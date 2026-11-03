@@ -3,24 +3,38 @@
 </p>
 
 <p align="center"><b>Free, open-source link-in-bio pages that search engines can actually find.</b><br>
-A Linktree alternative with nine real themes, built-in SEO and no ads, tracking or sign-up.</p>
+Nine themes, real HTML, no ads and no tracking. Your page is a file you own.</p>
+
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/mafzalkalwardev/tapvio?label=licence" alt="MIT licence"></a>
+  <a href="https://github.com/mafzalkalwardev/tapvio/releases"><img src="https://img.shields.io/github/v/release/mafzalkalwardev/tapvio" alt="Latest release"></a>
+  <a href="https://github.com/mafzalkalwardev/tapvio/stargazers"><img src="https://img.shields.io/github/stars/mafzalkalwardev/tapvio" alt="GitHub stars"></a>
+</p>
 
 <p align="center">
   <a href="https://mafzalkalwardev.github.io/tapvio/">Website</a> ·
   <a href="https://mafzalkalwardev.github.io/tapvio/create/">Create your page</a> ·
   <a href="https://mafzalkalwardev.github.io/tapvio/guide/">Guide</a> ·
-  <a href="GUIDE.md">Guide (Markdown)</a>
+  <a href="https://dev.to/mafzalkalwardev/i-built-a-free-linktree-alternative-that-google-can-index-1d7j">Why I built this</a>
 </p>
 
 ![Tapvio homepage with a live theme preview](docs/homepage.png)
+
+**Quick start** (Python 3.12, the version CI uses): `pip install -r requirements.txt && TAPVIO_SITE_URL=http://localhost:8000 python build.py --no-og && python -m http.server -d dist 8000`
+
+Then open http://localhost:8000/.
+
+## Why this exists
+
+Most link-in-bio tools are built for social apps. The page they give you is often a script-heavy profile that search engines skip, and some of them send a `noindex` tag on purpose. That is a poor trade if the thing you want found is your name, your work, and the profiles you actually own.
+
+Tapvio takes the other route. Each page is static HTML with a title, a description, a canonical URL and structured data. There is no database and no Tapvio account. The page is one YAML file in this repository. GitHub Actions checks it, `build.py` builds the site, and GitHub Pages hosts it. The longer version of that decision is in [I built a free Linktree alternative that Google can index](https://dev.to/mafzalkalwardev/i-built-a-free-linktree-alternative-that-google-can-index-1d7j).
 
 ## What is Tapvio?
 
 Tapvio is a **free link-in-bio tool**: one short address that lists your website, social profiles, portfolio, shop and contact details. Put it in your Instagram, TikTok, LinkedIn, X or GitHub bio, your email signature, or on a business card.
 
-Most link-in-bio apps are built for social media and their pages often aren't indexed by Google. Some even ship with a `noindex` tag. Tapvio takes the opposite approach. Every page is a **static HTML page with full SEO markup**, so your name, your work and every profile you own can show up in search results.
-
-There's no database and no account system. Each page is one small YAML file in this repository. GitHub Actions validates it, builds the site, and publishes it to GitHub Pages for free.
+Publishing uses a free GitHub account, because that is how the pull request is opened. After that, the page is yours: copy the file, fork the project, or point a domain at your own copy.
 
 ### Who it's for
 
@@ -31,7 +45,8 @@ There's no database and no account system. Each page is one small YAML file in t
 
 ## Features
 
-### Nine real themes
+### Nine themes
+
 Each theme has its own typography, layout and link style, not just a different colour.
 
 | Theme | Look | Light/dark |
@@ -48,26 +63,29 @@ Each theme has its own typography, layout and link style, not just a different c
 
 ![All nine Tapvio themes on a phone](docs/themes.png)
 
-**Customization options:** light, dark or automatic mode; your own accent colour; ten font choices; cover image; photo shape (circle, rounded, square); website icons on or off.
+**Customization options:** light, dark or automatic mode (on the themes that have both); your own accent colour; ten font choices; cover image; photo shape (circle, rounded, square); website icons on or off.
 
 ### SEO and indexing
-- Server-rendered HTML with no `noindex`, a unique title and description, and a canonical URL on every page
-- **Structured data (JSON-LD):** `ProfilePage`, `Person` with `sameAs` links to every profile you own, plus `worksFor`, `knowsAbout`, `BreadcrumbList`, `WebSite`, `SoftwareApplication` and `HowTo`
-- An auto-generated **1200 × 630 share image** for every page, so links look good on LinkedIn, X, WhatsApp and Slack
-- `sitemap.xml` with image entries and git-based `lastmod` dates, plus `robots.txt`, an Atom feed and `llms.txt`
-- **IndexNow** ping after every deploy, so Bing, Yandex, Seznam, Naver and Yep learn about changes within minutes
-- A homepage directory that links to every profile, so crawlers find new pages
-- Do-follow links for verified profiles; `ugc nofollow` for everyone else (anti-spam)
+
+- Server-rendered HTML. Published profiles are not marked `noindex`. Each one has a unique title, description and canonical URL.
+- **Structured data (JSON-LD):** `ProfilePage` and `Person` (with `sameAs` for every http(s) link, plus `worksFor` and `knowsAbout` when you set them), `BreadcrumbList` on the profile, `WebSite` and `SoftwareApplication` on the homepage, and `HowTo` on the guide.
+- An auto-generated **1200 × 630 share image** for every published page, so links look right on LinkedIn, X, WhatsApp and Slack.
+- `sitemap.xml` with image entries and git-based `lastmod` dates on profiles, plus `robots.txt`, an Atom feed and `llms.txt`.
+- **IndexNow** ping after every deploy, so Bing, Yandex, Seznam, Naver and Yep are told about changes.
+- A homepage directory that links to every profile, so crawlers can find new pages.
+- Do-follow links for profiles a maintainer has marked verified; `ugc nofollow` for everyone else.
 
 ### Built for visitors
-- **Save contact:** a vCard is generated whenever you add an email, phone or WhatsApp link
-- Share button, link search for long pages, keyboard navigation, `prefers-reduced-motion` support
-- Each page is about 5–8 KB compressed, and the page itself loads no JavaScript framework
+
+- **Save contact:** a vCard is generated when you add an email, phone or WhatsApp link.
+- Share button, link search on pages with more than 12 links, a skip link, and `prefers-reduced-motion` support.
+- The page does not load a JavaScript framework. The script on the page is a few lines for share, search, a broken-image fallback, and the homepage theme preview.
 
 ### Built for owners
-- A **visual builder** with a live phone preview that publishes through a GitHub pull request; no coding needed
+
+- A **visual builder** with a live phone preview that publishes through a GitHub pull request.
 - Your page is a plain file you own. Copy it, fork the project, or self-host it.
-- Validation in CI with clear error messages on every pull request
+- Validation in CI, with the error written on the pull request.
 
 ## How it works
 
@@ -114,7 +132,7 @@ TAPVIO_SITE_URL=http://localhost:8000 python build.py --no-og
 python -m http.server -d dist 8000            # open http://localhost:8000/
 ```
 
-`--no-og` skips share-image rendering. `TAPVIO_SITE_URL` makes all links point at your local server.
+`--no-og` skips share-image rendering. `TAPVIO_SITE_URL` makes generated links point at your local server. CI installs these dependencies on Python 3.12.
 
 ## Deploy your own copy
 
@@ -179,13 +197,9 @@ scripts/indexnow.py       IndexNow ping, run by CI after deploys
 
 Colours: cobalt `#2B4BE0`, ink `#141B2E`, paper `#F5F6F8`. Fonts: Bricolage Grotesque (headings) and Hanken Grotesk (text).
 
-## Keywords
+## Contributing
 
-Tapvio is a free Linktree alternative and open-source link-in-bio tool. Related terms people search for:
-
-free link in bio, link in bio tool, Linktree alternative, free Linktree alternative, open source Linktree, Linktree clone, bio link page, bio link generator, link in bio for Instagram, link in bio for TikTok, all my links in one page, personal landing page, one page profile, digital business card, free digital business card, vCard link page, developer portfolio links, freelancer profile page, Upwork profile links, social links page, link hub, link tree for free, SEO link in bio, indexed link in bio page, GitHub Pages link in bio, static site generator Python, Jinja2 static site, personal website free hosting.
-
-**Suggested GitHub topics:** `link-in-bio`, `linktree-alternative`, `linktree`, `bio-link`, `personal-website`, `digital-business-card`, `github-pages`, `static-site-generator`, `seo`, `python`, `jinja2`, `open-source`.
+Profile pages and code changes both start in [CONTRIBUTING.md](CONTRIBUTING.md). Please read [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before you post.
 
 ## Releases
 
@@ -194,3 +208,5 @@ See [CHANGELOG.md](CHANGELOG.md) and the [releases page](https://github.com/mafz
 ## License
 
 MIT © INDUS Web Agency. Fonts are © their authors under the SIL Open Font License. Inter is used for share images.
+
+If this helped, a star helps others find it.

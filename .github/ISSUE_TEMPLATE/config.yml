@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Ask a question
+    url: https://github.com/mafzalkalwardev/tapvio/discussions
+    about: How to use Tapvio, self-host it, or pick a theme. Bug reports and code changes still belong in issues.
