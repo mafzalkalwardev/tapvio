@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>{{ cfg.site_name }}: new and updated pages</title>
+  <link href="{{ cfg.site_url }}/feed.xml" rel="self"/>
+  <link href="{{ cfg.site_url }}/"/>
+  <id>{{ cfg.site_url }}/</id>
+  <updated>{{ updated }}T00:00:00Z</updated>
+{% for p in profiles %}
+  <entry>
+    <title>{{ p.name }}{% if p.headline %} - {{ p.headline }}{% endif %}</title>
+    <link href="{{ p.page_url }}"/>
+    <id>{{ p.page_url }}</id>
+    <updated>{{ p.modified }}T00:00:00Z</updated>
+    <author><name>{{ p.name }}</name></author>
+    <summary>{{ p.bio or p.about }}</summary>
+  </entry>
+{% endfor %}
+</feed>

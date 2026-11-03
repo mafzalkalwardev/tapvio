@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block meta %}
+<meta name="description" content="{{ description }}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="author" content="{{ p.name }}">
+{% if p.keywords %}<meta name="keywords" content="{{ p.keywords | join(', ') }}">{% endif %}
+<meta name="theme-color" content="{{ s.accent or '#0f1222' }}">
+<link rel="canonical" href="{{ page_url }}">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="{{ cfg.site_name }}">
+<meta property="og:title" content="{{ p.name }}{% if p.headline %} - {{ p.headline }}{% endif %}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ page_url }}">
+{% if og_image %}<meta property="og:image" content="{{ og_image }}">
+<meta property="og:image:alt" content="{{ p.name }} on {{ cfg.site_name }}">
+{% if p.og_url %}<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">{% endif %}{% endif %}
+<meta property="profile:username" content="{{ p.username }}">
+<meta name="twitter:card" content="{{ 'summary_large_image' if p.og_url else 'summary' }}">
+<meta name="twitter:title" content="{{ p.name }}">
+<meta name="twitter:description" content="{{ description }}">
+{% if og_image %}<meta name="twitter:image" content="{{ og_image }}">{% endif %}
+<script type="application/ld+json">
+{{ json_ld | safe }}
+</script>
+{% endblock %}
+
+{% block content %}
+<header class="hero">
+  <div class="avatar-wrap anim" style="--i:0">
+  {% if avatar_url %}
+    <img class="avatar" src="{{ avatar_url }}" alt="Photo of {{ p.name }}" data-fb="{{ p.name[:1] }}" width="112" height="112" fetchpriority="high">
+  {% else %}
+    <div class="avatar avatar--initial" aria-hidden="true">{{ p.name[:1] }}</div>
+  {% endif %}
+  </div>
+  <h1 class="anim" style="--i:1">{{ p.name }}{% if p.verified %} <span class="badge" title="Verified profile" aria-label="Verified">✓</span>{% endif %}</h1>
+  {% if p.headline %}<p class="headline anim" style="--i:2">{{ p.headline }}</p>{% endif %}
+  {% if p.bio %}<p class="bio anim" style="--i:3">{{ p.bio }}</p>{% endif %}
+  {% if p.location %}<p class="loc anim" style="--i:3">📍 {{ p.location }}</p>{% endif %}
+
+  {% if p.socials %}
+  <nav class="socials" aria-label="Social profiles">
+    {% for x in p.socials %}
+    <a class="anim" style="--i:{{ loop.index + 3 }}" href="{{ x.url }}"{% if x.rel %} rel="{{ x.rel }}" target="_blank"{% endif %} title="{{ x.label }}" aria-label="{{ x.label }}">
+      {% if x.url.startswith('http') %}<img class="sico" src="https://icons.duckduckgo.com/ip3/{{ x.url | domain }}.ico" alt="" data-fb="{{ x.label[:1] }}" width="20" height="20" loading="lazy">
+      {% elif x.url.startswith('mailto') %}<span aria-hidden="true">✉</span>
+      {% else %}<span aria-hidden="true">☎</span>{% endif %}
+    </a>
+    {% endfor %}
+  </nav>
+  {% endif %}
+
+  <div class="tools anim" style="--i:6">
+    <button type="button" class="btn" id="share" hidden>↗ Share</button>
+    {% if p.link_count > 12 %}
+    <label class="search"><span class="sr">Search links</span>
+      <input id="q" type="search" placeholder="Search {{ p.link_count }} links…" autocomplete="off">
+    </label>
+    {% endif %}
+  </div>
+</header>
+
+{% if p.about %}
+<section class="about anim" style="--i:7" aria-labelledby="about-h">
+  <h2 id="about-h">About {{ p.name.split(' ')[0] }}</h2>
+  <p>{{ p.about }}</p>
+</section>
+{% endif %}
+
+{% set n = namespace(i=8) %}
+{% for sec in p.sections %}
+<section class="block" aria-labelledby="s{{ loop.index }}">
+  {% if sec.title %}<h2 id="s{{ loop.index }}" class="anim" style="--i:{{ n.i }}">{{ sec.title }}</h2>{% endif %}
+  <ul class="links">
+    {% for l in sec.links %}
+    {% set n.i = n.i + 1 %}
+    <li class="anim" style="--i:{{ n.i }}">
+      <a class="link{% if l.featured %} link--featured{% endif %}" href="{{ l.url }}"{% if l.rel %} rel="{{ l.rel }}" target="_blank"{% endif %}>
+        {% if l.url.startswith('http') %}<img class="ico" src="https://icons.duckduckgo.com/ip3/{{ l.url | domain }}.ico" alt="" data-fb="{{ l.title[:1] }}" width="26" height="26" loading="lazy">{% else %}<span class="ico ico--txt" aria-hidden="true">✉</span>{% endif %}
+        <span class="txt">
+          <span class="t">{{ l.title }}</span>
+          {% if l.description %}<span class="d">{{ l.description }}</span>{% elif l.url.startswith('http') %}<span class="d">{{ l.url | domain }}</span>{% endif %}
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+<p class="empty" id="empty" hidden>No links match your search.</p>
+<p class="updated">Last updated <time datetime="{{ modified }}">{{ modified }}</time></p>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(() => {
+  const share = document.getElementById('share');
+  if (share) {
+    share.hidden = false;
+    share.addEventListener('click', async () => {
+      try {
+        if (navigator.share) await navigator.share({ title: document.title, url: location.href });
+        else { await navigator.clipboard.writeText(location.href); share.textContent = '✓ Link copied'; setTimeout(() => share.textContent = '↗ Share', 1600); }
+      } catch (e) {}
+    });
+  }
+  const q = document.getElementById('q');
+  if (!q) return;
+  const blocks = [...document.querySelectorAll('.block')], empty = document.getElementById('empty');
+  q.addEventListener('input', () => {
+    const term = q.value.trim().toLowerCase();
+    let shown = 0;
+    blocks.forEach(b => {
+      let any = false;
+      b.querySelectorAll('li').forEach(li => {
+        const hit = !term || li.textContent.toLowerCase().includes(term);
+        li.hidden = !hit; if (hit) { any = true; shown++; }
+      });
+      b.hidden = !any;
+    });
+    empty.hidden = shown > 0;
+  });
+})();
+</script>
+{% endblock %}

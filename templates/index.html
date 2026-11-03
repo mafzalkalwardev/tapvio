@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ cfg.site_name }}: free, open-source link in bio with SEO{% endblock %}
+{% block meta %}
+<meta name="description" content="{{ cfg.site_tagline }} {{ themes | length }} animated themes, custom fonts and buttons, no ads, no tracking. Browse {{ profiles | length }} pages or create yours.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ page_url }}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ cfg.site_name }}">
+<meta property="og:title" content="{{ cfg.site_name }}: free link-in-bio pages">
+<meta property="og:description" content="{{ cfg.site_tagline }}">
+<meta property="og:url" content="{{ page_url }}">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","name":{{ cfg.site_name | tojson }},"url":{{ page_url | tojson }},"description":{{ cfg.site_tagline | tojson }},"publisher":{"@type":"Organization","name":{{ cfg.owner_name | tojson }},"url":{{ cfg.owner_url | tojson }}}},
+ {"@type":"ItemList","name":"Linkora directory","itemListElement":[{% for p in profiles %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ (cfg.site_url ~ '/' ~ p.username ~ '/') | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
+]}
+</script>
+{% endblock %}
+{% block content %}
+<header class="hero">
+  <div class="avatar-wrap anim" style="--i:0"><div class="avatar avatar--initial" aria-hidden="true">🔗</div></div>
+  <h1 class="anim" style="--i:1">{{ cfg.site_name }}</h1>
+  <p class="headline anim" style="--i:2">Your links. Your page. Indexed by Google.</p>
+  <p class="bio anim" style="--i:3">{{ cfg.site_tagline }}</p>
+  <div class="tools anim" style="--i:4">
+    <a class="btn btn--solid" href="{{ cfg.site_url }}/create/">✨ Create your free page</a>
+    <a class="btn" href="{{ cfg.repo_url }}">★ GitHub</a>
+  </div>
+</header>
+
+<section class="block" aria-labelledby="dir">
+  <h2 id="dir" class="anim" style="--i:5">Directory</h2>
+  <ul class="links">
+    {% for p in profiles %}
+    <li class="anim" style="--i:{{ loop.index + 5 }}">
+      <a class="link" href="{{ cfg.site_url }}/{{ p.username }}/">
+        {% if p.avatar_url %}<img class="ico ico--round" src="{{ p.avatar_url }}" data-fb="{{ p.name[:1] }}" alt="" width="38" height="38" loading="lazy">{% else %}<span class="ico ico--round ico--txt" aria-hidden="true">{{ p.name[:1] }}</span>{% endif %}
+        <span class="txt">
+          <span class="t">{{ p.name }}{% if p.verified %} <span class="badge" aria-label="Verified">✓</span>{% endif %}</span>
+          <span class="d">{{ p.headline or p.bio }}</span>
+        </span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="about anim" style="--i:9" aria-labelledby="why">
+  <h2 id="why">Why {{ cfg.site_name }}?</h2>
+  <p>Every page is fast, plain HTML with structured data, a share image, a sitemap and no <code>noindex</code> tag, so search engines can find you. Pick from {{ themes | length }} animated themes, 8 fonts and 6 button styles. It's free, with no ads and no tracking, and it's open source.</p>
+</section>
+{% endblock %}

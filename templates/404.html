@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Page not found | {{ cfg.site_name }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}
+<header class="hero">
+  <div class="avatar-wrap anim"><div class="avatar avatar--initial" aria-hidden="true">?</div></div>
+  <h1 class="anim" style="--i:1">This page doesn't exist yet</h1>
+  <p class="bio anim" style="--i:2">The username might be free. Claim it in two minutes.</p>
+  <div class="tools anim" style="--i:3">
+    <a class="btn btn--solid" href="{{ cfg.site_url }}/create/">✨ Claim it for free</a>
+    <a class="btn" href="{{ cfg.site_url }}/">Browse the directory</a>
+  </div>
+</header>
+{% endblock %}

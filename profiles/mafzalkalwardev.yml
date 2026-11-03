@@ -1,0 +1,99 @@
+# File name must equal the username: profiles/<username>.yml
+username: mafzalkalwardev
+name: "Muhammad Afzal Kalwar"
+headline: "Python Automation & Full-Stack Developer"
+bio: "Founder, INDUS Web Agency. Python automation: auto dialers, AI call agents, scrapers, CRMs."
+# Longer text helps search engines understand the page (aim for 2-4 sentences).
+about: >-
+  I'm Muhammad Afzal Kalwar, a Python automation and full-stack developer based in
+  Islamabad, Pakistan, and the founder of INDUS Web Agency. I build auto dialers,
+  AI call agents, web scrapers, CRMs and Chrome extensions for businesses worldwide.
+  Below you'll find my portfolio, freelance profiles, articles and products.
+location: "Islamabad, Pakistan"
+avatar: "https://github.com/mafzalkalwardev.png"
+style:
+  theme: aurora
+  font: space-grotesk
+  buttons: glass
+  effect: aurora
+  animation: rise
+# Set by maintainers only: verified profiles get followed (do-follow) links.
+verified: true
+job_title: "Founder & Principal Engineer"
+works_for:
+  name: "INDUS Web Agency"
+  url: "https://induswebagency.com"
+keywords: [Python automation, auto dialer, AI call agent, web scraping, CRM, Chrome extensions, full-stack developer, Pakistan]
+
+socials:
+  - { label: "X", url: "https://x.com/mafzalkalwardev" }
+  - { label: "GitHub", url: "https://github.com/mafzalkalwardev" }
+  - { label: "LinkedIn", url: "https://www.linkedin.com/in/mafzalkalwardev" }
+  - { label: "WhatsApp", url: "https://wa.me/923079670503" }
+  - { label: "Email", url: "mailto:kalwarmuhammadafzal3@gmail.com" }
+
+sections:
+  - title: "Work with me"
+    links:
+      - { title: "Hire me — Portfolio", url: "https://mafzalkalwardev.github.io/#hire-me", featured: true }
+      - { title: "INDUS Web Agency", url: "https://induswebagency.com", featured: true }
+      - { title: "Upwork", url: "https://www.upwork.com/freelancers/~01f4ad6974fac97bf3" }
+      - { title: "LinkedIn — INDUS Web Agency", url: "https://www.linkedin.com/company/induswebagency" }
+      - { title: "Topmate — Book a call", url: "https://topmate.io/mafzalkalwardev" }
+
+  - title: "Chrome extensions"
+    links:
+      - { title: "GV Auto Dialer", url: "https://chromewebstore.google.com/detail/gv-auto-dialer-by-indus-w/mhmfioegohbhejocblgpacabecelbkoi" }
+      - { title: "IPECS Auto Dialer", url: "https://chromewebstore.google.com/detail/ipecs-auto-dialer-by-indu/jocjgmjjcmfdkcajfhblilmeamfkhahk" }
+      - { title: "GchoPro Solutions Auto Dialer", url: "https://chromewebstore.google.com/detail/gchopro-solutions-auto-di/andjenipikfajnahdljcdnkbiccdince" }
+      - { title: "ExtensionLaunch profile", url: "https://extensionlaunch.com/kalwarmuhammadafzal3" }
+
+  - title: "Articles"
+    links:
+      - { title: "How to Build an AI Call Agent with Python: STT, Groq LLM and TTS", url: "https://dev.to/mafzalkalwardev/how-to-build-an-ai-call-agent-with-python-stt-groq-llm-and-tts-2nm6" }
+      - { title: "Google Voice Auto Dialer Chrome Extension: How It Works (MV3)", url: "https://dev.to/mafzalkalwardev/google-voice-auto-dialer-chrome-extension-how-it-works-mv3-39p3" }
+      - { title: "How to Build a Python Auto Dialer: Multi-Line, AMD and Excel Import", url: "https://dev.to/mafzalkalwardev/how-to-build-a-python-auto-dialer-multi-line-amd-and-excel-import-2jof" }
+      - { title: "Building CallAudit-X: an AI call-auditing SaaS that works without an API key", url: "https://dev.to/mafzalkalwardev/building-callaudit-x-an-ai-call-auditing-saas-that-still-works-without-an-api-key-3o03" }
+      - { title: "How my Google Voice AI agent knows when to talk", url: "https://dev.to/mafzalkalwardev/how-my-google-voice-ai-agent-knows-when-to-talk-call-state-detection-groq-and-tts-e5a" }
+      - { title: "Building CallAudit-X (Medium)", url: "https://medium.com/@mafzalkalwardev/building-callaudit-x-an-ai-call-auditing-saas-that-still-works-without-an-api-key-2309d22d6415" }
+      - { title: "Google Voice AI agent (Medium)", url: "https://medium.com/@mafzalkalwardev/how-my-google-voice-ai-agent-knows-when-to-talk-call-state-detection-groq-and-tts-3fd7f1721bc4" }
+      - { title: "Building CallAudit-X (Hashnode)", url: "https://mafzalkalwardev.hashnode.dev/building-callaudit-x-an-ai-call-auditing-saas-that-still-works-without-an-api-key" }
+
+  - title: "Writing & developer platforms"
+    links:
+      - { title: "Dev.to", url: "https://dev.to/mafzalkalwardev" }
+      - { title: "Hashnode", url: "https://mafzalkalwardev.hashnode.dev" }
+      - { title: "Medium", url: "https://medium.com/@mafzalkalwardev" }
+      - { title: "Substack", url: "https://substack.com/@mafzalkalwardev" }
+      - { title: "GitLab", url: "https://gitlab.com/mafzalkalwardev" }
+      - { title: "Stack Overflow", url: "https://stackoverflow.com/users/33261021/muhammad-afzal-kalwar" }
+      - { title: "Kaggle", url: "https://www.kaggle.com/mafzalkalwardev" }
+      - { title: "CodePen", url: "https://codepen.io/mafzalkalwardev" }
+      - { title: "HackerRank", url: "https://www.hackerrank.com/profile/mafzalkalwardev" }
+      - { title: "LeetCode", url: "https://leetcode.com/u/ugFD6WjrxX" }
+      - { title: "daily.dev", url: "https://app.daily.dev/mafzalkalwardev" }
+      - { title: "Behance", url: "https://www.behance.net/muhammakalwar1" }
+      - { title: "Quora", url: "https://www.quora.com/profile/Muhammad-Afzal-Kalwar" }
+      - { title: "Gravatar", url: "https://gravatar.com/mafzalkalwardev" }
+
+  - title: "Communities"
+    links:
+      - { title: "Peerlist", url: "https://peerlist.io/mafzalkalwardev" }
+      - { title: "Product Hunt", url: "https://www.producthunt.com/@mafzalkalwardev" }
+      - { title: "Indie Hackers", url: "https://www.indiehackers.com/mafzalkalwardev" }
+
+  - title: "Freelance & hiring platforms"
+    links:
+      - { title: "Contra", url: "https://contra.com/mafzalkalwardev" }
+      - { title: "Wellfound", url: "https://wellfound.com/u/muhammad-afzal-kalwar" }
+      - { title: "Arc.dev", url: "https://arc.dev/@muhammadafzalkalwar" }
+      - { title: "Freelancer.com", url: "https://www.freelancer.com/u/mafzalkalwardev" }
+      - { title: "Guru", url: "https://www.guru.com/freelancers/muhammad-afzal-kalwar" }
+      - { title: "PeoplePerHour", url: "https://www.peopleperhour.com/freelancer/muhammad_afzal-kalwar-python-automation-dev-auto-dialers-zxnqwwyj" }
+
+  - title: "INDUS Web Agency listings"
+    links:
+      - { title: "Crunchbase", url: "https://www.crunchbase.com/organization/indus-web-agency" }
+      - { title: "Clutch", url: "https://clutch.co/profile/indus-web-agency" }
+      - { title: "GoodFirms", url: "https://www.goodfirms.co/company/indus-web-agency" }
+      - { title: "Sortlist", url: "https://www.sortlist.com/agency/indus-web-agency" }

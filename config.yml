@@ -1,0 +1,19 @@
+# Linkora site settings.
+site_name: "Linkora"
+site_tagline: "Free, open-source link-in-bio pages that search engines can actually find."
+# Full public URL, no trailing slash.
+# Moving to a custom domain later? Set site_url to it and fill custom_domain.
+site_url: "https://mafzalkalwardev.github.io/linkora"
+custom_domain: ""
+owner_name: "INDUS Web Agency"
+owner_url: "https://induswebagency.com"
+# GitHub repo (owner/name): used for "Create your page" and pull-request links.
+repo: "mafzalkalwardev/linkora"
+branch: "main"
+default_theme: "aurora"
+lang: "en"
+# Paste only the content="..." token from Google Search Console / Bing Webmaster Tools.
+google_site_verification: ""
+bing_site_verification: ""
+# IndexNow key (Bing, Yandex, Seznam, Naver). Any 32-char hex string; it is public by design.
+indexnow_key: "2062ec5b941c96db67ed9b9f6fd1d1f2"

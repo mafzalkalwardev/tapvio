@@ -1,0 +1,8 @@
+# {{ cfg.site_name }}
+
+> {{ cfg.site_tagline }}
+
+## Profiles
+{% for p in profiles %}
+- [{{ p.name }}]({{ p.page_url }}): {{ p.headline or p.bio }}
+{% endfor %}

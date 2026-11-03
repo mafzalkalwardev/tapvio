@@ -1,0 +1,344 @@
+{% extends "base.html" %}
+{% block title %}Create your free link-in-bio page | {{ cfg.site_name }}{% endblock %}
+{% block meta %}
+<meta name="description" content="Build your free {{ cfg.site_name }} page visually: pick a theme, animations, fonts and button styles, add your links and publish. No sign-up, no ads, indexed by Google.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ page_url }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Create your free {{ cfg.site_name }} page">
+<meta property="og:description" content="{{ cfg.site_tagline }}">
+<meta property="og:url" content="{{ page_url }}">
+{% endblock %}
+{% block head_extra %}
+<style>
+.wrap.builder{max-width:1240px;padding-top:36px}
+.bhead{text-align:center;margin-bottom:26px}
+.bhead h1{font-size:clamp(1.6rem,4vw,2.3rem)}
+.bhead p{color:var(--muted);margin:6px auto 0;max-width:60ch}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:28px;align-items:start}
+@media (max-width:980px){.grid2{grid-template-columns:1fr}.phone-col{order:-1}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px 20px 8px;margin-bottom:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.panel h2{margin:0 0 14px;font-size:.82rem}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:560px){.row{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;font-size:.88rem;font-weight:600}
+.f small{font-weight:400;color:var(--muted)}
+.f .err{color:#ff6b81;font-weight:600}
+.f .ok{color:#3ddc97;font-weight:600}
+.builder input,.builder textarea,.builder select{font:inherit;font-weight:400;font-size:.95rem;color:var(--text);background:rgba(127,127,127,.08);border:1px solid var(--border);border-radius:10px;padding:9px 11px;width:100%}
+.builder textarea{min-height:76px;resize:vertical}
+.builder select option{color:#111}
+.builder input:focus,.builder textarea:focus,.builder select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent)}
+.builder input[type=color]{padding:2px;height:40px;cursor:pointer}
+.builder input[type=checkbox]{width:auto}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-bottom:16px}
+.sw{position:relative;border:2px solid transparent;border-radius:12px;padding:0;cursor:pointer;height:64px;overflow:hidden;font:inherit;font-size:.75rem;font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;transition:transform .2s}
+.sw:hover{transform:translateY(-2px)}
+.sw[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
+.sw .dot{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:34px;height:12px;border-radius:6px}
+.item{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:center;margin-bottom:8px}
+.item.link-item{grid-template-columns:1fr 1.4fr auto auto}
+.item .desc{grid-column:1/3}
+@media (max-width:560px){.item,.item.link-item{grid-template-columns:1fr auto}.item .desc{grid-column:1/-1}}
+.ib{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:8px;padding:7px 9px;cursor:pointer;font:inherit;font-size:.85rem;line-height:1}
+.ib:hover{border-color:var(--accent)}
+.feat{display:flex;align-items:center;gap:4px;font-size:.78rem;font-weight:600;color:var(--muted)}
+.sec{border:1px dashed var(--border);border-radius:14px;padding:12px;margin-bottom:12px}
+.sec-head{display:flex;gap:8px;margin-bottom:10px}
+.add{margin:0 0 14px}
+.phone-col{position:sticky;top:18px}
+.phone{position:relative;height:min(780px,calc(100vh - 140px));min-height:520px;border-radius:36px;border:10px solid #0b0b12;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;background:#000}
+.phone .page{position:absolute;inset:0;min-height:0;overflow:hidden}
+.pv-scroll{position:absolute;inset:0;z-index:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.pv-scroll::-webkit-scrollbar{display:none}
+.phone .fx,.phone .page.has-bgimg::before{position:absolute}
+.phone .wrap{padding:44px 14px 20px}
+.phone .foot{padding-bottom:26px}
+.out{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+.yaml{width:100%;min-height:220px;font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:.8rem!important;white-space:pre}
+.steps{margin:0 0 14px;padding-left:20px;color:var(--muted);font-size:.9rem}
+.steps b{color:var(--text)}
+.chk{flex-direction:row;align-items:center;gap:8px}
+</style>
+{% endblock %}
+
+{% block main_class %} builder{% endblock %}
+{% block content %}
+<header class="bhead">
+  <h1 class="anim">✨ Create your {{ cfg.site_name }} page</h1>
+  <p class="anim" style="--i:1">Fill in the form and watch the preview update. When you're happy, click <b>Publish on GitHub</b>. Your page goes live for free once it's approved.</p>
+</header>
+
+<div class="grid2">
+<div>
+  <section class="panel">
+    <h2>1 · About you</h2>
+    <div class="row">
+      <label class="f">Username <input id="username" placeholder="e.g. ali-khan" maxlength="30" autocomplete="off"><small id="u-msg">Your page: {{ cfg.site_url }}/<b id="u-prev">username</b>/</small></label>
+      <label class="f">Full name <input id="name" placeholder="Ali Khan" maxlength="80"></label>
+    </div>
+    <div class="row">
+      <label class="f">Headline <input id="headline" placeholder="Full-stack developer" maxlength="100"></label>
+      <label class="f">Location <input id="location" placeholder="Lahore, Pakistan" maxlength="100"></label>
+    </div>
+    <label class="f">Short bio <input id="bio" placeholder="One line about what you do" maxlength="200"></label>
+    <label class="f">About (good for SEO) <textarea id="about" maxlength="1200" placeholder="A few sentences about you, your work, and what visitors will find here."></textarea></label>
+    <div class="row">
+      <label class="f">Avatar image URL <input id="avatar" placeholder="https://github.com/you.png"><small>Tip: <a href="#" id="gh-avatar">use my GitHub photo</a></small></label>
+      <label class="f">Keywords <input id="keywords" placeholder="python, automation, freelancer"><small>Comma separated</small></label>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>2 · Look &amp; feel</h2>
+    <div class="swatches" id="swatches" role="group" aria-label="Theme"></div>
+    <div class="row">
+      <label class="f">Font <select id="font"></select></label>
+      <label class="f">Button style <select id="buttons"></select></label>
+    </div>
+    <div class="row">
+      <label class="f">Background animation <select id="effect"></select></label>
+      <label class="f">Link entrance animation <select id="animation"></select></label>
+    </div>
+    <div class="row">
+      <label class="f">Layout <select id="layout"></select></label>
+      <label class="f">Avatar shape <select id="avatarShape"></select></label>
+    </div>
+    <div class="row">
+      <div class="f"><span>Accent colour</span>
+        <div style="display:flex;gap:8px;align-items:center"><input type="color" id="accent" value="#8b7cff" style="width:64px"><label class="f chk" style="margin:0"><input type="checkbox" id="useAccent"> Custom</label></div>
+      </div>
+      <div class="f"><span>Gradient background</span>
+        <div style="display:flex;gap:8px;align-items:center"><input type="color" id="g1" value="#1a1a2e" style="width:56px"><input type="color" id="g2" value="#0f3460" style="width:56px"><label class="f chk" style="margin:0"><input type="checkbox" id="useGrad"> On</label></div>
+      </div>
+    </div>
+    <label class="f">Background image URL (optional) <input id="bgimg" placeholder="https://images.unsplash.com/..."><small>It's darkened automatically so text stays readable.</small></label>
+  </section>
+
+  <section class="panel">
+    <h2>3 · Social icons</h2>
+    <div id="socials"></div>
+    <button type="button" class="btn add" id="add-social">+ Add social</button>
+  </section>
+
+  <section class="panel">
+    <h2>4 · Links</h2>
+    <div id="sections"></div>
+    <button type="button" class="btn add" id="add-section">+ Add section</button>
+  </section>
+
+  <section class="panel" id="publish">
+    <h2>5 · Publish</h2>
+    <ol class="steps">
+      <li>Click <b>Publish on GitHub</b>. Sign in, or create a free GitHub account.</li>
+      <li>GitHub opens with your file already filled in. Click <b>Commit changes → Propose changes → Create pull request</b>.</li>
+      <li>Once it's approved, your page is live at <b>{{ cfg.site_url }}/<span class="u-echo">username</span>/</b>.</li>
+    </ol>
+    <p class="f err" id="pub-err" hidden></p>
+    <div class="out">
+      <button type="button" class="btn btn--solid" id="publish-btn">🚀 Publish on GitHub</button>
+      <button type="button" class="btn" id="copy-btn">Copy YAML</button>
+      <button type="button" class="btn" id="dl-btn">Download .yml</button>
+      <button type="button" class="btn" id="reset-btn">Reset</button>
+    </div>
+    <label class="f"><span>Your profile file <small>(profiles/<span class="u-echo">username</span>.yml)</small></span><textarea class="yaml" id="yaml" readonly></textarea></label>
+  </section>
+</div>
+
+<div class="phone-col">
+  <div class="phone" aria-label="Live preview"><div class="page" id="pv"></div></div>
+  <p style="text-align:center;color:var(--muted);font-size:.85rem">Live preview</p>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="builder-data" type="application/json">{{ builder | safe }}</script>
+<script>
+(() => {
+const D = JSON.parse(document.getElementById('builder-data').textContent);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const domain = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+const okUrl = u => /^(https?:\/\/[^\s]+\.[^\s]+|mailto:[^\s]+|tel:[+0-9 ()-]+)$/i.test(u.trim());
+const STORE = 'linkora-draft-v1';
+
+const blank = () => ({
+  username: '', name: '', headline: '', bio: '', about: '', location: '', avatar: '', keywords: '',
+  style: { theme: 'aurora', font: 'inter', buttons: 'rounded', layout: 'list', avatar: 'circle', effect: 'auto', animation: 'rise',
+           accent: '#8b7cff', useAccent: false, g1: '#1a1a2e', g2: '#0f3460', useGrad: false, bgimg: '' },
+  socials: [{ label: 'GitHub', url: '' }, { label: 'LinkedIn', url: '' }, { label: 'Email', url: 'mailto:' }],
+  sections: [{ title: 'Links', links: [{ title: 'My website', url: 'https://', description: '', featured: true }] }],
+});
+let S;
+try { S = JSON.parse(localStorage.getItem(STORE)) || blank(); } catch { S = blank(); }
+
+/* ---------- static controls ---------- */
+const fields = ['username', 'name', 'headline', 'bio', 'about', 'location', 'avatar', 'keywords'];
+fields.forEach(k => { $(k).value = S[k] || ''; $(k).addEventListener('input', () => { S[k] = $(k).value; update(); }); });
+const fill = (id, list, key) => { $(id).innerHTML = list.map(v => `<option value="${v}">${v.replace(/-/g, ' ')}</option>`).join(''); $(id).value = S.style[key]; $(id).addEventListener('change', () => { S.style[key] = $(id).value; update(); }); };
+fill('font', Object.keys(D.fonts), 'font');
+fill('buttons', D.options.buttons, 'buttons');
+fill('effect', D.options.effect, 'effect');
+fill('animation', D.options.animation, 'animation');
+fill('layout', D.options.layout, 'layout');
+fill('avatarShape', D.options.avatar, 'avatar');
+[['accent', 'accent'], ['g1', 'g1'], ['g2', 'g2'], ['bgimg', 'bgimg']].forEach(([id, k]) => { $(id).value = S.style[k]; $(id).addEventListener('input', () => { S.style[k] = $(id).value; if (id === 'accent') { S.style.useAccent = true; $('useAccent').checked = true; } if (id[0] === 'g') { S.style.useGrad = true; $('useGrad').checked = true; } update(); }); });
+['useAccent', 'useGrad'].forEach(id => { $(id).checked = S.style[id]; $(id).addEventListener('change', () => { S.style[id] = $(id).checked; update(); }); });
+$('gh-avatar').addEventListener('click', e => { e.preventDefault(); const u = prompt('Your GitHub username:', S.username); if (u) { S.avatar = `https://github.com/${u.trim()}.png`; $('avatar').value = S.avatar; update(); } });
+
+$('swatches').innerHTML = Object.entries(D.themes).map(([k, t]) =>
+  `<button type="button" class="sw" data-t="${k}" style="background:radial-gradient(circle at 20% 10%,${t.c1},transparent 60%),radial-gradient(circle at 90% 80%,${t.c2},transparent 60%),${t.bg};color:${t.text}"><span class="dot" style="background:${t.accent}"></span>${k}</button>`).join('');
+$('swatches').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; S.style.theme = b.dataset.t; if (!S.style.useAccent) $('accent').value = D.themes[b.dataset.t].accent; update(); });
+
+/* ---------- dynamic lists ---------- */
+function renderLists() {
+  $('socials').innerHTML = S.socials.map((s, i) => `
+    <div class="item"><input data-s="${i}" data-k="label" value="${esc(s.label)}" placeholder="Label (e.g. GitHub)" maxlength="120">
+    <input data-s="${i}" data-k="url" value="${esc(s.url)}" placeholder="https://… or mailto:…">
+    <button type="button" class="ib" data-del-s="${i}" aria-label="Remove">✕</button></div>`).join('');
+  $('sections').innerHTML = S.sections.map((sec, i) => `
+    <div class="sec">
+      <div class="sec-head"><input data-sec="${i}" value="${esc(sec.title)}" placeholder="Section title (e.g. Work with me)" maxlength="120">
+        <button type="button" class="ib" data-up="${i}" aria-label="Move up">↑</button>
+        <button type="button" class="ib" data-del-sec="${i}" aria-label="Remove section">✕</button></div>
+      ${sec.links.map((l, j) => `
+        <div class="item link-item">
+          <input data-l="${i}.${j}" data-k="title" value="${esc(l.title)}" placeholder="Link title" maxlength="120">
+          <input data-l="${i}.${j}" data-k="url" value="${esc(l.url)}" placeholder="https://…">
+          <label class="feat" title="Highlight this link"><input type="checkbox" data-l="${i}.${j}" data-k="featured" ${l.featured ? 'checked' : ''}>★</label>
+          <button type="button" class="ib" data-del-l="${i}.${j}" aria-label="Remove link">✕</button>
+          <input class="desc" data-l="${i}.${j}" data-k="description" value="${esc(l.description)}" placeholder="Optional description" maxlength="160">
+        </div>`).join('')}
+      <button type="button" class="ib" data-add-l="${i}">+ Add link</button>
+    </div>`).join('');
+}
+document.addEventListener('input', e => {
+  const t = e.target, d = t.dataset;
+  if (d.s !== undefined) S.socials[d.s][d.k] = t.value;
+  else if (d.sec !== undefined) S.sections[d.sec].title = t.value;
+  else if (d.l !== undefined) { const [i, j] = d.l.split('.'); S.sections[i].links[j][d.k] = d.k === 'featured' ? t.checked : t.value; }
+  else return;
+  update(false);
+});
+document.addEventListener('click', e => {
+  const d = e.target.dataset; let changed = true;
+  if (d.delS !== undefined) S.socials.splice(d.delS, 1);
+  else if (d.delSec !== undefined) S.sections.splice(d.delSec, 1);
+  else if (d.up !== undefined) { const i = +d.up; if (i > 0) [S.sections[i - 1], S.sections[i]] = [S.sections[i], S.sections[i - 1]]; }
+  else if (d.delL !== undefined) { const [i, j] = d.delL.split('.'); S.sections[i].links.splice(j, 1); }
+  else if (d.addL !== undefined) S.sections[d.addL].links.push({ title: '', url: 'https://', description: '', featured: false });
+  else changed = false;
+  if (changed) update();
+});
+$('add-social').addEventListener('click', () => { if (S.socials.length < D.limits.socials) { S.socials.push({ label: '', url: 'https://' }); update(); } });
+$('add-section').addEventListener('click', () => { if (S.sections.length < D.limits.sections) { S.sections.push({ title: '', links: [{ title: '', url: 'https://', description: '', featured: false }] }); update(); } });
+
+/* ---------- clean data + YAML ---------- */
+function clean() {
+  const links = S.sections.map(s => ({ title: s.title.trim(), links: s.links.filter(l => l.title.trim() && okUrl(l.url)) })).filter(s => s.links.length);
+  return { ...S, socials: S.socials.filter(s => okUrl(s.url) && !/^mailto:$/.test(s.url.trim())), sections: links };
+}
+const q = v => JSON.stringify(String(v).trim());
+function toYaml(c) {
+  const st = c.style, out = [];
+  out.push(`# Made with the ${D.site_url}/create/ builder`, `username: ${c.username.trim() || 'your-username'}`, `name: ${q(c.name || 'Your Name')}`);
+  ['headline', 'bio', 'location'].forEach(k => c[k].trim() && out.push(`${k}: ${q(c[k])}`));
+  if (c.about.trim()) out.push(`about: ${q(c.about.replace(/\s+/g, ' '))}`);
+  if (c.avatar.trim()) out.push(`avatar: ${q(c.avatar)}`);
+  const kw = c.keywords.split(',').map(s => s.trim()).filter(Boolean);
+  if (kw.length) out.push(`keywords: [${kw.map(q).join(', ')}]`);
+  out.push('', 'style:', `  theme: ${st.theme}`, `  font: ${st.font}`, `  buttons: ${st.buttons}`, `  layout: ${st.layout}`, `  avatar: ${st.avatar}`, `  effect: ${st.effect}`, `  animation: ${st.animation}`);
+  if (st.useAccent) out.push(`  accent: "${st.accent}"`);
+  if (st.useGrad) out.push(`  gradient: ["${st.g1}", "${st.g2}"]`);
+  if (st.bgimg.trim()) out.push(`  background_image: ${q(st.bgimg)}`);
+  if (c.socials.length) { out.push('', 'socials:'); c.socials.forEach(s => out.push(`  - { label: ${q(s.label || domain(s.url) || 'Link')}, url: ${q(s.url)} }`)); }
+  if (c.sections.length) {
+    out.push('', 'sections:');
+    c.sections.forEach(s => {
+      out.push(`  - title: ${q(s.title)}`, '    links:');
+      s.links.forEach(l => out.push(`      - { title: ${q(l.title)}, url: ${q(l.url)}${l.description.trim() ? `, description: ${q(l.description)}` : ''}${l.featured ? ', featured: true' : ''} }`));
+    });
+  }
+  return out.join('\n') + '\n';
+}
+
+/* ---------- preview ---------- */
+const loadedFonts = new Set();
+function preview(c) {
+  const st = c.style, t = D.themes[st.theme], pv = $('pv');
+  const font = D.fonts[st.font];
+  if (font.url && !loadedFonts.has(font.url)) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = font.url; document.head.appendChild(l); loadedFonts.add(font.url); }
+  Object.assign(pv.dataset, { theme: st.theme, effect: st.effect === 'auto' ? t.effect : st.effect, buttons: st.buttons, layout: st.layout, avatar: st.avatar, anim: st.animation });
+  const vars = [];
+  if (!(st.theme === 'terminal' && st.font === 'inter')) vars.push(`--font:${font.stack}`);
+  if (st.useAccent) vars.push(`--accent:${st.accent}`);
+  if (st.useGrad) vars.push(`--page-bg:linear-gradient(160deg,${st.g1},${st.g2})`);
+  const bg = /^https:\/\/[^\s"'()\\;]+$/.test(st.bgimg.trim()) ? st.bgimg.trim() : '';
+  if (bg) vars.push(`--bg-img:url(${bg})`);
+  pv.setAttribute('style', vars.join(';'));
+  pv.classList.toggle('has-bgimg', !!bg);
+  const name = c.name.trim() || 'Your Name', ini = esc(name[0]);
+  const av = c.avatar.trim().startsWith('https://') ? `<img class="avatar" src="${esc(c.avatar.trim())}" alt="" data-fb="${ini}">` : `<div class="avatar avatar--initial">${ini}</div>`;
+  let i = 8;
+  pv.innerHTML = `<div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="pv-scroll"><div class="wrap"><header class="hero">
+    <div class="avatar-wrap anim" style="--i:0">${av}</div>
+    <h1 class="anim" style="--i:1">${esc(name)}</h1>
+    ${c.headline.trim() ? `<p class="headline anim" style="--i:2">${esc(c.headline)}</p>` : ''}
+    ${c.bio.trim() ? `<p class="bio anim" style="--i:3">${esc(c.bio)}</p>` : ''}
+    ${c.location.trim() ? `<p class="loc anim" style="--i:3">📍 ${esc(c.location)}</p>` : ''}
+    ${c.socials.length ? `<nav class="socials">${c.socials.map((s, k) => `<a class="anim" style="--i:${k + 4}" title="${esc(s.label)}">${s.url.startsWith('http') ? `<img class="sico" src="https://icons.duckduckgo.com/ip3/${esc(domain(s.url))}.ico" alt="" data-fb="${esc((s.label || '?')[0])}">` : '✉'}</a>`).join('')}</nav>` : ''}
+  </header>
+  ${c.about.trim() ? `<section class="about anim" style="--i:7"><h2>About ${esc(name.split(' ')[0])}</h2><p>${esc(c.about)}</p></section>` : ''}
+  ${c.sections.map(s => `<section class="block">${s.title ? `<h2 class="anim" style="--i:${i}">${esc(s.title)}</h2>` : ''}<ul class="links">${s.links.map(l => `<li class="anim" style="--i:${++i}"><a class="link${l.featured ? ' link--featured' : ''}">${l.url.startsWith('http') ? `<img class="ico" src="https://icons.duckduckgo.com/ip3/${esc(domain(l.url))}.ico" alt="" data-fb="${esc(l.title[0])}">` : '<span class="ico ico--txt">✉</span>'}<span class="txt"><span class="t">${esc(l.title)}</span><span class="d">${esc(l.description || domain(l.url))}</span></span><span class="arrow">→</span></a></li>`).join('')}</ul></section>`).join('')}
+  </div><footer class="foot"><p>${esc(D.site_url.replace(/^https?:\/\//, ''))}/${esc(c.username || 'username')}</p></footer></div>`;
+}
+
+/* ---------- validation + output ---------- */
+function validate(c) {
+  const u = c.username.trim(), m = $('u-msg');
+  let err = '';
+  if (!u) err = 'Choose a username.';
+  else if (!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])$/.test(u)) err = 'Use 2-30 lowercase letters, numbers or hyphens (no hyphen at the start or end).';
+  else if (D.reserved.includes(u)) err = 'That username is reserved.';
+  const uErr = err;
+  if (!c.name.trim()) err = err || 'Add your name.';
+  if (!c.sections.length && !c.socials.length) err = err || 'Add at least one link with a valid URL.';
+  const taken = D.taken.includes(u);
+  m.innerHTML = uErr ? `<span class="err">${esc(uErr)}</span>` : u ? (taken ? `<span class="err">"${esc(u)}" is taken. If it's yours, publishing will open an edit.</span>` : `<span class="ok">✓ ${esc(D.site_url)}/${esc(u)}/ is available</span>`) : `Your page: ${esc(D.site_url)}/<b>${esc(u || 'username')}</b>/`;
+  document.querySelectorAll('.u-echo').forEach(e => e.textContent = u || 'username');
+  return { err, taken };
+}
+
+function update(lists = true) {
+  if (lists) renderLists();
+  document.querySelectorAll('.sw').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === S.style.theme));
+  const c = clean();
+  preview(c);
+  $('yaml').value = toYaml(c);
+  validate(c);
+  try { localStorage.setItem(STORE, JSON.stringify(S)); } catch {}
+}
+
+$('publish-btn').addEventListener('click', () => {
+  const c = clean(), { err, taken } = validate(c), box = $('pub-err');
+  box.hidden = !err; box.textContent = err;
+  if (err) { box.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+  const u = c.username.trim(), file = `profiles/${u}.yml`;
+  if (taken) {
+    navigator.clipboard?.writeText(toYaml(c)).catch(() => {});
+    alert('Your YAML is copied. On GitHub, select all, paste, then propose the change.');
+    window.open(`https://github.com/${D.repo}/edit/${D.branch}/${file}`, '_blank', 'noopener');
+  } else {
+    window.open(`https://github.com/${D.repo}/new/${D.branch}?filename=${encodeURIComponent(file)}&value=${encodeURIComponent(toYaml(c))}`, '_blank', 'noopener');
+  }
+});
+$('copy-btn').addEventListener('click', async e => { try { await navigator.clipboard.writeText($('yaml').value); e.target.textContent = '✓ Copied'; } catch { $('yaml').select(); } setTimeout(() => e.target.textContent = 'Copy YAML', 1500); });
+$('dl-btn').addEventListener('click', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('yaml').value], { type: 'text/yaml' })); a.download = `${S.username.trim() || 'profile'}.yml`; a.click(); URL.revokeObjectURL(a.href); });
+$('reset-btn').addEventListener('click', () => { if (confirm('Clear the form and start over?')) { S = blank(); fields.forEach(k => $(k).value = ''); try { localStorage.removeItem(STORE); } catch {} update(); } });
+
+update();
+})();
+</script>
+{% endblock %}

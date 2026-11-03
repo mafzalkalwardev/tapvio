@@ -1,0 +1,36 @@
+# Easiest way: use the visual builder at <site_url>/create/ and it writes this file for you.
+# Or copy this file to profiles/<your-username>.yml (files starting with "_" are ignored).
+# Username: 2-30 chars, lowercase letters, numbers and hyphens. Your page: <site_url>/<username>/
+username: your-username
+name: "Your Full Name"
+headline: "What you do, in a few words"          # optional
+bio: "One or two lines shown under your name (max 200 characters)."
+about: >-                                         # optional, but good for SEO
+  A short paragraph about you and what visitors will find here.
+location: "City, Country"                        # optional
+avatar: "https://github.com/your-github.png"     # any https image URL, or avatars/<username>.jpg
+job_title: ""                                    # optional
+works_for: { name: "", url: "" }                 # optional
+keywords: []                                     # optional, e.g. [web design, Lahore]
+
+style:                                           # every option is optional
+  theme: aurora        # aurora midnight light glass neon ocean forest sunset rose sand minimal terminal
+  accent: ""           # override the theme colour, e.g. "#ff5c8a"
+  font: inter          # inter poppins space-grotesk outfit playfair jetbrains-mono nunito system
+  buttons: rounded     # rounded pill square outline glass brutal
+  layout: list         # list | grid (two columns on wide screens)
+  avatar: circle       # circle rounded square
+  effect: auto         # auto aurora grid particles waves none  (animated background)
+  animation: rise      # rise fade pop slide none  (how links appear)
+  gradient: []         # optional custom background, e.g. ["#1a1a2e", "#16213e", "#0f3460"]
+  background_image: "" # optional https image URL (darkened automatically for readability)
+
+socials:                                         # round icons under your name; max 12
+  - { label: "GitHub", url: "https://github.com/you" }
+  - { label: "Email", url: "mailto:you@example.com" }
+
+sections:                                        # max 15 sections, 200 links total
+  - title: "Links"
+    links:
+      - { title: "My website", url: "https://example.com", featured: true }
+      - { title: "Blog", url: "https://example.com/blog", description: "Optional one-liner" }
