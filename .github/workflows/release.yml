@@ -1,0 +1,38 @@
+name: Release
+
+# Push a tag like v1.2.0 and this publishes a GitHub release.
+# The release notes are that version's section of CHANGELOG.md, and the brand kit is attached.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract release notes from CHANGELOG.md
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { found = 1; next }
+            found && /^## \[/ { exit }
+            found && /^\[[0-9.]+\]: / { exit }
+            found { print }
+          ' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then echo "No CHANGELOG.md section for $version" >&2; exit 1; fi
+          printf '\n---\n**Live site:** https://mafzalkalwardev.github.io/tapvio/ · **Create a page:** https://mafzalkalwardev.github.io/tapvio/create/ · **Guide:** https://mafzalkalwardev.github.io/tapvio/guide/\n' >> notes.md
+      - name: Package brand kit
+        run: cd static/brand && zip -q -r "$GITHUB_WORKSPACE/tapvio-brand-kit.zip" .
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "Tapvio $GITHUB_REF_NAME" \
+            --notes-file notes.md \
+            --latest \
+            tapvio-brand-kit.zip

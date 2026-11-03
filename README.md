@@ -187,6 +187,10 @@ free link in bio, link in bio tool, Linktree alternative, free Linktree alternat
 
 **Suggested GitHub topics:** `link-in-bio`, `linktree-alternative`, `linktree`, `bio-link`, `personal-website`, `digital-business-card`, `github-pages`, `static-site-generator`, `seo`, `python`, `jinja2`, `open-source`.
 
+## Releases
+
+See [CHANGELOG.md](CHANGELOG.md) and the [releases page](https://github.com/mafzalkalwardev/tapvio/releases). To publish a release, add a section for the new version to `CHANGELOG.md`, then push a tag: `git tag v1.1.0 && git push origin v1.1.0`. The release workflow publishes the notes and attaches the brand kit.
+
 ## License
 
 MIT © INDUS Web Agency. Fonts are © their authors under the SIL Open Font License. Inter is used for share images.
