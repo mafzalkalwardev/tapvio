@@ -1,0 +1,36 @@
+# Demo profile used by the homepage theme gallery and the builder's "Load example".
+# Rendered at /demo/ with noindex; never listed in the directory or sitemap.
+username: sana-malik
+name: "Sana Malik"
+headline: "Product designer and illustrator"
+bio: "I design calm, useful apps for health and finance teams. Open for freelance work from January."
+about: >-
+  Eight years designing mobile and web products, most recently at a fintech startup in Karachi.
+  I run a small studio with two other designers and draw editorial illustrations on the side.
+location: "Karachi, Pakistan"
+avatar: "avatars/demo-sana.svg"
+cover: ""
+job_title: "Product Designer"
+works_for: { name: "Malik Studio", url: "https://example.com" }
+style:
+  theme: resume
+socials:
+  - { label: "Dribbble", url: "https://dribbble.com/" }
+  - { label: "LinkedIn", url: "https://www.linkedin.com/" }
+  - { label: "Instagram", url: "https://www.instagram.com/" }
+  - { label: "Email", url: "mailto:hello@example.com" }
+sections:
+  - title: "Work with me"
+    links:
+      - { title: "Book a 20-minute intro call", url: "https://cal.com/", featured: true }
+      - { title: "Portfolio", url: "https://www.behance.net/", description: "Case studies from 2019 to now" }
+      - { title: "Rates and availability", url: "https://www.notion.so/" }
+  - title: "Recent projects"
+    links:
+      - { title: "Redesigning a savings app for first-time users", url: "https://medium.com/" }
+      - { title: "Clinic booking flow, from 9 steps to 4", url: "https://dribbble.com/" }
+      - { title: "Illustrations for Dawn's weekend edition", url: "https://www.instagram.com/" }
+  - title: "Shop"
+    links:
+      - { title: "Print shop", url: "https://www.etsy.com/" }
+      - { title: "Figma UI kit", url: "https://gumroad.com/" }

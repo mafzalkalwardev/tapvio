@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set active = 'guide' %}
+{% block title %}How to use Tapvio: create a free link-in-bio page | {{ cfg.site_name }}{% endblock %}
+{% block meta %}
+<meta name="description" content="Step-by-step guide to Tapvio: create and publish a free link-in-bio page, choose a theme, edit it later, and get your page indexed by Google.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to use Tapvio">
+<meta property="og:description" content="Create and publish a free link-in-bio page that search engines can find.">
+<meta property="og:url" content="{{ page_url }}">
+<meta property="og:image" content="{{ cfg.site_url }}/assets/brand/tapvio-social.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"HowTo","name":"Create a free link-in-bio page with Tapvio","url":{{ page_url | tojson }},
+ "tool":[{"@type":"HowToTool","name":"A free GitHub account"}],
+ "step":[{"@type":"HowToStep","name":"Fill in the builder","url":{{ (page_url ~ '#create') | tojson }}},
+         {"@type":"HowToStep","name":"Publish on GitHub","url":{{ (page_url ~ '#publish') | tojson }}},
+         {"@type":"HowToStep","name":"Share your page","url":{{ (page_url ~ '#seo') | tojson }}}]}
+</script>
+{% endblock %}
+{% block content %}
+<div class="wrap doc">
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>{% for h in guide_toc %}<li><a href="#{{ h.id }}">{{ h.name }}</a></li>{% endfor %}</ol>
+  </nav>
+  <article class="prose">
+    {{ guide_html | safe }}
+    <p style="margin-top:48px"><a class="btn btn--brand" href="{{ cfg.site_url }}/create/">Create your page</a></p>
+  </article>
+</div>
+{% endblock %}

@@ -1,15 +1,18 @@
-{% extends "base.html" %}
-{% block title %}{{ title }}{% endblock %}
-{% block meta %}
+<!DOCTYPE html>
+<html lang="{{ cfg.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }}</title>
 <meta name="description" content="{{ description }}">
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="robots" content="{{ 'noindex, nofollow' if noindex else 'index, follow, max-image-preview:large, max-snippet:-1' }}">
 <meta name="author" content="{{ p.name }}">
 {% if p.keywords %}<meta name="keywords" content="{{ p.keywords | join(', ') }}">{% endif %}
-<meta name="theme-color" content="{{ s.accent or '#0f1222' }}">
+<meta name="theme-color" content="{{ t.og.bg }}">
 <link rel="canonical" href="{{ page_url }}">
 <meta property="og:type" content="profile">
 <meta property="og:site_name" content="{{ cfg.site_name }}">
-<meta property="og:title" content="{{ p.name }}{% if p.headline %} - {{ p.headline }}{% endif %}">
+<meta property="og:title" content="{{ p.name }}{% if p.headline %}, {{ p.headline }}{% endif %}">
 <meta property="og:description" content="{{ description }}">
 <meta property="og:url" content="{{ page_url }}">
 {% if og_image %}<meta property="og:image" content="{{ og_image }}">
@@ -20,108 +23,129 @@
 <meta name="twitter:title" content="{{ p.name }}">
 <meta name="twitter:description" content="{{ description }}">
 {% if og_image %}<meta name="twitter:image" content="{{ og_image }}">{% endif %}
-<script type="application/ld+json">
+{% if cfg.google_site_verification %}<meta name="google-site-verification" content="{{ cfg.google_site_verification }}">{% endif %}
+{% if cfg.bing_site_verification %}<meta name="msvalidate.01" content="{{ cfg.bing_site_verification }}">{% endif %}
+<link rel="icon" href="{{ cfg.site_url }}/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{% if s.font_url %}<link rel="stylesheet" href="{{ s.font_url }}">{% endif %}
+<style>{{ css | safe }}</style>
+{% if json_ld %}<script type="application/ld+json">
 {{ json_ld | safe }}
+</script>{% endif %}
+<script>
+// Missing favicon or avatar -> letter badge instead of a broken image.
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (img.tagName !== 'IMG' || !img.dataset.fb) return;
+  const el = document.createElement('span');
+  el.className = img.className + (img.classList.contains('tv-avatar') ? ' tv-avatar--initial' : ' tv-ico--txt');
+  el.setAttribute('aria-hidden', 'true');
+  el.textContent = img.dataset.fb;
+  img.replaceWith(el);
+}, true);
 </script>
-{% endblock %}
+</head>
+<body class="tv" data-theme="{{ s.theme }}" data-mode="{{ s.mode }}" data-avatar="{{ s.avatar }}" data-icons="{{ s.icons }}"{% if s.css %} style="{{ s.css }}"{% endif %}>
+<a class="tv-skip" href="#main">Skip to links</a>
+<div class="tv-page">
+  <div class="tv-window-bar" aria-hidden="true"><span class="tv-window-title">{{ p.name }}</span><span class="tv-window-btns"><i></i><i></i><i></i></span></div>
+  <p class="tv-terminal-only tv-prompt" aria-hidden="true"><b>{{ p.username }}@tapvio</b>:<i>~</i>$ whoami</p>
 
-{% block content %}
-<header class="hero">
-  <div class="avatar-wrap anim" style="--i:0">
-  {% if avatar_url %}
-    <img class="avatar" src="{{ avatar_url }}" alt="Photo of {{ p.name }}" data-fb="{{ p.name[:1] }}" width="112" height="112" fetchpriority="high">
-  {% else %}
-    <div class="avatar avatar--initial" aria-hidden="true">{{ p.name[:1] }}</div>
-  {% endif %}
-  </div>
-  <h1 class="anim" style="--i:1">{{ p.name }}{% if p.verified %} <span class="badge" title="Verified profile" aria-label="Verified">✓</span>{% endif %}</h1>
-  {% if p.headline %}<p class="headline anim" style="--i:2">{{ p.headline }}</p>{% endif %}
-  {% if p.bio %}<p class="bio anim" style="--i:3">{{ p.bio }}</p>{% endif %}
-  {% if p.location %}<p class="loc anim" style="--i:3">📍 {{ p.location }}</p>{% endif %}
-
-  {% if p.socials %}
-  <nav class="socials" aria-label="Social profiles">
-    {% for x in p.socials %}
-    <a class="anim" style="--i:{{ loop.index + 3 }}" href="{{ x.url }}"{% if x.rel %} rel="{{ x.rel }}" target="_blank"{% endif %} title="{{ x.label }}" aria-label="{{ x.label }}">
-      {% if x.url.startswith('http') %}<img class="sico" src="https://icons.duckduckgo.com/ip3/{{ x.url | domain }}.ico" alt="" data-fb="{{ x.label[:1] }}" width="20" height="20" loading="lazy">
-      {% elif x.url.startswith('mailto') %}<span aria-hidden="true">✉</span>
-      {% else %}<span aria-hidden="true">☎</span>{% endif %}
-    </a>
-    {% endfor %}
-  </nav>
-  {% endif %}
-
-  <div class="tools anim" style="--i:6">
-    <button type="button" class="btn" id="share" hidden>↗ Share</button>
-    {% if p.link_count > 12 %}
-    <label class="search"><span class="sr">Search links</span>
-      <input id="q" type="search" placeholder="Search {{ p.link_count }} links…" autocomplete="off">
-    </label>
+  <header class="tv-head">
+    {% if p.cover %}<div class="tv-cover"><img src="{{ p.cover_url }}" alt="" fetchpriority="high"></div>{% else %}<div class="tv-cover tv-cover--blank"{% if avatar_url %} style="--cover-img:url('{{ avatar_url }}')"{% endif %}></div>{% endif %}
+    <div class="tv-id" data-handle="{{ cfg.site_url.split('://',1)[-1] }}/{{ p.username }}">
+      {% if avatar_url %}<img class="tv-avatar" src="{{ avatar_url }}" alt="{{ p.name }}" data-fb="{{ p.name[:1] }}" width="88" height="88">
+      {% else %}<span class="tv-avatar tv-avatar--initial" aria-hidden="true">{{ p.name[:1] }}</span>{% endif %}
+      <div class="tv-idtext">
+        <h1 class="tv-name">{{ p.name }}{% if p.verified %}<svg class="tv-verified" viewBox="0 0 20 20" role="img" aria-label="Verified"><path fill="currentColor" d="M10 0l2.4 2.1 3.2-.3.7 3.1 2.8 1.6-1.3 2.9 1.3 2.9-2.8 1.6-.7 3.1-3.2-.3L10 20l-2.4-2.1-3.2.3-.7-3.1L.9 13.5l1.3-2.9L.9 7.6l2.8-1.6.7-3.1 3.2.3z"/><path fill="var(--bg)" d="M8.6 13.6 5.4 10.4l1.3-1.3 1.9 1.9 4.7-4.7 1.3 1.3z"/></svg>{% endif %}</h1>
+        {% if p.headline %}<p class="tv-headline">{{ p.headline }}</p>{% endif %}
+        {% if p.location %}<p class="tv-loc">{{ p.location }}</p>{% endif %}
+      </div>
+    </div>
+    {% if p.bio %}<p class="tv-bio">{{ p.bio }}</p>{% endif %}
+    {% if p.socials %}
+    <ul class="tv-social" aria-label="Profiles">
+      {% for x in p.socials %}
+      <li><a href="{{ x.url }}"{% if x.rel %} rel="{{ x.rel }}" target="_blank"{% endif %}>{% if x.url.startswith('http') %}<img src="https://icons.duckduckgo.com/ip3/{{ x.url | domain }}.ico" alt="" data-fb="{{ x.label[:1] }}" width="18" height="18" loading="lazy">{% endif %}{{ x.label }}</a></li>
+      {% endfor %}
+    </ul>
     {% endif %}
-  </div>
-</header>
+    <div class="tv-actions">
+      {% if p.vcard %}<a class="tv-btn tv-btn--primary" href="contact.vcf" download="{{ p.username }}.vcf">Save contact</a>{% endif %}
+      <button type="button" class="tv-btn" id="tv-share" hidden>Share</button>
+      {% if p.link_count > 12 %}<label class="tv-search"><span class="tv-sr">Search links</span><input id="tv-q" type="search" placeholder="Search {{ p.link_count }} links" autocomplete="off"></label>{% endif %}
+    </div>
+  </header>
 
-{% if p.about %}
-<section class="about anim" style="--i:7" aria-labelledby="about-h">
-  <h2 id="about-h">About {{ p.name.split(' ')[0] }}</h2>
-  <p>{{ p.about }}</p>
-</section>
-{% endif %}
-
-{% set n = namespace(i=8) %}
-{% for sec in p.sections %}
-<section class="block" aria-labelledby="s{{ loop.index }}">
-  {% if sec.title %}<h2 id="s{{ loop.index }}" class="anim" style="--i:{{ n.i }}">{{ sec.title }}</h2>{% endif %}
-  <ul class="links">
-    {% for l in sec.links %}
-    {% set n.i = n.i + 1 %}
-    <li class="anim" style="--i:{{ n.i }}">
-      <a class="link{% if l.featured %} link--featured{% endif %}" href="{{ l.url }}"{% if l.rel %} rel="{{ l.rel }}" target="_blank"{% endif %}>
-        {% if l.url.startswith('http') %}<img class="ico" src="https://icons.duckduckgo.com/ip3/{{ l.url | domain }}.ico" alt="" data-fb="{{ l.title[:1] }}" width="26" height="26" loading="lazy">{% else %}<span class="ico ico--txt" aria-hidden="true">✉</span>{% endif %}
-        <span class="txt">
-          <span class="t">{{ l.title }}</span>
-          {% if l.description %}<span class="d">{{ l.description }}</span>{% elif l.url.startswith('http') %}<span class="d">{{ l.url | domain }}</span>{% endif %}
-        </span>
-        <span class="arrow" aria-hidden="true">→</span>
-      </a>
-    </li>
+  <main id="main" class="tv-body">
+    {% if p.about %}
+    <section class="tv-about" aria-labelledby="tv-about-h">
+      <h2 class="tv-h" id="tv-about-h">About</h2>
+      <p>{{ p.about }}</p>
+    </section>
+    {% endif %}
+    {% for sec in p.sections %}
+    <section class="tv-sec" aria-labelledby="tv-s{{ loop.index }}">
+      <h2 class="tv-h" id="tv-s{{ loop.index }}">{{ sec.title or 'Links' }}</h2>
+      <ul class="tv-links">
+        {% for l in sec.links %}
+        <li class="tv-item{% if l.featured %} is-featured{% endif %}">
+          <a class="tv-link" href="{{ l.url }}"{% if l.rel %} rel="{{ l.rel }}" target="_blank"{% endif %}>
+            {% if l.url.startswith('http') %}<img class="tv-ico" src="https://icons.duckduckgo.com/ip3/{{ l.url | domain }}.ico" alt="" data-fb="{{ l.title[:1] }}" width="18" height="18" loading="lazy">{% else %}<span class="tv-ico tv-ico--txt" aria-hidden="true">@</span>{% endif %}
+            <span class="tv-lt">{{ l.title }}{% if l.description %}<span class="tv-desc">{{ l.description }}</span>{% endif %}</span>
+            <span class="tv-ld">{{ l.url | domain if l.url.startswith('http') else l.url.split(':', 1)[1] }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
     {% endfor %}
-  </ul>
-</section>
-{% endfor %}
-<p class="empty" id="empty" hidden>No links match your search.</p>
-<p class="updated">Last updated <time datetime="{{ modified }}">{{ modified }}</time></p>
-{% endblock %}
+    <p class="tv-empty" id="tv-empty" hidden>No links match that search.</p>
+    <p class="tv-terminal-only tv-cursor" aria-hidden="true">$ <span></span></p>
+  </main>
 
-{% block scripts %}
+  <footer class="tv-foot">
+    <span>Updated <time datetime="{{ modified }}">{{ modified }}</time></span>
+    <a href="{{ cfg.site_url }}/">Made with {{ cfg.site_name }}. Make your own page, free.</a>
+  </footer>
+</div>
 <script>
 (() => {
-  const share = document.getElementById('share');
+  const share = document.getElementById('tv-share');
   if (share) {
     share.hidden = false;
     share.addEventListener('click', async () => {
       try {
-        if (navigator.share) await navigator.share({ title: document.title, url: location.href });
-        else { await navigator.clipboard.writeText(location.href); share.textContent = '✓ Link copied'; setTimeout(() => share.textContent = '↗ Share', 1600); }
+        if (navigator.share) await navigator.share({ title: document.title, url: location.href.split('?')[0] });
+        else { await navigator.clipboard.writeText(location.href.split('?')[0]); share.textContent = 'Link copied'; setTimeout(() => share.textContent = 'Share', 1800); }
       } catch (e) {}
     });
   }
-  const q = document.getElementById('q');
-  if (!q) return;
-  const blocks = [...document.querySelectorAll('.block')], empty = document.getElementById('empty');
-  q.addEventListener('input', () => {
-    const term = q.value.trim().toLowerCase();
-    let shown = 0;
-    blocks.forEach(b => {
-      let any = false;
-      b.querySelectorAll('li').forEach(li => {
-        const hit = !term || li.textContent.toLowerCase().includes(term);
-        li.hidden = !hit; if (hit) { any = true; shown++; }
-      });
-      b.hidden = !any;
+  const q = document.getElementById('tv-q');
+  if (q) {
+    const secs = [...document.querySelectorAll('.tv-sec')], empty = document.getElementById('tv-empty');
+    q.addEventListener('input', () => {
+      const term = q.value.trim().toLowerCase(); let shown = 0;
+      secs.forEach(s => { let any = false;
+        s.querySelectorAll('.tv-item').forEach(li => { const hit = !term || li.textContent.toLowerCase().includes(term); li.hidden = !hit; if (hit) { any = true; shown++; } });
+        s.hidden = !any; });
+      empty.hidden = shown > 0;
     });
-    empty.hidden = shown > 0;
-  });
+  }
+  // Theme preview for the gallery: ?theme=<name>&mode=<light|dark>. Does not change the canonical page.
+  const params = new URLSearchParams(location.search), b = document.body;
+  const themes = {{ theme_fonts | safe }};
+  const t = params.get('theme');
+  if (t && Object.hasOwn(themes, t) && t !== b.dataset.theme) {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = '{{ cfg.site_url }}/assets/themes/' + t + '.css';
+    css.onload = () => { b.dataset.theme = t; b.removeAttribute('style'); };
+    if (themes[t]) { const font = document.createElement('link'); font.rel = 'stylesheet'; font.href = themes[t]; document.head.append(font); }
+    document.head.append(css);
+  }
+  const m = params.get('mode');
+  if (m === 'light' || m === 'dark') b.dataset.mode = m;
 })();
 </script>
-{% endblock %}
+</body>
+</html>

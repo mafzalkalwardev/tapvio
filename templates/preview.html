@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="{{ cfg.lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preview | {{ cfg.site_name }}</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>{{ base_css | safe }}</style>
+{% for key in themes %}<link rel="stylesheet" href="{{ cfg.site_url }}/assets/themes/{{ key }}.css">
+{% endfor %}
+<script>
+document.addEventListener('error', e => {
+  const img = e.target;
+  if (img.tagName !== 'IMG' || !img.dataset.fb) return;
+  const el = document.createElement('span');
+  el.className = img.className + (img.classList.contains('tv-avatar') ? ' tv-avatar--initial' : ' tv-ico--txt');
+  el.textContent = img.dataset.fb;
+  img.replaceWith(el);
+}, true);
+</script>
+</head>
+<body class="tv" data-theme="resume" data-mode="auto" data-avatar="circle" data-icons="on">
+<div id="root"></div>
+<script id="builder-data" type="application/json">{{ builder | safe }}</script>
+<script>
+(() => {
+const D = JSON.parse(document.getElementById('builder-data').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const domain = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+const icon = (u, label) => u.startsWith('http') ? `<img class="tv-ico" src="https://icons.duckduckgo.com/ip3/${esc(domain(u))}.ico" alt="" data-fb="${esc((label || '?')[0])}" width="18" height="18">` : '<span class="tv-ico tv-ico--txt" aria-hidden="true">@</span>';
+const loaded = new Set();
+function font(url) { if (!url || loaded.has(url)) return; const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = url; document.head.appendChild(l); loaded.add(url); }
+const contrast = h => { const n = [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255).map(c => c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4); return .2126 * n[0] + .7152 * n[1] + .0722 * n[2] > .35 ? '#000000' : '#ffffff'; };
+
+function render(c) {
+  const st = c.style, t = D.themes[st.theme] || D.themes.resume, b = document.body;
+  b.dataset.theme = st.theme; b.dataset.mode = t.modes ? st.mode : 'light'; b.dataset.avatar = st.avatar; b.dataset.icons = st.icons;
+  const vars = [];
+  if (st.accent) vars.push(`--accent:${st.accent}`, `--accent-ink:${contrast(st.accent)}`);
+  if (st.font && st.font !== 'default' && D.fonts[st.font]) { vars.push(`--font-body:${D.fonts[st.font].stack}`, `--font-display:${D.fonts[st.font].stack}`); font(D.fonts[st.font].url); }
+  else font(t.font);
+  b.setAttribute('style', vars.join(';'));
+  const name = c.name || 'Your name', ini = esc(name[0]);
+  const handle = D.site_url.split('://')[1] + '/' + (c.username || 'username');
+  const hasContact = [...c.socials, ...c.sections.flatMap(s => s.links)].some(l => /^(mailto:|tel:|https:\/\/wa\.me\/)/.test(l.url));
+  const count = c.socials.length + c.sections.reduce((n, s) => n + s.links.length, 0);
+  document.getElementById('root').innerHTML = `
+  <div class="tv-page">
+    <div class="tv-window-bar" aria-hidden="true"><span class="tv-window-title">${esc(name)}</span><span class="tv-window-btns"><i></i><i></i><i></i></span></div>
+    <p class="tv-terminal-only tv-prompt" aria-hidden="true"><b>${esc(c.username || 'you')}@tapvio</b>:<i>~</i>$ whoami</p>
+    <header class="tv-head">
+      ${c.cover ? `<div class="tv-cover"><img src="${esc(c.cover)}" alt=""></div>` : `<div class="tv-cover tv-cover--blank"${c.avatar ? ` style="--cover-img:url('${esc(c.avatar)}')"` : ''}></div>`}
+      <div class="tv-id" data-handle="${esc(handle)}">
+        ${c.avatar ? `<img class="tv-avatar" src="${esc(c.avatar)}" alt="" data-fb="${ini}">` : `<span class="tv-avatar tv-avatar--initial">${ini}</span>`}
+        <div class="tv-idtext">
+          <h1 class="tv-name">${esc(name)}</h1>
+          ${c.headline ? `<p class="tv-headline">${esc(c.headline)}</p>` : ''}
+          ${c.location ? `<p class="tv-loc">${esc(c.location)}</p>` : ''}
+        </div>
+      </div>
+      ${c.bio ? `<p class="tv-bio">${esc(c.bio)}</p>` : ''}
+      ${c.socials.length ? `<ul class="tv-social">${c.socials.map(s => `<li><a href="#">${s.url.startsWith('http') ? `<img src="https://icons.duckduckgo.com/ip3/${esc(domain(s.url))}.ico" alt="" data-fb="${esc((s.label || '?')[0])}" width="18" height="18">` : ''}${esc(s.label)}</a></li>`).join('')}</ul>` : ''}
+      <div class="tv-actions">
+        ${hasContact ? '<a class="tv-btn tv-btn--primary" href="#">Save contact</a>' : ''}
+        <button type="button" class="tv-btn">Share</button>
+        ${count > 12 ? `<label class="tv-search"><input type="search" placeholder="Search ${count} links"></label>` : ''}
+      </div>
+    </header>
+    <main class="tv-body">
+      ${c.about ? `<section class="tv-about"><h2 class="tv-h">About</h2><p>${esc(c.about)}</p></section>` : ''}
+      ${c.sections.map(s => `<section class="tv-sec"><h2 class="tv-h">${esc(s.title || 'Links')}</h2><ul class="tv-links">${s.links.map(l => `
+        <li class="tv-item${l.featured ? ' is-featured' : ''}"><a class="tv-link" href="#">${icon(l.url, l.title)}<span class="tv-lt">${esc(l.title)}${l.description ? `<span class="tv-desc">${esc(l.description)}</span>` : ''}</span><span class="tv-ld">${esc(l.url.startsWith('http') ? domain(l.url) : l.url.split(':')[1] || '')}</span></a></li>`).join('')}</ul></section>`).join('')}
+      <p class="tv-terminal-only tv-cursor" aria-hidden="true">$ <span></span></p>
+    </main>
+    <footer class="tv-foot"><span>Preview</span><span>${esc(handle)}</span></footer>
+  </div>`;
+}
+document.addEventListener('click', e => { if (e.target.closest('a')) e.preventDefault(); });
+addEventListener('message', e => {
+  if (e.origin !== location.origin || !e.data || e.data.type !== 'tapvio-preview') return;
+  render(e.data.profile);
+});
+parent.postMessage({ type: 'tapvio-preview-ready' }, location.origin);
+})();
+</script>
+</body>
+</html>

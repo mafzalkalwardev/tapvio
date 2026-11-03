@@ -1,0 +1,28 @@
+/* Résumé: set like a well-made CV. Section names in a left column, links as quiet rows. */
+[data-theme=resume]{--bg:light-dark(#ffffff,#0f1420);--fg:light-dark(#141a2a,#e5e8f0);--muted:light-dark(#5a6276,#98a1b6);
+  --line:light-dark(#e3e6ed,#252d40);--surface:var(--bg);--accent:light-dark(#2240c4,#8fa3ff);--accent-ink:light-dark(#fff,#0f1420);
+  --font-body:"Hanken Grotesk",system-ui,sans-serif;--font-display:var(--font-body);--radius:6px;--avatar:76px}
+[data-theme=resume] .tv-page{max-width:780px;padding-top:72px}
+[data-theme=resume] .tv-name{font-size:2.1rem;font-weight:700;letter-spacing:-.02em}
+[data-theme=resume] .tv-headline{font-size:1.08rem;color:var(--fg)}
+[data-theme=resume] .tv-bio{font-size:1.06rem;margin-top:24px}
+[data-theme=resume] .tv-social{gap:6px 20px}
+[data-theme=resume] .tv-social a{border:0;padding:0;border-radius:0;font-size:.95rem;font-weight:500;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-decoration-thickness:1.5px}
+[data-theme=resume] .tv-social a:hover{text-decoration-color:var(--accent);color:var(--accent)}
+[data-theme=resume] .tv-social img{display:none}
+[data-theme=resume] .tv-body{margin-top:48px;border-top:2px solid var(--fg)}
+[data-theme=resume] .tv-sec,[data-theme=resume] .tv-about{display:grid;grid-template-columns:170px minmax(0,1fr);gap:0 28px;margin:0;padding:22px 0;border-bottom:1px solid var(--line)}
+[data-theme=resume] .tv-h{margin:9px 0 0;color:var(--fg);font-size:.95rem;font-weight:700;line-height:1.35;align-self:start;position:sticky;top:20px}
+[data-theme=resume] .tv-about p{margin-top:7px}
+[data-theme=resume] .tv-links{gap:0}
+[data-theme=resume] .tv-link{border:0;border-radius:0;background:none;padding:9px 0;min-height:0;gap:10px}
+[data-theme=resume] .tv-item+.tv-item .tv-link{border-top:1px dashed var(--line)}
+[data-theme=resume] .tv-lt{font-weight:500}
+[data-theme=resume] .tv-link:hover .tv-lt{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+[data-theme=resume] .is-featured .tv-lt{font-weight:700;color:var(--accent)}
+[data-theme=resume] .tv-ico{opacity:.85}
+[data-theme=resume] .tv-foot{border-top:0}
+@media (max-width:640px){
+  [data-theme=resume] .tv-sec,[data-theme=resume] .tv-about{grid-template-columns:1fr}
+  [data-theme=resume] .tv-h{position:static;margin:0 0 4px}
+}

@@ -1,0 +1,33 @@
+/* Studio: the name set huge, links as large lines of type. Black and white, accent only on interaction. */
+[data-theme=studio]{color-scheme:dark;--bg:#000;--fg:#f1f1ef;--muted:#8b8b86;--line:#2a2a28;--surface:#000;--accent:#f1f1ef;--accent-ink:#000;
+  --font-body:"Bricolage Grotesque",system-ui,sans-serif;--font-display:var(--font-body);--radius:0;--avatar:58px}
+[data-theme=studio] .tv-page{max-width:1040px;padding:48px 32px 32px}
+[data-theme=studio] .tv-id{flex-direction:column;align-items:flex-start;gap:28px}
+[data-theme=studio] .tv-avatar{filter:grayscale(1) contrast(1.05)}
+[data-theme=studio] .tv-name{font-size:clamp(3rem,10.5vw,7.4rem);line-height:.9;font-weight:700;font-stretch:75%;font-variation-settings:"wdth" 75;letter-spacing:-.035em;max-width:11ch}
+[data-theme=studio] .tv-verified{width:.3em;height:.3em;vertical-align:.9em;color:var(--fg)}
+[data-theme=studio] .tv-verified path:last-child{fill:#000}
+[data-theme=studio] .tv-headline{margin-top:18px;font-size:clamp(1.15rem,2.2vw,1.5rem);font-weight:400;max-width:36ch}
+[data-theme=studio] .tv-loc{font-size:1rem}
+[data-theme=studio] .tv-bio{font-size:1.1rem;color:var(--muted);max-width:52ch}
+[data-theme=studio] .tv-social a{border:0;padding:0 0 2px;border-radius:0;border-bottom:1px solid var(--line);font-size:1rem}
+[data-theme=studio] .tv-social a:hover{border-color:var(--fg)}
+[data-theme=studio] .tv-social{gap:10px 24px}
+[data-theme=studio] .tv-social img,[data-theme=studio] .tv-ico{display:none}
+[data-theme=studio] .tv-btn{border-radius:999px;background:#000;border-color:#555}
+[data-theme=studio] .tv-btn--primary{background:var(--fg);color:#000;border-color:var(--fg)}
+[data-theme=studio] .tv-search input{border-radius:999px;background:#000;border-color:#555}
+[data-theme=studio] .tv-body{margin-top:88px}
+[data-theme=studio] .tv-sec,[data-theme=studio] .tv-about{margin-top:64px}
+[data-theme=studio] .tv-h{font-weight:400;font-size:1rem;color:var(--muted);margin-bottom:14px}
+[data-theme=studio] .tv-about p{font-size:clamp(1.2rem,2.4vw,1.6rem);line-height:1.4;max-width:34ch}
+[data-theme=studio] .tv-links{gap:0;border-bottom:1px solid var(--line)}
+[data-theme=studio] .tv-link{border:0;border-top:1px solid var(--line);background:none;padding:16px 0;min-height:0;transition:padding .25s ease}
+[data-theme=studio] .tv-lt{font-size:clamp(1.25rem,3.4vw,2.1rem);line-height:1.15;font-weight:500;letter-spacing:-.015em}
+[data-theme=studio] .tv-desc{font-size:.95rem;letter-spacing:0;margin-top:4px}
+[data-theme=studio] .tv-ld{font-size:.95rem}
+[data-theme=studio] .tv-link:hover{padding-left:14px}
+[data-theme=studio] .tv-link:hover .tv-lt{color:var(--accent)}
+[data-theme=studio] .is-featured .tv-lt{font-style:italic}
+[data-theme=studio] .tv-foot{border-color:var(--line);margin-top:96px}
+@media (max-width:520px){[data-theme=studio] .tv-page{padding:36px 18px 28px}[data-theme=studio] .tv-body{margin-top:56px}}

@@ -1,0 +1,27 @@
+/* Bold: thick black borders and hard offset shadows on yellow. Buttons press in when clicked. */
+[data-theme=bold]{color-scheme:light;--bg:#ffd23f;--fg:#000;--muted:#3a3a3a;--line:#000;--surface:#fff;--accent:#ff8fd6;--accent-ink:#000;
+  --font-body:"Archivo",system-ui,sans-serif;--font-display:var(--font-body);--radius:8px;--avatar:92px}
+[data-theme=bold] .tv-page{max-width:640px;padding-top:56px}
+[data-theme=bold] .tv-id{flex-direction:column;align-items:flex-start;gap:18px}
+[data-theme=bold] .tv-avatar{border:3px solid #000;box-shadow:5px 5px 0 #000;background:#fff}
+[data-theme=bold] .tv-name{font-size:clamp(2.1rem,7vw,3rem);font-weight:900;font-stretch:125%;font-variation-settings:"wdth" 125;line-height:1;letter-spacing:-.02em}
+[data-theme=bold] .tv-verified path:last-child{fill:#ffd23f}
+[data-theme=bold] .tv-verified{color:#000}
+[data-theme=bold] .tv-headline{margin-top:10px;font-weight:700;font-size:1.1rem}
+[data-theme=bold] .tv-loc{color:#000}
+[data-theme=bold] .tv-bio{font-size:1.06rem;font-weight:500}
+[data-theme=bold] .tv-social a,[data-theme=bold] .tv-btn{border:2px solid #000;background:#fff;box-shadow:3px 3px 0 #000;font-weight:700;color:#000;transition:transform .08s,box-shadow .08s}
+[data-theme=bold] .tv-social a{border-radius:999px}
+[data-theme=bold] .tv-btn--primary{background:var(--accent)}
+[data-theme=bold] .tv-search input{border:2px solid #000;background:#fff;box-shadow:3px 3px 0 #000}
+[data-theme=bold] .tv-h{color:#000;font-size:1.15rem;font-weight:800}
+[data-theme=bold] .tv-about p{background:#fff;border:2px solid #000;border-radius:var(--radius);padding:16px 18px;box-shadow:4px 4px 0 #000}
+[data-theme=bold] .tv-links{gap:14px}
+[data-theme=bold] .tv-link{border:2px solid #000;box-shadow:4px 4px 0 #000;padding:14px 16px;transition:transform .08s,box-shadow .08s}
+[data-theme=bold] .tv-link:hover,[data-theme=bold] .tv-social a:hover,[data-theme=bold] .tv-btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 #000;border-color:#000}
+[data-theme=bold] .tv-link:active,[data-theme=bold] .tv-social a:active,[data-theme=bold] .tv-btn:active{transform:translate(4px,4px);box-shadow:0 0 0 #000}
+[data-theme=bold] .tv-lt{font-weight:800}
+[data-theme=bold] .tv-ld{color:#333}
+[data-theme=bold] .is-featured .tv-link{background:var(--accent)}
+[data-theme=bold] .tv-ico{border:1.5px solid #000;border-radius:5px;background:#fff;width:22px;height:22px;padding:1px}
+[data-theme=bold] .tv-foot{border-top:2px solid #000;color:#000}

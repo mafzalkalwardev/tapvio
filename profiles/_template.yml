@@ -1,35 +1,33 @@
 # Easiest way: use the visual builder at <site_url>/create/ and it writes this file for you.
 # Or copy this file to profiles/<your-username>.yml (files starting with "_" are ignored).
-# Username: 2-30 chars, lowercase letters, numbers and hyphens. Your page: <site_url>/<username>/
+# Username: 2-30 characters, lowercase letters, numbers and hyphens. Your page: <site_url>/<username>/
 username: your-username
 name: "Your Full Name"
 headline: "What you do, in a few words"          # optional
 bio: "One or two lines shown under your name (max 200 characters)."
-about: >-                                         # optional, but good for SEO
+about: >-                                         # optional, but good for search engines
   A short paragraph about you and what visitors will find here.
 location: "City, Country"                        # optional
-avatar: "https://github.com/your-github.png"     # any https image URL, or avatars/<username>.jpg
-job_title: ""                                    # optional
+avatar: "https://github.com/your-github.png"     # any https image, or avatars/<username>.jpg in this repo
+cover: ""                                        # optional banner image, used by the Cover theme
+job_title: ""                                    # optional, used in search results and Save contact
 works_for: { name: "", url: "" }                 # optional
 keywords: []                                     # optional, e.g. [web design, Lahore]
 
 style:                                           # every option is optional
-  theme: aurora        # aurora midnight light glass neon ocean forest sunset rose sand minimal terminal
-  accent: ""           # override the theme colour, e.g. "#ff5c8a"
-  font: inter          # inter poppins space-grotesk outfit playfair jetbrains-mono nunito system
-  buttons: rounded     # rounded pill square outline glass brutal
-  layout: list         # list | grid (two columns on wide screens)
-  avatar: circle       # circle rounded square
-  effect: auto         # auto aurora grid particles waves none  (animated background)
-  animation: rise      # rise fade pop slide none  (how links appear)
-  gradient: []         # optional custom background, e.g. ["#1a1a2e", "#16213e", "#0f3460"]
-  background_image: "" # optional https image URL (darkened automatically for readability)
+  theme: resume    # resume card tiles studio contents terminal desktop95 bold cover
+  mode: auto       # auto | light | dark  (resume, tiles, contents and cover have both)
+  accent: ""       # your own colour, e.g. "#0a7d5a"
+  font: default    # default (the theme's font) or: hanken-grotesk figtree libre-franklin
+                   # bricolage-grotesque instrument-sans ibm-plex-sans newsreader source-serif ubuntu-mono system
+  avatar: circle   # circle | rounded | square
+  icons: on        # on | off  (website icons next to links)
 
-socials:                                         # round icons under your name; max 12
+socials:                                         # your main profiles, shown under your bio; max 12
   - { label: "GitHub", url: "https://github.com/you" }
-  - { label: "Email", url: "mailto:you@example.com" }
+  - { label: "Email", url: "mailto:you@example.com" }   # an email or phone adds a "Save contact" button
 
-sections:                                        # max 15 sections, 200 links total
+sections:                                        # max 15 sections, 200 links in total
   - title: "Links"
     links:
       - { title: "My website", url: "https://example.com", featured: true }

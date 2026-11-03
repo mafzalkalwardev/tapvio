@@ -1,0 +1,50 @@
+/* Terminal: an Ubuntu terminal session. Links listed like files, a blinking cursor at the end. */
+[data-theme=terminal]{color-scheme:dark;--bg:#300a24;--fg:#ffffff;--muted:#c7b5c1;--line:#5e2750;--surface:#300a24;--accent:#8ae234;--accent-ink:#300a24;
+  --blue:#729fcf;--yellow:#fce94f;--font-body:"Ubuntu Mono",ui-monospace,Menlo,Consolas,monospace;--font-display:var(--font-body);--radius:0;--avatar:0px}
+[data-theme=terminal] body,[data-theme=terminal]{font-size:17px;line-height:1.5}
+[data-theme=terminal] .tv-page{max-width:860px;padding:28px 22px}
+[data-theme=terminal] .tv-terminal-only{display:block;margin:0 0 6px}
+[data-theme=terminal] .tv-prompt b{color:var(--accent)}
+[data-theme=terminal] .tv-prompt i{font-style:normal;color:var(--blue);font-weight:700}
+[data-theme=terminal] .tv-avatar{display:none}
+[data-theme=terminal] .tv-id{display:block}
+[data-theme=terminal] .tv-name{font:700 1em/1.5 var(--font-body);letter-spacing:0}
+[data-theme=terminal] .tv-verified{width:.8em;height:.8em;color:var(--accent)}
+[data-theme=terminal] .tv-verified path:last-child{fill:var(--bg)}
+[data-theme=terminal] .tv-headline,[data-theme=terminal] .tv-loc{margin:0;font-weight:400;font-size:1em;color:var(--fg)}
+[data-theme=terminal] .tv-loc{color:var(--muted)}
+[data-theme=terminal] .tv-bio{margin:1.5em 0 0;max-width:72ch}
+[data-theme=terminal] .tv-bio::before,[data-theme=terminal] .tv-social::before,[data-theme=terminal] .tv-about p::before{display:block;color:var(--fg)}
+[data-theme=terminal] .tv-bio::before{content:"$ cat bio.txt"}
+[data-theme=terminal] .tv-social{display:block;margin-top:1.5em}
+[data-theme=terminal] .tv-social::before{content:"$ ls profiles/"}
+[data-theme=terminal] .tv-social li{display:inline-block;margin-right:2ch}
+[data-theme=terminal] .tv-social a{border:0;padding:0;border-radius:0;font-size:1em;font-weight:700;color:var(--blue)}
+[data-theme=terminal] .tv-social a:hover{background:var(--fg);color:var(--bg)}
+[data-theme=terminal] .tv-social img,[data-theme=terminal] .tv-ico{display:none}
+[data-theme=terminal] .tv-actions{margin-top:1.5em;gap:2ch}
+[data-theme=terminal] .tv-btn{font:inherit;padding:0;border:0;background:none;color:var(--yellow)}
+[data-theme=terminal] .tv-btn::before{content:"["}[data-theme=terminal] .tv-btn::after{content:"]"}
+[data-theme=terminal] .tv-btn:hover{background:var(--yellow);color:var(--bg)}
+[data-theme=terminal] .tv-search{flex:0 1 32ch}
+[data-theme=terminal] .tv-search input{font:inherit;border:0;border-bottom:1px dashed var(--muted);border-radius:0;background:none;padding:0 0 2px;color:var(--fg)}
+[data-theme=terminal] .tv-body{margin-top:1.5em}
+[data-theme=terminal] .tv-sec,[data-theme=terminal] .tv-about{margin-top:1.5em}
+[data-theme=terminal] .tv-h{font:inherit;color:var(--fg);margin:0}
+[data-theme=terminal] .tv-sec .tv-h::before{content:'$ ls "'}
+[data-theme=terminal] .tv-sec .tv-h::after{content:'"/'}
+[data-theme=terminal] .tv-about .tv-h{display:none}
+[data-theme=terminal] .tv-about p::before{content:"$ cat about.txt"}
+[data-theme=terminal] .tv-links{gap:0}
+[data-theme=terminal] .tv-link{border:0;border-radius:0;background:none;padding:0;min-height:0;gap:2ch;align-items:baseline}
+[data-theme=terminal] .tv-lt{font-weight:700;color:var(--blue);overflow-wrap:normal}
+[data-theme=terminal] .tv-desc{display:inline;margin-left:2ch;font-weight:400;color:var(--muted);font-size:1em}
+[data-theme=terminal] .tv-ld{margin:0 0 0 auto;padding:0;font-size:1em;color:var(--muted);max-width:40%}
+[data-theme=terminal] .is-featured .tv-lt{color:var(--yellow)}
+[data-theme=terminal] .tv-link:hover,[data-theme=terminal] .tv-link:focus-visible{background:var(--fg);outline:0}
+[data-theme=terminal] .tv-link:hover *,[data-theme=terminal] .tv-link:focus-visible *{color:var(--bg)}
+[data-theme=terminal] .tv-cursor{margin-top:1.5em}
+[data-theme=terminal] .tv-cursor span{display:inline-block;width:.55em;height:1.05em;vertical-align:-.2em;background:var(--fg);animation:tv-blink 1.1s steps(1) infinite}
+[data-theme=terminal] .tv-foot{border-top:1px dashed var(--line);font-size:.9em}
+@keyframes tv-blink{50%{opacity:0}}
+@media (max-width:620px){[data-theme=terminal] .tv-ld{display:none}[data-theme=terminal] .tv-desc{display:block;margin-left:0}}

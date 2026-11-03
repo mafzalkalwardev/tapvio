@@ -12,11 +12,8 @@ about: >-
 location: "Islamabad, Pakistan"
 avatar: "https://github.com/mafzalkalwardev.png"
 style:
-  theme: aurora
-  font: space-grotesk
-  buttons: glass
-  effect: aurora
-  animation: rise
+  theme: resume
+  mode: auto
 # Set by maintainers only: verified profiles get followed (do-follow) links.
 verified: true
 job_title: "Founder & Principal Engineer"

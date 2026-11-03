@@ -1,0 +1,43 @@
+/* Desktop 95: a Windows 95 window on the teal desktop. Bevelled buttons, group boxes, status bar. */
+[data-theme=desktop95]{color-scheme:light;--bg:#008080;--fg:#000;--muted:#404040;--line:#808080;--surface:#c0c0c0;--accent:#000080;--accent-ink:#fff;
+  --font-body:Tahoma,Verdana,"Segoe UI",sans-serif;--font-display:var(--font-body);--radius:0;--avatar:64px;
+  --raised:inset -1px -1px #0a0a0a,inset 1px 1px #fff,inset -2px -2px #808080,inset 2px 2px #dfdfdf;
+  --sunken:inset -1px -1px #fff,inset 1px 1px #0a0a0a,inset -2px -2px #dfdfdf,inset 2px 2px #808080}
+[data-theme=desktop95] body,[data-theme=desktop95]{font-size:14px;line-height:1.4}
+[data-theme=desktop95] .tv-page{max-width:640px;margin:40px auto;padding:3px 3px 0;background:var(--surface);box-shadow:var(--raised)}
+[data-theme=desktop95] .tv-window-bar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 3px 3px 6px;background:linear-gradient(90deg,#000080,#1084d0);color:#fff;font-weight:700;font-size:13px}
+[data-theme=desktop95] .tv-window-title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+[data-theme=desktop95] .tv-window-btns{display:flex;gap:2px;flex:none}
+[data-theme=desktop95] .tv-window-btns i{width:16px;height:14px;background:var(--surface);box-shadow:var(--raised);font:700 10px/14px Tahoma,sans-serif;font-style:normal;color:#000;text-align:center}
+[data-theme=desktop95] .tv-window-btns i:nth-child(1)::before{content:"_"}
+[data-theme=desktop95] .tv-window-btns i:nth-child(2)::before{content:"□"}
+[data-theme=desktop95] .tv-window-btns i:nth-child(3){margin-left:2px}
+[data-theme=desktop95] .tv-window-btns i:nth-child(3)::before{content:"×";font-size:12px}
+[data-theme=desktop95] .tv-head,[data-theme=desktop95] .tv-body{padding:0 12px}
+[data-theme=desktop95] .tv-head{padding-top:16px}
+[data-theme=desktop95] .tv-avatar{box-shadow:var(--sunken);padding:2px;background:#fff}
+[data-theme=desktop95] .tv-name{font:700 18px/1.2 var(--font-body);letter-spacing:0}
+[data-theme=desktop95] .tv-verified{color:var(--accent)}
+[data-theme=desktop95] .tv-verified path:last-child{fill:var(--surface)}
+[data-theme=desktop95] .tv-headline{font-weight:400}
+[data-theme=desktop95] .tv-bio{margin-top:14px;padding:8px 10px;background:#fff;box-shadow:var(--sunken)}
+[data-theme=desktop95] .tv-social{gap:6px}
+[data-theme=desktop95] .tv-social a,[data-theme=desktop95] .tv-btn{border:0;border-radius:0;background:var(--surface);box-shadow:var(--raised);padding:5px 10px;font-size:13px;font-weight:400;color:#000}
+[data-theme=desktop95] .tv-social a:active,[data-theme=desktop95] .tv-btn:active,[data-theme=desktop95] .tv-link:active{box-shadow:var(--sunken)}
+[data-theme=desktop95] .tv-btn--primary{font-weight:700;outline:1px solid #000;outline-offset:-1px}
+[data-theme=desktop95] .tv-search input{border:0;border-radius:0;background:#fff;box-shadow:var(--sunken);font-size:13px;padding:5px 8px;color:#000}
+[data-theme=desktop95] .tv-body{margin-top:18px;padding-bottom:14px}
+[data-theme=desktop95] .tv-sec,[data-theme=desktop95] .tv-about{position:relative;margin-top:22px;padding:18px 10px 10px;border:1px solid #808080;box-shadow:1px 1px 0 #fff,inset 1px 1px 0 #fff}
+[data-theme=desktop95] .tv-h{position:absolute;top:-.75em;left:8px;margin:0;padding:0 4px;background:var(--surface);color:#000;font:400 13px/1.4 var(--font-body)}
+[data-theme=desktop95] .tv-links{gap:6px}
+[data-theme=desktop95] .tv-link{border:0;border-radius:0;background:var(--surface);box-shadow:var(--raised);padding:6px 10px;min-height:0;gap:8px}
+[data-theme=desktop95] .tv-link:hover{background:#d4d0c8}
+[data-theme=desktop95] .tv-link:focus-visible{outline:1px dotted #000;outline-offset:-5px}
+[data-theme=desktop95] .tv-ico{width:16px;height:16px;border-radius:0;image-rendering:pixelated}
+[data-theme=desktop95] .tv-lt{font-weight:400}
+[data-theme=desktop95] .is-featured .tv-lt{font-weight:700}
+[data-theme=desktop95] .tv-ld{color:var(--muted);font-size:12px}
+[data-theme=desktop95] .tv-foot{margin:0;padding:3px;border:0;gap:3px;font-size:12px;flex-wrap:nowrap}
+[data-theme=desktop95] .tv-foot>*{padding:2px 6px;box-shadow:inset -1px -1px #fff,inset 1px 1px #808080;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+[data-theme=desktop95] .tv-foot>a{flex:1;text-decoration:none}
+@media (max-width:680px){[data-theme=desktop95] .tv-page{margin:0;min-height:100vh}}

@@ -14,13 +14,14 @@ import datetime as dt
 import hashlib
 import io
 import json
+import os
 import re
 import shutil
 import subprocess
 import sys
 import urllib.request
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -28,50 +29,61 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 ROOT = Path(__file__).resolve().parent
 PROFILES, TEMPLATES, STATIC = ROOT / "profiles", ROOT / "templates", ROOT / "static"
 AVATARS, FONTS, CACHE, DIST = ROOT / "avatars", ROOT / "fonts", ROOT / ".cache", ROOT / "dist"
+THEME_CSS = STATIC / "profile" / "themes"
+GF = "https://fonts.googleapis.com/css2?display=swap&family="
 
-# theme -> (background, glow1, glow2, glow3, text, accent, default animated effect)
+# Each theme: label, one-line description, Google Fonts query, whether it has a dark mode,
+# and the colours used for its share image (bg, text, accent).
 THEMES = {
-    "aurora":   ("#080a1a", "#6d5dfc", "#00c2ff", "#ff4fd8", "#f2f3ff", "#8b7cff", "aurora"),
-    "midnight": ("#0f1222", "#3446c9", "#5b2bbd", "#1b6fc9", "#eef0ff", "#7c8cff", "particles"),
-    "light":    ("#f4f5fb", "#c7cdff", "#ffd6f1", "#c8f1ff", "#14172b", "#4353e8", "aurora"),
-    "glass":    ("#1b1036", "#ff6ec4", "#7873f5", "#3cd3ff", "#ffffff", "#ffffff", "aurora"),
-    "neon":     ("#05010d", "#ff2fd6", "#00f0ff", "#7a2bff", "#f6edff", "#ff2fd6", "grid"),
-    "ocean":    ("#041b26", "#0090b3", "#00c9a7", "#0b4f9c", "#e8fbff", "#3fd1e6", "waves"),
-    "forest":   ("#0b170f", "#2f8f4e", "#9bc53d", "#16695a", "#eefaf1", "#5fd68a", "particles"),
-    "sunset":   ("#1f0d18", "#ff5f6d", "#ffc371", "#b0306a", "#fff1f6", "#ff8a5c", "waves"),
-    "rose":     ("#fff5f7", "#ffc2d1", "#ffe0c2", "#e7c6ff", "#3a0f1e", "#e8436f", "aurora"),
-    "sand":     ("#f6f0e6", "#f0d3a8", "#e8b98a", "#d9cbb0", "#2d2418", "#b5652b", "waves"),
-    "minimal":  ("#ffffff", "#eeeeee", "#f5f5f5", "#e8e8e8", "#111111", "#111111", "none"),
-    "terminal": ("#030a04", "#0f5a1d", "#1f8a35", "#0a3a14", "#b8ffb8", "#39ff6a", "grid"),
+    "resume":    {"label": "Résumé", "desc": "Set like a well-made CV. Section names in a left column.",
+                  "font": "Hanken+Grotesk:wght@400;500;600;700", "modes": True, "og": ("#ffffff", "#141a2a", "#2240c4")},
+    "card":      {"label": "Business card", "desc": "A printed contact card on a desk, with Save contact.",
+                  "font": "Libre+Franklin:wght@400;500;600;700", "modes": False, "og": ("#34463d", "#f9f7f1", "#f9f7f1")},
+    "tiles":     {"label": "Tiles", "desc": "A grid of tinted tiles. Featured links get a wide tile.",
+                  "font": "Figtree:wght@400;600;700;800", "modes": True, "og": ("#eceef2", "#151820", "#1f6feb")},
+    "studio":    {"label": "Studio", "desc": "Your name set huge, links as large lines of type.",
+                  "font": "Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..700", "modes": False, "og": ("#000000", "#f1f1ef", "#f1f1ef")},
+    "contents":  {"label": "Contents", "desc": "A book's table of contents, with dotted leaders.",
+                  "font": "Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400", "modes": True, "og": ("#fffefb", "#1c1b19", "#8c1c2b")},
+    "terminal":  {"label": "Terminal", "desc": "An Ubuntu terminal session. Links listed like files.",
+                  "font": "Ubuntu+Mono:wght@400;700", "modes": False, "og": ("#300a24", "#ffffff", "#8ae234")},
+    "desktop95": {"label": "Desktop 95", "desc": "A Windows 95 window with bevelled buttons.",
+                  "font": None, "modes": False, "og": ("#008080", "#ffffff", "#c0c0c0")},
+    "bold":      {"label": "Bold", "desc": "Thick borders and hard shadows on yellow.",
+                  "font": "Archivo:wdth,wght@62..125,400..900", "modes": False, "og": ("#ffd23f", "#000000", "#ff8fd6")},
+    "cover":     {"label": "Cover", "desc": "A full-width photo banner with a large serif name.",
+                  "font": "Instrument+Sans:wght@400..700&family=Instrument+Serif", "modes": True, "og": ("#ffffff", "#16171a", "#14532d")},
 }
-# font key -> (Google Fonts family query or None, CSS font stack)
-FONT_STACKS = {
-    "inter": ("Inter:wght@400;600;800", '"Inter",system-ui,sans-serif'),
-    "poppins": ("Poppins:wght@400;600;800", '"Poppins",system-ui,sans-serif'),
-    "space-grotesk": ("Space+Grotesk:wght@400;600;700", '"Space Grotesk",system-ui,sans-serif'),
-    "outfit": ("Outfit:wght@400;600;800", '"Outfit",system-ui,sans-serif'),
-    "playfair": ("Playfair+Display:wght@400;600;800", '"Playfair Display",Georgia,serif'),
-    "jetbrains-mono": ("JetBrains+Mono:wght@400;600;800", '"JetBrains Mono",ui-monospace,monospace'),
-    "nunito": ("Nunito:wght@400;600;800", '"Nunito",system-ui,sans-serif'),
+DEFAULT_THEME = "resume"
+# Themes from the first version map to their closest new equivalent.
+THEME_ALIASES = {"aurora": "studio", "midnight": "studio", "light": "resume", "glass": "tiles", "neon": "terminal",
+                 "ocean": "cover", "forest": "card", "sunset": "bold", "rose": "tiles", "sand": "contents", "minimal": "resume"}
+# Optional font override: key -> (Google Fonts query or None, CSS stack)
+FONTS_OVERRIDE = {
+    "hanken-grotesk": ("Hanken+Grotesk:wght@400;500;600;700", '"Hanken Grotesk",system-ui,sans-serif'),
+    "figtree": ("Figtree:wght@400;600;700;800", '"Figtree",system-ui,sans-serif'),
+    "libre-franklin": ("Libre+Franklin:wght@400;500;600;700", '"Libre Franklin",system-ui,sans-serif'),
+    "bricolage-grotesque": ("Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..700", '"Bricolage Grotesque",system-ui,sans-serif'),
+    "instrument-sans": ("Instrument+Sans:wght@400..700", '"Instrument Sans",system-ui,sans-serif'),
+    "ibm-plex-sans": ("IBM+Plex+Sans:wght@400;500;600;700", '"IBM Plex Sans",system-ui,sans-serif'),
+    "newsreader": ("Newsreader:ital,opsz,wght@0,6..72,400..600;1,6..72,400", '"Newsreader",Georgia,serif'),
+    "source-serif": ("Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400", '"Source Serif 4",Georgia,serif'),
+    "ubuntu-mono": ("Ubuntu+Mono:wght@400;700", '"Ubuntu Mono",ui-monospace,monospace'),
     "system": (None, 'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif'),
 }
-OPTIONS = {
-    "buttons": ["rounded", "pill", "square", "outline", "glass", "brutal"],
-    "layout": ["list", "grid"],
-    "avatar": ["circle", "rounded", "square"],
-    "effect": ["auto", "aurora", "grid", "particles", "waves", "none"],
-    "animation": ["rise", "fade", "pop", "slide", "none"],
-}
+OPTIONS = {"mode": ["auto", "light", "dark"], "avatar": ["circle", "rounded", "square"], "icons": ["on", "off"]}
+RETIRED_STYLE_KEYS = {"buttons", "layout", "effect", "animation", "gradient", "background_image"}
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 USERNAME_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])$")
 RESERVED = {
-    "admin", "api", "app", "assets", "static", "avatars", "about", "help", "login", "create",
-    "signup", "register", "settings", "sitemap", "robots", "index", "404", "www", "themes",
-    "mail", "blog", "docs", "terms", "privacy", "contact", "support", "new", "join", "feed",
+    "admin", "api", "app", "assets", "static", "avatars", "about", "help", "login", "create", "guide",
+    "signup", "register", "settings", "sitemap", "robots", "index", "404", "www", "themes", "preview",
+    "mail", "blog", "docs", "terms", "privacy", "contact", "support", "new", "join", "feed", "demo",
 }
 ALLOWED_SCHEMES = {"https", "http", "mailto", "tel"}
 LIMITS = {"bio": 200, "about": 1200, "name": 80, "headline": 100, "title": 120,
           "description": 160, "socials": 12, "sections": 15, "links": 200}
+WARNINGS: list[str] = []
 
 
 class ProfileError(Exception):
@@ -98,43 +110,58 @@ def _text(value, key: str, where: str) -> str:
     return value
 
 
-def _choice(style: dict, key: str, allowed, default, where: str):
-    val = style.get(key) or default
-    if val not in allowed:
-        raise ProfileError(f"{where}: style.{key} must be one of {list(allowed)} (got {val!r})")
-    return val
+def _image(value, where: str, field: str) -> str:
+    value = str(value or "").strip()
+    if value.startswith("avatars/"):
+        if not (ROOT / value).is_file():
+            raise ProfileError(f"{where}: {field} file {value} not found")
+    elif value and urlparse(value).scheme != "https":
+        raise ProfileError(f"{where}: {field} must be an https URL or avatars/<file>")
+    if any(c in value for c in "\"'<>\\ "):
+        raise ProfileError(f"{where}: {field} contains invalid characters")
+    return value
 
 
 def parse_style(data: dict, where: str) -> dict:
     style = data.get("style") or {}
     if not isinstance(style, dict):
         raise ProfileError(f"{where}: style must be a mapping")
-    if data.get("theme") and "theme" not in style:  # backwards compatible top-level theme
+    if data.get("theme") and "theme" not in style:
         style["theme"] = data["theme"]
-    s = {
-        "theme": _choice(style, "theme", THEMES, "", where) if style.get("theme") else "",
-        "font": _choice(style, "font", FONT_STACKS, "inter", where),
-        **{k: _choice(style, k, v, v[0], where) for k, v in OPTIONS.items()},
-    }
+    retired = sorted(RETIRED_STYLE_KEYS & set(style))
+    if retired:
+        WARNINGS.append(f"{where}: style option(s) {', '.join(retired)} are no longer used and were ignored")
+    theme = str(style.get("theme") or "").strip()
+    if theme in THEME_ALIASES:
+        WARNINGS.append(f"{where}: theme {theme!r} was retired; using {THEME_ALIASES[theme]!r}")
+        theme = THEME_ALIASES[theme]
+    if theme and theme not in THEMES:
+        raise ProfileError(f"{where}: style.theme must be one of {list(THEMES)} (got {theme!r})")
+    s = {"theme": theme}
+    for key, allowed in OPTIONS.items():
+        val = str(style.get(key) or allowed[0]).strip()
+        if val in ("true", "True"):
+            val = "on"
+        if val in ("false", "False"):
+            val = "off"
+        if val not in allowed:
+            raise ProfileError(f"{where}: style.{key} must be one of {allowed} (got {val!r})")
+        s[key] = val
+    font = str(style.get("font") or "default").strip()
+    if font in ("inter", "poppins", "space-grotesk", "outfit", "playfair", "jetbrains-mono", "nunito"):
+        WARNINGS.append(f"{where}: font {font!r} was retired; using the theme's own font")
+        font = "default"
+    if font != "default" and font not in FONTS_OVERRIDE:
+        raise ProfileError(f"{where}: style.font must be 'default' or one of {list(FONTS_OVERRIDE)}")
+    s["font"] = font
     accent = str(style.get("accent") or "").strip()
     if accent and not HEX_RE.match(accent):
-        raise ProfileError(f"{where}: style.accent must be a hex colour like #ff5c8a")
+        raise ProfileError(f"{where}: style.accent must be a hex colour like #2240c4")
     s["accent"] = accent
-    grad = style.get("gradient") or []
-    if grad and (not isinstance(grad, list) or not 2 <= len(grad) <= 4
-                 or not all(HEX_RE.match(str(c)) for c in grad)):
-        raise ProfileError(f"{where}: style.gradient must be a list of 2-4 hex colours")
-    s["gradient"] = [str(c) for c in grad]
-    bgi = str(style.get("background_image") or "").strip()
-    if bgi and urlparse(bgi).scheme != "https":
-        raise ProfileError(f"{where}: style.background_image must be an https URL")
-    if any(c in bgi for c in "\"'()\\ ;"):
-        raise ProfileError(f"{where}: style.background_image contains invalid characters")
-    s["background_image"] = bgi
     return s
 
 
-def load_profile(path: Path) -> dict:
+def load_profile(path: Path, demo: bool = False) -> dict:
     where = path.name
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -146,10 +173,11 @@ def load_profile(path: Path) -> dict:
     username = str(data.get("username", "")).strip()
     if not USERNAME_RE.match(username):
         raise ProfileError(f"{where}: username must be 2-30 chars of a-z, 0-9 and '-'")
-    if username in RESERVED:
-        raise ProfileError(f"{where}: username {username!r} is reserved")
-    if path.stem != username:
-        raise ProfileError(f"{where}: file name must be {username}.yml")
+    if not demo:
+        if username in RESERVED:
+            raise ProfileError(f"{where}: username {username!r} is reserved")
+        if path.stem != username:
+            raise ProfileError(f"{where}: file name must be {username}.yml")
 
     p = {
         "username": username,
@@ -159,9 +187,11 @@ def load_profile(path: Path) -> dict:
         "about": _text(data.get("about"), "about", where),
         "location": _text(data.get("location"), "headline", where),
         "job_title": _text(data.get("job_title"), "headline", where),
-        "verified": bool(data.get("verified", False)),
+        "verified": bool(data.get("verified", False)) and not demo,
         "keywords": [str(k).strip() for k in (data.get("keywords") or []) if str(k).strip()][:15],
         "style": parse_style(data, where),
+        "avatar": _image(data.get("avatar"), where, "avatar"),
+        "cover": _image(data.get("cover"), where, "cover"),
     }
     if not p["name"]:
         raise ProfileError(f"{where}: name is required")
@@ -171,14 +201,6 @@ def load_profile(path: Path) -> dict:
     if isinstance(wf, dict) and wf.get("name"):
         p["works_for"] = {"name": _text(wf["name"], "name", where),
                           "url": _url(wf["url"], f"{where} works_for") if wf.get("url") else ""}
-
-    avatar = str(data.get("avatar") or "").strip()
-    if avatar.startswith("avatars/"):
-        if not (ROOT / avatar).is_file():
-            raise ProfileError(f"{where}: avatar file {avatar} not found")
-    elif avatar and urlparse(avatar).scheme != "https":
-        raise ProfileError(f"{where}: avatar must be an https URL or avatars/<file>")
-    p["avatar"] = avatar
 
     socials = data.get("socials") or []
     if len(socials) > LIMITS["socials"]:
@@ -248,26 +270,65 @@ def link_rel(url: str, verified: bool) -> str:
 def contrast_text(hex_color: str) -> str:
     r, g, b = (int(hex_color[i:i + 2], 16) / 255 for i in (1, 3, 5))
     lum = lambda c: c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4  # noqa: E731
-    return "#0b0b14" if 0.2126 * lum(r) + 0.7152 * lum(g) + 0.0722 * lum(b) > 0.4 else "#ffffff"
+    return "#000000" if 0.2126 * lum(r) + 0.7152 * lum(g) + 0.0722 * lum(b) > 0.35 else "#ffffff"
+
+
+def theme_font_url(theme: str) -> str:
+    q = THEMES[theme]["font"]
+    return GF + q if q else ""
 
 
 def resolve_style(style: dict, cfg: dict) -> dict:
-    theme = style["theme"] or cfg.get("default_theme", "aurora")
-    effect = THEMES[theme][6] if style["effect"] == "auto" else style["effect"]
-    css_vars = []
+    theme = style["theme"] or cfg.get("default_theme") or DEFAULT_THEME
+    theme = THEME_ALIASES.get(theme, theme)
+    mode = style["mode"] if THEMES[theme]["modes"] else "light"
+    css_vars, font_url = [], theme_font_url(theme)
     if style["accent"]:
-        css_vars += [f"--accent:{style['accent']}", f"--accent-text:{contrast_text(style['accent'])}"]
-    if style["gradient"]:
-        css_vars.append(f"--page-bg:linear-gradient(160deg,{','.join(style['gradient'])})")
-    if style["background_image"]:
-        css_vars.append(f"--bg-img:url({style['background_image']})")
-    gfont, stack = FONT_STACKS[style["font"]]
-    if not (theme == "terminal" and style["font"] == "inter"):
-        css_vars.append(f"--font:{stack}")
-    elif theme == "terminal":
-        gfont = FONT_STACKS["jetbrains-mono"][0]
-    return {**style, "theme": theme, "effect": effect, "css": ";".join(css_vars),
-            "font_url": f"https://fonts.googleapis.com/css2?family={gfont}&display=swap" if gfont else ""}
+        css_vars += [f"--accent:{style['accent']}", f"--accent-ink:{contrast_text(style['accent'])}"]
+    if style["font"] != "default":
+        q, stack = FONTS_OVERRIDE[style["font"]]
+        css_vars += [f"--font-body:{stack}", f"--font-display:{stack}"]
+        if q:
+            font_url = GF + q
+    return {**style, "theme": theme, "mode": mode, "css": ";".join(css_vars), "font_url": font_url}
+
+
+def profile_css(theme: str) -> str:
+    base = (STATIC / "profile" / "base.css").read_text(encoding="utf-8")
+    return base + "\n" + (THEME_CSS / f"{theme}.css").read_text(encoding="utf-8")
+
+
+def vcard(p: dict, page_url: str) -> str:
+    emails, phones = [], []
+    for item in p["socials"] + [l for s in p["sections"] for l in s["links"]]:
+        u = item["url"]
+        if u.startswith("mailto:"):
+            emails.append(u[7:].split("?")[0])
+        elif u.startswith("tel:"):
+            phones.append(u[4:])
+        elif domain_of(u) == "wa.me":
+            num = urlparse(u).path.strip("/")
+            if num.isdigit():
+                phones.append("+" + num)
+    if not emails and not phones:
+        return ""
+    esc = lambda s: s.replace("\\", "\\\\").replace(",", "\\,").replace(";", "\\;").replace("\n", " ")  # noqa: E731
+    parts = p["name"].split()
+    lines = ["BEGIN:VCARD", "VERSION:3.0", f"FN:{esc(p['name'])}",
+             f"N:{esc(parts[-1] if len(parts) > 1 else p['name'])};{esc(' '.join(parts[:-1]))};;;"]
+    if p["job_title"] or p["headline"]:
+        lines.append(f"TITLE:{esc(p['job_title'] or p['headline'])}")
+    if p["works_for"]:
+        lines.append(f"ORG:{esc(p['works_for']['name'])}")
+    lines += [f"EMAIL;TYPE=INTERNET:{e}" for e in dict.fromkeys(emails)]
+    lines += [f"TEL;TYPE=CELL:{t}" for t in dict.fromkeys(phones)]
+    if p["location"]:
+        lines.append(f"ADR;TYPE=WORK:;;;{esc(p['location'])};;;")
+    lines.append(f"URL:{page_url}")
+    if p["avatar_url"].startswith("https://"):
+        lines.append(f"PHOTO;VALUE=URI:{p['avatar_url']}")
+    lines.append("END:VCARD")
+    return "\r\n".join(lines) + "\r\n"
 
 
 def json_ld(p: dict, cfg: dict, page_url: str, avatar_url: str, modified: str, og: str) -> str:
@@ -305,48 +366,40 @@ def json_ld(p: dict, cfg: dict, page_url: str, avatar_url: str, modified: str, o
 # ---------------------------------------------------------------- Open Graph images
 def _fetch_image(url: str):
     from PIL import Image
-    CACHE.mkdir(exist_ok=True)
-    cached = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".img")
     try:
+        if url.startswith("/") or url.startswith(str(ROOT)):
+            return Image.open(url).convert("RGB")
+        CACHE.mkdir(exist_ok=True)
+        cached = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".img")
         if not cached.exists():
             req = urllib.request.Request(url, headers={"User-Agent": "Tapvio-build/1.0"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 cached.write_bytes(resp.read(5_000_000))
         return Image.open(io.BytesIO(cached.read_bytes())).convert("RGB")
     except Exception as exc:  # network blocked, 404, not an image...
-        print(f"  ! avatar not loaded for OG image ({exc.__class__.__name__}): {url}")
+        print(f"  ! image not loaded for share image ({exc.__class__.__name__}): {url}")
         return None
 
 
 def render_og(p: dict, theme: str, accent: str, avatar_src: str, out: Path, site: str) -> bool:
+    """1200x630 share image in the profile's theme colours: avatar, name, headline, address."""
     try:
-        from PIL import Image, ImageDraw, ImageFilter, ImageFont
+        from PIL import Image, ImageDraw, ImageFont
     except ImportError:
         return False
-    bg, c1, c2, c3, text, t_accent, _ = THEMES[theme]
+    bg, fg, t_accent = THEMES[theme]["og"]
     accent = accent or t_accent
-    W, H = 1200, 630
+    W, H, M = 1200, 630, 80
     img = Image.new("RGB", (W, H), bg)
-    glow = Image.new("RGB", (W, H), bg)
-    d = ImageDraw.Draw(glow)
-    d.ellipse((-200, -260, 560, 420), fill=c1)
-    d.ellipse((760, 140, 1400, 820), fill=c2)
-    d.ellipse((300, 420, 900, 980), fill=c3)
-    img = Image.blend(img, glow.filter(ImageFilter.GaussianBlur(140)), 0.55)
     draw = ImageDraw.Draw(img)
 
     def font(bold: bool, size: int):
-        f = FONTS / ("Inter-Bold.otf" if bold else "Inter-Regular.otf")
         try:
-            return ImageFont.truetype(str(f), size)
+            return ImageFont.truetype(str(FONTS / ("Inter-Bold.otf" if bold else "Inter-Regular.otf")), size)
         except OSError:
             return ImageFont.load_default(size)
 
-    # avatar
-    size, ax, ay = 300, 90, (H - 300) // 2
-    ring = Image.new("L", (size + 16, size + 16), 0)
-    ImageDraw.Draw(ring).ellipse((0, 0, size + 15, size + 15), fill=255)
-    img.paste(Image.new("RGB", ring.size, accent), (ax - 8, ay - 8), ring)
+    size = 168
     avatar = _fetch_image(avatar_src) if avatar_src else None
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).ellipse((0, 0, size - 1, size - 1), fill=255)
@@ -354,15 +407,14 @@ def render_og(p: dict, theme: str, accent: str, avatar_src: str, out: Path, site
         w, h = avatar.size
         side = min(w, h)
         avatar = avatar.crop(((w - side) // 2, (h - side) // 2, (w + side) // 2, (h + side) // 2))
-        img.paste(avatar.resize((size, size), Image.LANCZOS), (ax, ay), mask)
+        img.paste(avatar.resize((size, size), Image.LANCZOS), (M, M), mask)
     else:
-        tile = Image.new("RGB", (size, size), bg)
-        td = ImageDraw.Draw(tile)
-        td.text((size / 2, size / 2), p["name"][:1].upper(), font=font(True, 150), fill=text, anchor="mm")
-        img.paste(tile, (ax, ay), mask)
+        tile = Image.new("RGB", (size, size), accent)
+        ImageDraw.Draw(tile).text((size / 2, size / 2), p["name"][:1].upper(), font=font(True, 84),
+                                  fill=contrast_text(accent), anchor="mm")
+        img.paste(tile, (M, M), mask)
 
-    # text block with simple word wrap
-    x, maxw = ax + size + 70, W - (ax + size + 70) - 70
+    maxw = W - 2 * M
 
     def wrap(s: str, f, lines: int):
         words, out_lines, cur = s.split(), [], ""
@@ -379,28 +431,38 @@ def render_og(p: dict, theme: str, accent: str, avatar_src: str, out: Path, site
             out_lines[-1] = out_lines[-1].rstrip(".,") + "…"
         return out_lines
 
-    name_f, sub_f, small_f = font(True, 66), font(False, 34), font(True, 28)
-    name_lines = wrap(p["name"], name_f, 2)
-    sub_lines = wrap(p["headline"] or p["bio"], sub_f, 3) if (p["headline"] or p["bio"]) else []
-    block = len(name_lines) * 78 + (24 + len(sub_lines) * 46 if sub_lines else 0)
-    y = (H - block) // 2 - 20
-    for line in name_lines:
-        draw.text((x, y), line, font=name_f, fill=text)
-        y += 78
-    y += 24
-    for line in sub_lines:
-        draw.text((x, y), line, font=sub_f, fill=text)
-        y += 46
+    name_f, sub_f = font(True, 76), font(False, 36)
+    y = M + size + 40
+    for line in wrap(p["name"], name_f, 1):
+        draw.text((M, y), line, font=name_f, fill=fg)
+        y += 92
+    sub = p["headline"] or p["bio"]
+    for line in wrap(sub, sub_f, 2) if sub else []:
+        draw.text((M, y), line, font=sub_f, fill=fg)
+        y += 48
     label = f"{site}/{p['username']}"
-    for sz in range(28, 15, -2):  # shrink long URLs until they fit
+    for sz in range(30, 15, -2):
         small_f = font(True, sz)
-        if draw.textlength(label, font=small_f) + 34 <= W - x - 40:
+        if draw.textlength(label, font=small_f) <= maxw - 260:
             break
-    draw.rounded_rectangle((x - 2, H - 112, x + draw.textlength(label, font=small_f) + 34, H - 62),
-                           radius=25, fill=accent)
-    draw.text((x + 16, H - 87), label, font=small_f, fill=contrast_text(accent), anchor="lm")
+    draw.text((M, H - M + 6), label, font=small_f, fill=fg, anchor="ls")
+    draw.rectangle((M, H - M + 22, M + 64, H - M + 28), fill=accent if accent.lower() != bg.lower() else fg)
+    mark = FONTS.parent / "static" / "brand" / "tapvio-mark-256.png"
+    if mark.exists():
+        m = Image.open(mark).convert("RGBA").resize((64, 64), Image.LANCZOS)
+        img.paste(m, (W - M - 64, H - M - 52), m)
     img.save(out, "PNG", optimize=True)
     return True
+
+
+def render_guide() -> dict:
+    """GUIDE.md is the single source for the /guide/ page."""
+    import markdown
+    md = markdown.Markdown(extensions=["tables", "attr_list", "md_in_html", "toc"])
+    html = md.convert((ROOT / "GUIDE.md").read_text(encoding="utf-8"))
+    html = html.replace('href="../create/"', 'href="../create/"')
+    toc = [{"id": t["id"], "name": t["name"]} for top in md.toc_tokens for t in top.get("children", [])]
+    return {"guide_html": html, "guide_toc": toc}
 
 
 # ---------------------------------------------------------------- build
@@ -411,8 +473,8 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html", "xml"]),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["domain"] = domain_of
-    css = (STATIC / "style.css").read_text(encoding="utf-8")
     today = dt.date.today().isoformat()
+    theme_fonts = json.dumps({k: theme_font_url(k) for k in THEMES})
 
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -420,78 +482,101 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
     if AVATARS.is_dir():
         shutil.copytree(AVATARS, DIST / "avatars")
     for f in STATIC.iterdir():
-        if f.name != "style.css":
+        if f.is_file() and f.suffix in {".svg", ".png", ".ico", ".webmanifest"}:
             shutil.copy(f, DIST / f.name)
+    if (STATIC / "brand").is_dir():
+        shutil.copytree(STATIC / "brand", DIST / "assets" / "brand")
+    (DIST / "assets" / "themes").mkdir(parents=True, exist_ok=True)
+    for t in THEMES:
+        shutil.copy(THEME_CSS / f"{t}.css", DIST / "assets" / "themes" / f"{t}.css")
+    shutil.copy(STATIC / "profile" / "base.css", DIST / "assets" / "profile-base.css")
+    site_css = (STATIC / "site.css").read_text(encoding="utf-8")
 
-    common = {"cfg": cfg, "css": css, "year": dt.date.today().year}
-    sitemap = [{"loc": site_url + "/", "lastmod": today, "images": []},
-               {"loc": site_url + "/create/", "lastmod": today, "images": []}]
+    logo = (STATIC / "brand" / "tapvio-logo.svg").read_text(encoding="utf-8")
+    logo = logo.replace('role="img" aria-label="Tapvio"', 'aria-hidden="true" focusable="false"', 1)
+    common = {"cfg": cfg, "year": dt.date.today().year, "themes": THEMES, "theme_fonts": theme_fonts, "logo_svg": logo}
+    sitemap = [{"loc": f"{site_url}/{p}", "lastmod": today, "images": []} for p in ("", "create/", "guide/")]
 
-    for p in profiles:
-        page_url = f"{site_url}/{p['username']}/"
+    def render_profile(p: dict, out: Path, page_url: str, noindex: bool = False):
         avatar_url = f"{site_url}/{p['avatar']}" if p["avatar"].startswith("avatars/") else p["avatar"]
-        modified = last_modified(PROFILES / f"{p['username']}.yml")
+        p["cover_url"] = f"{site_url}/{p['cover']}" if p["cover"].startswith("avatars/") else p["cover"]
+        p["avatar_url"], p["page_url"] = avatar_url, page_url
+        p["modified"] = p.get("modified") or today
         style = resolve_style(p["style"], cfg)
         for s in p["sections"]:
             for l in s["links"]:
                 l["rel"] = link_rel(l["url"], p["verified"])
         for s in p["socials"]:
             s["rel"] = link_rel(s["url"], p["verified"])
-        out = DIST / p["username"]
-        out.mkdir()
-        avatar_local = str(ROOT / p["avatar"]) if p["avatar"].startswith("avatars/") else p["avatar"]
+        out.mkdir(parents=True, exist_ok=True)
+        card = vcard(p, page_url)
+        if card:
+            (out / "contact.vcf").write_text(card, encoding="utf-8")
+        p["vcard"] = bool(card)
         og_url = ""
-        if og_images and render_og(p, style["theme"], style["accent"], avatar_local, out / "og.png", host_path):
+        avatar_local = str(ROOT / p["avatar"]) if p["avatar"].startswith("avatars/") else p["avatar"]
+        if og_images and not noindex and render_og(p, style["theme"], style["accent"], avatar_local, out / "og.png", host_path):
             og_url = page_url + "og.png"
-        p["og_url"], p["modified"], p["page_url"], p["avatar_url"] = og_url, modified, page_url, avatar_url
-
-        title = p["name"] + (f" - {p['headline']}" if p["headline"] else "") + f" | {cfg['site_name']}"
+        p["og_url"] = og_url
+        title = p["name"] + (f", {p['headline']}" if p["headline"] else "") + f" | {cfg['site_name']}"
         description = p["bio"] or p["about"][:155] or f"All links for {p['name']} in one place."
         (out / "index.html").write_text(env.get_template("profile.html").render(
-            **common, p=p, s=style, page_url=page_url, avatar_url=avatar_url, title=title,
-            description=description, modified=modified, og_image=og_url or avatar_url,
-            json_ld=json_ld(p, cfg, page_url, avatar_url, modified, og_url)), encoding="utf-8")
-        sitemap.append({"loc": page_url, "lastmod": modified,
-                        "images": [i for i in (og_url, avatar_url) if i.startswith("http")]})
+            **common, p=p, s=style, t=THEMES[style["theme"]], css=profile_css(style["theme"]),
+            page_url=page_url, avatar_url=avatar_url, title=title, description=description,
+            modified=p["modified"], og_image=og_url or avatar_url, noindex=noindex,
+            json_ld="" if noindex else json_ld(p, cfg, page_url, avatar_url, p["modified"], og_url)), encoding="utf-8")
+        return style
 
-    home_style = resolve_style({**parse_style({}, "config"), "theme": cfg.get("default_theme", "aurora")}, cfg)
-    # The builder nests a live preview inside the page, so the outer page must not set
-    # layout/button/avatar/effect attributes that would leak into the preview.
-    builder_style = {**home_style, "effect": "none", "buttons": "", "layout": "", "avatar": "", "animation": "fade",
-                     "css": "--page-bg:radial-gradient(1200px 700px at 20% -10%,#1d1846,transparent),radial-gradient(900px 600px at 100% 0%,#0b2a44,transparent),#080a1a"}
+    for p in profiles:
+        p["modified"] = last_modified(PROFILES / f"{p['username']}.yml")
+        page_url = f"{site_url}/{p['username']}/"
+        render_profile(p, DIST / p["username"], page_url)
+        sitemap.append({"loc": page_url, "lastmod": p["modified"],
+                        "images": [i for i in (p["og_url"], p["avatar_url"]) if i.startswith("http")]})
+
+    demo_path = PROFILES / "_demo.yml"
+    demo = None
+    if demo_path.exists():
+        demo = load_profile(demo_path, demo=True)
+        render_profile(demo, DIST / "demo", f"{site_url}/demo/", noindex=True)
+
     ordered = sorted(profiles, key=lambda x: x["name"].lower())
     builder_data = {
-        "themes": {k: {"bg": v[0], "c1": v[1], "c2": v[2], "accent": v[5], "text": v[4], "effect": v[6]}
-                   for k, v in THEMES.items()},
-        "fonts": {k: {"url": f"https://fonts.googleapis.com/css2?family={g}&display=swap" if g else "",
-                      "stack": st} for k, (g, st) in FONT_STACKS.items()},
+        "themes": {k: {"label": v["label"], "desc": v["desc"], "modes": v["modes"], "font": theme_font_url(k),
+                       "og": v["og"]} for k, v in THEMES.items()},
+        "fonts": {k: {"url": GF + q if q else "", "stack": st} for k, (q, st) in FONTS_OVERRIDE.items()},
         "options": OPTIONS, "reserved": sorted(RESERVED), "taken": [p["username"] for p in profiles],
-        "repo": cfg["repo"], "branch": cfg.get("branch", "main"), "site_url": site_url,
-        "limits": LIMITS,
+        "repo": cfg["repo"], "branch": cfg.get("branch", "main"), "site_url": site_url, "limits": LIMITS,
     }
+    builder_json = json.dumps(builder_data).replace("</", "<\\/")
     pages = {
-        "index.html": ("index.html", {"profiles": ordered, "page_url": site_url + "/", "themes": THEMES}),
-        "404.html": ("404.html", {}),
-        "create/index.html": ("create.html", {"page_url": site_url + "/create/", "s": builder_style,
-                                              "builder": json.dumps(builder_data).replace("</", "<\\/")}),
+        "index.html": ("index.html", {"profiles": ordered, "page_url": site_url + "/"}),
+        "404.html": ("404.html", {"page_url": site_url + "/404.html"}),
+        "create/index.html": ("create.html", {"page_url": site_url + "/create/", "builder": builder_json}),
+        "guide/index.html": ("guide.html", {"page_url": site_url + "/guide/", **render_guide()}),
+        "preview/index.html": ("preview.html", {"page_url": site_url + "/preview/", "builder": builder_json,
+                                                "base_css": (STATIC / "profile" / "base.css").read_text(encoding="utf-8")}),
     }
     for target, (tpl, ctx) in pages.items():
         (DIST / target).parent.mkdir(parents=True, exist_ok=True)
-        (DIST / target).write_text(env.get_template(tpl).render(**{**common, "s": home_style, **ctx}), encoding="utf-8")
+        (DIST / target).write_text(env.get_template(tpl).render(**common, css=site_css, **ctx), encoding="utf-8")
 
     (DIST / "sitemap.xml").write_text(env.get_template("sitemap.xml").render(urls=sitemap), encoding="utf-8")
     (DIST / "feed.xml").write_text(env.get_template("feed.xml").render(
         cfg=cfg, updated=max([p["modified"] for p in profiles] + ["2026-01-01"]),
         profiles=sorted(profiles, key=lambda x: x["modified"], reverse=True)[:50]), encoding="utf-8")
     (DIST / "llms.txt").write_text(env.get_template("llms.txt").render(cfg=cfg, profiles=ordered), encoding="utf-8")
-    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {site_url}/sitemap.xml\n", encoding="utf-8")
+    (DIST / "robots.txt").write_text(
+        f"User-agent: *\nAllow: /\nDisallow: /preview/\nDisallow: /demo/\n\nSitemap: {site_url}/sitemap.xml\n", encoding="utf-8")
     if cfg.get("indexnow_key"):
         (DIST / f"{cfg['indexnow_key']}.txt").write_text(cfg["indexnow_key"])
     (DIST / ".nojekyll").write_text("")
     if cfg.get("custom_domain"):
         (DIST / "CNAME").write_text(cfg["custom_domain"].strip() + "\n")
-    (DIST / "urls.txt").write_text("\n".join(u["loc"] for u in sitemap) + "\n")  # used by IndexNow ping
-    print(f"Built {len(profiles)} profile(s) into {DIST.relative_to(ROOT)}/")
+    (DIST / "urls.txt").write_text("\n".join(u["loc"] for u in sitemap) + "\n")
+    for w in dict.fromkeys(WARNINGS):
+        print("  warning:", w)
+    print(f"Built {len(profiles)} profile(s){' + demo' if demo else ''} into {DIST.relative_to(ROOT)}/")
 
 
 def main() -> None:
@@ -500,8 +585,18 @@ def main() -> None:
     ap.add_argument("--no-og", action="store_true", help="skip Open Graph image generation")
     args = ap.parse_args()
     cfg = yaml.safe_load((ROOT / "config.yml").read_text(encoding="utf-8"))
+    if os.environ.get("TAPVIO_SITE_URL"):  # local preview: python build.py with TAPVIO_SITE_URL=http://localhost:8000
+        cfg["site_url"] = os.environ["TAPVIO_SITE_URL"]
     profiles = load_all()
+    if (PROFILES / "_demo.yml").exists():
+        try:
+            load_profile(PROFILES / "_demo.yml", demo=True)
+        except ProfileError as exc:
+            print(f"Demo profile invalid: {exc}", file=sys.stderr)
+            sys.exit(1)
     if args.check:
+        for w in dict.fromkeys(WARNINGS):
+            print("  warning:", w)
         print(f"All {len(profiles)} profile(s) are valid.")
         return
     build(cfg, profiles, og_images=not args.no_og)

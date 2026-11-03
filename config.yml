@@ -10,7 +10,7 @@ owner_url: "https://induswebagency.com"
 # GitHub repo (owner/name): used for "Create your page" and pull-request links.
 repo: "mafzalkalwardev/tapvio"
 branch: "main"
-default_theme: "aurora"
+default_theme: "resume"
 lang: "en"
 # Paste only the content="..." token from Google Search Console / Bing Webmaster Tools.
 google_site_verification: ""

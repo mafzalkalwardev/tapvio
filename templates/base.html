@@ -5,39 +5,51 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{{ cfg.site_name }}{% endblock %}</title>
 {% block meta %}{% endblock %}
+<link rel="canonical" href="{{ page_url }}">
 {% if cfg.google_site_verification %}<meta name="google-site-verification" content="{{ cfg.google_site_verification }}">{% endif %}
 {% if cfg.bing_site_verification %}<meta name="msvalidate.01" content="{{ cfg.bing_site_verification }}">{% endif %}
+<meta name="theme-color" content="#f5f6f8">
 <link rel="icon" href="{{ cfg.site_url }}/favicon.svg" type="image/svg+xml">
-<link rel="alternate" type="application/atom+xml" title="{{ cfg.site_name }}: new pages" href="{{ cfg.site_url }}/feed.xml">
-<link rel="preconnect" href="https://icons.duckduckgo.com">
-{% if s.font_url %}
+<link rel="apple-touch-icon" href="{{ cfg.site_url }}/assets/brand/tapvio-mark-180.png">
+<link rel="alternate" type="application/atom+xml" title="New pages on {{ cfg.site_name }}" href="{{ cfg.site_url }}/feed.xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{{ s.font_url }}">
-{% endif %}
-{% block head_extra %}{% endblock %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Hanken+Grotesk:wght@400;500;600;700">
 <style>{{ css | safe }}</style>
-<script>
-// Swap any image that fails to load (blocked favicon, dead avatar) for a letter badge.
-document.addEventListener('error', e => {
-  const img = e.target;
-  if (img.tagName !== 'IMG' || !img.dataset.fb) return;
-  const el = document.createElement('span');
-  el.className = img.className + (img.classList.contains('avatar') ? ' avatar--initial' : ' ico--txt');
-  el.setAttribute('aria-hidden', 'true');
-  el.textContent = img.dataset.fb;
-  img.replaceWith(el);
-}, true);
-</script>
+{% block head_extra %}{% endblock %}
 </head>
-<body class="page{% if s.background_image %} has-bgimg{% endif %}" data-theme="{{ s.theme }}" data-effect="{{ s.effect }}" data-buttons="{{ s.buttons }}" data-layout="{{ s.layout }}" data-avatar="{{ s.avatar }}" data-anim="{{ s.animation }}"{% if s.css %} style="{{ s.css }}"{% endif %}>
-<div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
+<body class="site">
 <a class="skip" href="#main">Skip to content</a>
-<main id="main" class="wrap{% block main_class %}{% endblock %}">
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="brand" href="{{ cfg.site_url }}/" aria-label="{{ cfg.site_name }} home">{{ logo_svg | safe }}</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="{{ cfg.site_url }}/#themes"{% if active == 'themes' %} aria-current="page"{% endif %}>Themes</a>
+      <a href="{{ cfg.site_url }}/guide/"{% if active == 'guide' %} aria-current="page"{% endif %}>Guide</a>
+      <a href="{{ cfg.site_url }}/#directory">Directory</a>
+      <a href="{{ cfg.repo_url }}">GitHub</a>
+    </nav>
+    {% if active != 'create' %}<a class="btn btn--brand btn--sm" href="{{ cfg.site_url }}/create/">Create your page</a>{% endif %}
+  </div>
+</header>
+<main id="main">
 {% block content %}{% endblock %}
 </main>
 <footer class="foot">
-  <p><a href="{{ cfg.site_url }}/">{{ cfg.site_name }}</a>: free &amp; open source by <a href="{{ cfg.owner_url }}">{{ cfg.owner_name }}</a> · <a href="{{ cfg.site_url }}/create/">Create your free page</a></p>
+  <div class="wrap">
+    <a class="brand" href="{{ cfg.site_url }}/" aria-label="{{ cfg.site_name }} home">{{ logo_svg | safe }}</a>
+    <nav aria-label="Footer">
+      <a href="{{ cfg.site_url }}/create/">Create your page</a>
+      <a href="{{ cfg.site_url }}/guide/">Guide</a>
+      <a href="{{ cfg.repo_url }}">Source code</a>
+      <a href="{{ cfg.site_url }}/sitemap.xml">Sitemap</a>
+    </nav>
+    <span>Free and open source, made by <a href="{{ cfg.owner_url }}">{{ cfg.owner_name }}</a>.</span>
+  </div>
 </footer>
+<script>
+(() => { const n = document.getElementById('nav'); const f = () => n.classList.toggle('is-scrolled', scrollY > 8); addEventListener('scroll', f, { passive: true }); f(); })();
+</script>
 {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,25 @@
+/* Cover: a full-width photo banner with the name set in a large serif beneath it. */
+[data-theme=cover]{--bg:light-dark(#ffffff,#111214);--fg:light-dark(#16171a,#eeeef0);--muted:light-dark(#62656d,#9b9ea6);
+  --line:light-dark(#e4e5e8,#2a2c31);--surface:light-dark(#f6f6f7,#1b1c20);--accent:light-dark(#14532d,#86d4a4);--accent-ink:light-dark(#fff,#0c2416);
+  --font-body:"Instrument Sans",system-ui,sans-serif;--font-display:"Instrument Serif",Georgia,serif;--radius:12px;--avatar:112px}
+[data-theme=cover] .tv-page{max-width:760px;padding-top:0}
+[data-theme=cover] .tv-cover{position:relative;display:block;height:clamp(200px,38vw,320px);margin:0 -22px;overflow:hidden;background:var(--accent);border-radius:0 0 18px 18px}
+[data-theme=cover] .tv-cover img{width:100%;height:100%;object-fit:cover}
+[data-theme=cover] .tv-cover--blank{height:clamp(150px,24vw,210px);background:color-mix(in srgb,var(--accent) 85%,var(--fg))}
+[data-theme=cover] .tv-cover--blank::before{content:"";position:absolute;inset:-60px;background:var(--cover-img,none) center/cover;filter:blur(36px) saturate(1.3);opacity:.9}
+[data-theme=cover] .tv-id{position:relative;z-index:1;flex-direction:column;align-items:flex-start;gap:14px;margin-top:calc(var(--avatar) / -2)}
+[data-theme=cover] .tv-avatar{border:5px solid var(--bg);background:var(--surface)}
+[data-theme=cover] .tv-name{font:400 clamp(2.4rem,7vw,3.4rem)/1 var(--font-display);letter-spacing:-.01em}
+[data-theme=cover] .tv-verified{width:.42em;height:.42em;vertical-align:.3em}
+[data-theme=cover] .tv-headline{font-size:1.08rem;margin-top:8px}
+[data-theme=cover] .tv-social a{background:var(--surface);border-color:transparent}
+[data-theme=cover] .tv-social a:hover{border-color:var(--fg)}
+[data-theme=cover] .tv-btn{border-radius:999px}
+[data-theme=cover] .tv-search input{border-radius:999px;background:var(--surface);border-color:transparent}
+[data-theme=cover] .tv-h{font:400 1.6rem/1.2 var(--font-display);color:var(--fg);margin-bottom:12px}
+[data-theme=cover] .tv-link{background:var(--surface);border-color:transparent;padding:14px 16px}
+[data-theme=cover] .tv-link:hover{border-color:var(--fg)}
+[data-theme=cover] .is-featured .tv-link{background:var(--accent);color:var(--accent-ink)}
+[data-theme=cover] .is-featured .tv-ld,[data-theme=cover] .is-featured .tv-desc{color:inherit;opacity:.8}
+[data-theme=cover] .tv-ico{border-radius:5px}
+@media (max-width:520px){[data-theme=cover] .tv-cover{margin:0 -16px}[data-theme=cover] .tv-page{padding-top:0}}

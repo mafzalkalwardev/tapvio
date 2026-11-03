@@ -1,153 +1,105 @@
 {% extends "base.html" %}
+{% set active = 'create' %}
 {% block title %}Create your free link-in-bio page | {{ cfg.site_name }}{% endblock %}
 {% block meta %}
-<meta name="description" content="Build your free {{ cfg.site_name }} page visually: pick a theme, animations, fonts and button styles, add your links and publish. No sign-up, no ads, indexed by Google.">
+<meta name="description" content="Build your free Tapvio page: choose one of {{ themes | length }} themes, add your links and publish. No sign-up, no ads, and your page can be found on Google.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="{{ page_url }}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Create your free {{ cfg.site_name }} page">
 <meta property="og:description" content="{{ cfg.site_tagline }}">
 <meta property="og:url" content="{{ page_url }}">
-{% endblock %}
-{% block head_extra %}
-<style>
-.wrap.builder{max-width:1240px;padding-top:36px}
-.bhead{text-align:center;margin-bottom:26px}
-.bhead h1{font-size:clamp(1.6rem,4vw,2.3rem)}
-.bhead p{color:var(--muted);margin:6px auto 0;max-width:60ch}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:28px;align-items:start}
-@media (max-width:980px){.grid2{grid-template-columns:1fr}.phone-col{order:-1}}
-.panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:20px 20px 8px;margin-bottom:18px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
-.panel h2{margin:0 0 14px;font-size:.82rem}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:560px){.row{grid-template-columns:1fr}}
-.f{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;font-size:.88rem;font-weight:600}
-.f small{font-weight:400;color:var(--muted)}
-.f .err{color:#ff6b81;font-weight:600}
-.f .ok{color:#3ddc97;font-weight:600}
-.builder input,.builder textarea,.builder select{font:inherit;font-weight:400;font-size:.95rem;color:var(--text);background:rgba(127,127,127,.08);border:1px solid var(--border);border-radius:10px;padding:9px 11px;width:100%}
-.builder textarea{min-height:76px;resize:vertical}
-.builder select option{color:#111}
-.builder input:focus,.builder textarea:focus,.builder select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 28%,transparent)}
-.builder input[type=color]{padding:2px;height:40px;cursor:pointer}
-.builder input[type=checkbox]{width:auto}
-.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:10px;margin-bottom:16px}
-.sw{position:relative;border:2px solid transparent;border-radius:12px;padding:0;cursor:pointer;height:64px;overflow:hidden;font:inherit;font-size:.75rem;font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;transition:transform .2s}
-.sw:hover{transform:translateY(-2px)}
-.sw[aria-pressed=true]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 35%,transparent)}
-.sw .dot{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:34px;height:12px;border-radius:6px}
-.item{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:center;margin-bottom:8px}
-.item.link-item{grid-template-columns:1fr 1.4fr auto auto}
-.item .desc{grid-column:1/3}
-@media (max-width:560px){.item,.item.link-item{grid-template-columns:1fr auto}.item .desc{grid-column:1/-1}}
-.ib{border:1px solid var(--border);background:transparent;color:var(--text);border-radius:8px;padding:7px 9px;cursor:pointer;font:inherit;font-size:.85rem;line-height:1}
-.ib:hover{border-color:var(--accent)}
-.feat{display:flex;align-items:center;gap:4px;font-size:.78rem;font-weight:600;color:var(--muted)}
-.sec{border:1px dashed var(--border);border-radius:14px;padding:12px;margin-bottom:12px}
-.sec-head{display:flex;gap:8px;margin-bottom:10px}
-.add{margin:0 0 14px}
-.phone-col{position:sticky;top:18px}
-.phone{position:relative;height:min(780px,calc(100vh - 140px));min-height:520px;border-radius:36px;border:10px solid #0b0b12;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);overflow:hidden;background:#000}
-.phone .page{position:absolute;inset:0;min-height:0;overflow:hidden}
-.pv-scroll{position:absolute;inset:0;z-index:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
-.pv-scroll::-webkit-scrollbar{display:none}
-.phone .fx,.phone .page.has-bgimg::before{position:absolute}
-.phone .wrap{padding:44px 14px 20px}
-.phone .foot{padding-bottom:26px}
-.out{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
-.yaml{width:100%;min-height:220px;font-family:ui-monospace,Menlo,Consolas,monospace!important;font-size:.8rem!important;white-space:pre}
-.steps{margin:0 0 14px;padding-left:20px;color:var(--muted);font-size:.9rem}
-.steps b{color:var(--text)}
-.chk{flex-direction:row;align-items:center;gap:8px}
-</style>
+<meta property="og:image" content="{{ cfg.site_url }}/assets/brand/tapvio-social.png">
 {% endblock %}
 
-{% block main_class %} builder{% endblock %}
 {% block content %}
-<header class="bhead">
-  <h1 class="anim">✨ Create your {{ cfg.site_name }} page</h1>
-  <p class="anim" style="--i:1">Fill in the form and watch the preview update. When you're happy, click <b>Publish on GitHub</b>. Your page goes live for free once it's approved.</p>
+<div class="wrap">
+<header class="builder-head">
+  <h1 class="h2">Create your page</h1>
+  <p>Fill in the form and the preview updates as you type. Your draft is saved in this browser. When you're ready, publish it through GitHub; the guide explains <a href="{{ cfg.site_url }}/guide/#publish">each step</a>.</p>
+  <p><button type="button" class="ib ib--text" id="example-btn">Fill in an example page</button></p>
 </header>
 
-<div class="grid2">
+<div class="builder">
 <div>
-  <section class="panel">
-    <h2>1 · About you</h2>
+  <section class="panel" aria-labelledby="p1">
+    <h2 id="p1">About you</h2>
+    <p>This is what people and search engines see first.</p>
     <div class="row">
-      <label class="f">Username <input id="username" placeholder="e.g. ali-khan" maxlength="30" autocomplete="off"><small id="u-msg">Your page: {{ cfg.site_url }}/<b id="u-prev">username</b>/</small></label>
-      <label class="f">Full name <input id="name" placeholder="Ali Khan" maxlength="80"></label>
+      <label class="f">Username <input id="username" placeholder="ali-khan" maxlength="30" autocomplete="off" spellcheck="false"><small id="u-msg">Your page will be {{ cfg.site_url }}/<b>username</b>/</small></label>
+      <label class="f">Full name <input id="name" placeholder="Ali Khan" maxlength="80" autocomplete="name"></label>
     </div>
     <div class="row">
-      <label class="f">Headline <input id="headline" placeholder="Full-stack developer" maxlength="100"></label>
+      <label class="f">What you do <input id="headline" placeholder="Brand designer" maxlength="100"></label>
       <label class="f">Location <input id="location" placeholder="Lahore, Pakistan" maxlength="100"></label>
     </div>
-    <label class="f">Short bio <input id="bio" placeholder="One line about what you do" maxlength="200"></label>
-    <label class="f">About (good for SEO) <textarea id="about" maxlength="1200" placeholder="A few sentences about you, your work, and what visitors will find here."></textarea></label>
+    <label class="f">Short bio <input id="bio" placeholder="One line about your work" maxlength="200"></label>
+    <label class="f">About <textarea id="about" maxlength="1200" placeholder="A few sentences about you and your work. Search engines read this."></textarea></label>
     <div class="row">
-      <label class="f">Avatar image URL <input id="avatar" placeholder="https://github.com/you.png"><small>Tip: <a href="#" id="gh-avatar">use my GitHub photo</a></small></label>
-      <label class="f">Keywords <input id="keywords" placeholder="python, automation, freelancer"><small>Comma separated</small></label>
+      <label class="f">Photo URL <input id="avatar" placeholder="https://github.com/you.png" inputmode="url"><small><button type="button" class="ib ib--text" id="gh-avatar">Use my GitHub photo</button></small></label>
+      <label class="f">Cover image URL <input id="cover" placeholder="https://..." inputmode="url"><small>Used by the Cover theme.</small></label>
+    </div>
+    <div class="row">
+      <label class="f">Job title <input id="job_title" placeholder="Founder" maxlength="100"><small>Shown in search results and on your saved contact.</small></label>
+      <label class="f">Keywords <input id="keywords" placeholder="branding, logo design, Lahore"><small>Separate with commas.</small></label>
     </div>
   </section>
 
-  <section class="panel">
-    <h2>2 · Look &amp; feel</h2>
-    <div class="swatches" id="swatches" role="group" aria-label="Theme"></div>
+  <section class="panel" aria-labelledby="p2">
+    <h2 id="p2">Theme</h2>
+    <p id="theme-desc">Each theme has its own layout and fonts.</p>
+    <div class="themes" id="themes" role="group" aria-label="Theme"></div>
+    <div class="row">
+      <div class="f"><span id="mode-l">Light or dark</span>
+        <div class="seg" role="group" aria-labelledby="mode-l" id="mode"></div>
+        <small id="mode-note"></small>
+      </div>
+      <div class="f"><span id="av-l">Photo shape</span><div class="seg" role="group" aria-labelledby="av-l" id="avshape"></div></div>
+    </div>
     <div class="row">
       <label class="f">Font <select id="font"></select></label>
-      <label class="f">Button style <select id="buttons"></select></label>
-    </div>
-    <div class="row">
-      <label class="f">Background animation <select id="effect"></select></label>
-      <label class="f">Link entrance animation <select id="animation"></select></label>
-    </div>
-    <div class="row">
-      <label class="f">Layout <select id="layout"></select></label>
-      <label class="f">Avatar shape <select id="avatarShape"></select></label>
-    </div>
-    <div class="row">
       <div class="f"><span>Accent colour</span>
-        <div style="display:flex;gap:8px;align-items:center"><input type="color" id="accent" value="#8b7cff" style="width:64px"><label class="f chk" style="margin:0"><input type="checkbox" id="useAccent"> Custom</label></div>
-      </div>
-      <div class="f"><span>Gradient background</span>
-        <div style="display:flex;gap:8px;align-items:center"><input type="color" id="g1" value="#1a1a2e" style="width:56px"><input type="color" id="g2" value="#0f3460" style="width:56px"><label class="f chk" style="margin:0"><input type="checkbox" id="useGrad"> On</label></div>
+        <div style="display:flex;gap:10px;align-items:center"><input type="color" id="accent" value="#2240c4" aria-label="Accent colour"><label class="f check" style="margin:0"><input type="checkbox" id="useAccent"> Use my own colour</label></div>
       </div>
     </div>
-    <label class="f">Background image URL (optional) <input id="bgimg" placeholder="https://images.unsplash.com/..."><small>It's darkened automatically so text stays readable.</small></label>
+    <label class="f check"><input type="checkbox" id="icons" checked> Show website icons next to links</label>
   </section>
 
-  <section class="panel">
-    <h2>3 · Social icons</h2>
+  <section class="panel" aria-labelledby="p3">
+    <h2 id="p3">Profiles</h2>
+    <p>Your main accounts, shown under your bio. Add an email or phone link and visitors get a Save contact button.</p>
     <div id="socials"></div>
-    <button type="button" class="btn add" id="add-social">+ Add social</button>
+    <button type="button" class="ib" id="add-social" style="margin-bottom:16px">Add profile</button>
   </section>
 
-  <section class="panel">
-    <h2>4 · Links</h2>
+  <section class="panel" aria-labelledby="p4">
+    <h2 id="p4">Links</h2>
+    <p>Group links into sections. Star a link to feature it.</p>
     <div id="sections"></div>
-    <button type="button" class="btn add" id="add-section">+ Add section</button>
+    <button type="button" class="ib" id="add-section" style="margin-bottom:16px">Add section</button>
   </section>
 
-  <section class="panel" id="publish">
-    <h2>5 · Publish</h2>
-    <ol class="steps">
-      <li>Click <b>Publish on GitHub</b>. Sign in, or create a free GitHub account.</li>
-      <li>GitHub opens with your file already filled in. Click <b>Commit changes → Propose changes → Create pull request</b>.</li>
-      <li>Once it's approved, your page is live at <b>{{ cfg.site_url }}/<span class="u-echo">username</span>/</b>.</li>
+  <section class="panel" id="publish" aria-labelledby="p5">
+    <h2 id="p5">Publish</h2>
+    <ol class="publish-steps">
+      <li>Click <b>Publish on GitHub</b> and sign in. A free account is enough.</li>
+      <li>GitHub opens with your file filled in. Click <b>Commit changes</b>, then <b>Propose changes</b>, then <b>Create pull request</b>.</li>
+      <li>When it's approved, your page goes live at <b>{{ cfg.site_url }}/<span class="u-echo">username</span>/</b>.</li>
     </ol>
-    <p class="f err" id="pub-err" hidden></p>
+    <p class="msg-err" id="pub-err" role="alert" hidden></p>
     <div class="out">
-      <button type="button" class="btn btn--solid" id="publish-btn">🚀 Publish on GitHub</button>
-      <button type="button" class="btn" id="copy-btn">Copy YAML</button>
-      <button type="button" class="btn" id="dl-btn">Download .yml</button>
-      <button type="button" class="btn" id="reset-btn">Reset</button>
+      <button type="button" class="btn btn--brand" id="publish-btn">Publish on GitHub</button>
+      <button type="button" class="btn btn--sm" id="copy-btn">Copy file</button>
+      <button type="button" class="btn btn--sm" id="dl-btn">Download file</button>
+      <button type="button" class="btn btn--sm" id="reset-btn">Start over</button>
     </div>
-    <label class="f"><span>Your profile file <small>(profiles/<span class="u-echo">username</span>.yml)</small></span><textarea class="yaml" id="yaml" readonly></textarea></label>
+    <label class="f"><span>Your page file <small>profiles/<span class="u-echo">username</span>.yml</small></span><textarea class="yaml" id="yaml" readonly spellcheck="false"></textarea></label>
   </section>
 </div>
 
-<div class="phone-col">
-  <div class="phone" aria-label="Live preview"><div class="page" id="pv"></div></div>
-  <p style="text-align:center;color:var(--muted);font-size:.85rem">Live preview</p>
+<aside class="builder-preview" aria-label="Live preview">
+  <div class="phone"><iframe id="pv" src="{{ cfg.site_url }}/preview/" title="Live preview of your page"></iframe></div>
+  <p class="preview-note">Live preview. Links are disabled here.</p>
+</aside>
 </div>
 </div>
 {% endblock %}
@@ -160,57 +112,70 @@ const D = JSON.parse(document.getElementById('builder-data').textContent);
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const domain = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
-const okUrl = u => /^(https?:\/\/[^\s]+\.[^\s]+|mailto:[^\s]+|tel:[+0-9 ()-]+)$/i.test(u.trim());
-const STORE = 'tapvio-draft-v1';
+const okUrl = u => /^(https?:\/\/[^\s/]+\.[^\s]+|mailto:[^\s@]+@[^\s@]+|tel:\+?[0-9 ()-]{5,})$/i.test(String(u).trim());
+const okImg = u => !u.trim() || /^https:\/\/[^\s"'<>\\]+$/.test(u.trim());
+const STORE = 'tapvio-draft-v2';
+const FIELDS = ['username', 'name', 'headline', 'bio', 'about', 'location', 'avatar', 'cover', 'job_title', 'keywords'];
 
-const blank = () => ({
-  username: '', name: '', headline: '', bio: '', about: '', location: '', avatar: '', keywords: '',
-  style: { theme: 'aurora', font: 'inter', buttons: 'rounded', layout: 'list', avatar: 'circle', effect: 'auto', animation: 'rise',
-           accent: '#8b7cff', useAccent: false, g1: '#1a1a2e', g2: '#0f3460', useGrad: false, bgimg: '' },
-  socials: [{ label: 'GitHub', url: '' }, { label: 'LinkedIn', url: '' }, { label: 'Email', url: 'mailto:' }],
-  sections: [{ title: 'Links', links: [{ title: 'My website', url: 'https://', description: '', featured: true }] }],
-});
+const blank = () => ({ username: '', name: '', headline: '', bio: '', about: '', location: '', avatar: '', cover: '', job_title: '', keywords: '',
+  style: { theme: 'resume', mode: 'auto', accent: '#2240c4', useAccent: false, font: 'default', avatar: 'circle', icons: 'on' },
+  socials: [{ label: 'LinkedIn', url: '' }, { label: 'Email', url: '' }],
+  sections: [{ title: 'Links', links: [{ title: '', url: '', description: '', featured: true }] }] });
+const example = () => ({ username: 'sana-malik', name: 'Sana Malik', headline: 'Product designer and illustrator', location: 'Karachi, Pakistan',
+  bio: 'I design calm, useful apps for health and finance teams. Open for freelance work from January.',
+  about: 'Eight years designing mobile and web products, most recently at a fintech startup in Karachi. I run a small studio with two other designers.',
+  avatar: '', cover: '', job_title: 'Product Designer', keywords: 'product design, UI design, illustration, Karachi',
+  style: { theme: 'tiles', mode: 'auto', accent: '#2240c4', useAccent: false, font: 'default', avatar: 'circle', icons: 'on' },
+  socials: [{ label: 'Dribbble', url: 'https://dribbble.com/' }, { label: 'LinkedIn', url: 'https://www.linkedin.com/' }, { label: 'Email', url: 'mailto:hello@example.com' }],
+  sections: [{ title: 'Work with me', links: [{ title: 'Book a 20-minute intro call', url: 'https://cal.com/', description: '', featured: true }, { title: 'Portfolio', url: 'https://www.behance.net/', description: 'Case studies from 2019 to now', featured: false }] },
+             { title: 'Recent projects', links: [{ title: 'Redesigning a savings app for first-time users', url: 'https://medium.com/', description: '', featured: false }, { title: 'Clinic booking flow, from 9 steps to 4', url: 'https://dribbble.com/', description: '', featured: false }] }] });
 let S;
 try { S = JSON.parse(localStorage.getItem(STORE)) || blank(); } catch { S = blank(); }
+S.style = { ...blank().style, ...(S.style || {}) };
+if (!D.themes[S.style.theme]) S.style.theme = 'resume';
 
 /* ---------- static controls ---------- */
-const fields = ['username', 'name', 'headline', 'bio', 'about', 'location', 'avatar', 'keywords'];
-fields.forEach(k => { $(k).value = S[k] || ''; $(k).addEventListener('input', () => { S[k] = $(k).value; update(); }); });
-const fill = (id, list, key) => { $(id).innerHTML = list.map(v => `<option value="${v}">${v.replace(/-/g, ' ')}</option>`).join(''); $(id).value = S.style[key]; $(id).addEventListener('change', () => { S.style[key] = $(id).value; update(); }); };
-fill('font', Object.keys(D.fonts), 'font');
-fill('buttons', D.options.buttons, 'buttons');
-fill('effect', D.options.effect, 'effect');
-fill('animation', D.options.animation, 'animation');
-fill('layout', D.options.layout, 'layout');
-fill('avatarShape', D.options.avatar, 'avatar');
-[['accent', 'accent'], ['g1', 'g1'], ['g2', 'g2'], ['bgimg', 'bgimg']].forEach(([id, k]) => { $(id).value = S.style[k]; $(id).addEventListener('input', () => { S.style[k] = $(id).value; if (id === 'accent') { S.style.useAccent = true; $('useAccent').checked = true; } if (id[0] === 'g') { S.style.useGrad = true; $('useGrad').checked = true; } update(); }); });
-['useAccent', 'useGrad'].forEach(id => { $(id).checked = S.style[id]; $(id).addEventListener('change', () => { S.style[id] = $(id).checked; update(); }); });
-$('gh-avatar').addEventListener('click', e => { e.preventDefault(); const u = prompt('Your GitHub username:', S.username); if (u) { S.avatar = `https://github.com/${u.trim()}.png`; $('avatar').value = S.avatar; update(); } });
+function syncFields() { FIELDS.forEach(k => $(k).value = S[k] || ''); $('accent').value = S.style.accent; $('useAccent').checked = S.style.useAccent; $('font').value = S.style.font; $('icons').checked = S.style.icons === 'on'; }
+FIELDS.forEach(k => $(k).addEventListener('input', () => { S[k] = $(k).value; update(false); }));
+$('font').innerHTML = '<option value="default">Theme default</option>' + Object.keys(D.fonts).map(f => `<option value="${f}">${f.replace(/-/g, ' ').replace(/\b\w/g, m => m.toUpperCase())}</option>`).join('');
+$('font').addEventListener('change', () => { S.style.font = $('font').value; update(false); });
+$('accent').addEventListener('input', () => { S.style.accent = $('accent').value; S.style.useAccent = true; $('useAccent').checked = true; update(false); });
+$('useAccent').addEventListener('change', () => { S.style.useAccent = $('useAccent').checked; update(false); });
+$('icons').addEventListener('change', () => { S.style.icons = $('icons').checked ? 'on' : 'off'; update(false); });
+$('gh-avatar').addEventListener('click', () => { const u = prompt('Your GitHub username', S.username); if (u && /^[A-Za-z0-9-]{1,39}$/.test(u.trim())) { S.avatar = `https://github.com/${u.trim()}.png`; $('avatar').value = S.avatar; update(false); } });
 
-$('swatches').innerHTML = Object.entries(D.themes).map(([k, t]) =>
-  `<button type="button" class="sw" data-t="${k}" style="background:radial-gradient(circle at 20% 10%,${t.c1},transparent 60%),radial-gradient(circle at 90% 80%,${t.c2},transparent 60%),${t.bg};color:${t.text}"><span class="dot" style="background:${t.accent}"></span>${k}</button>`).join('');
-$('swatches').addEventListener('click', e => { const b = e.target.closest('.sw'); if (!b) return; S.style.theme = b.dataset.t; if (!S.style.useAccent) $('accent').value = D.themes[b.dataset.t].accent; update(); });
+$('themes').innerHTML = Object.entries(D.themes).map(([k, t]) => {
+  const [bg, fg, ac] = t.og;
+  return `<button type="button" class="theme-opt" data-t="${k}" aria-pressed="false"><span class="theme-sw" style="background:${bg}"><b style="background:${fg}"></b><i style="background:${ac === bg ? fg : ac};opacity:.85"></i></span><span class="theme-name">${esc(t.label)}</span></button>`;
+}).join('');
+$('themes').addEventListener('click', e => { const b = e.target.closest('.theme-opt'); if (!b) return; S.style.theme = b.dataset.t; update(false); });
+function seg(id, values, key, labels) {
+  $(id).innerHTML = values.map(v => `<button type="button" data-v="${v}">${labels[v] || v}</button>`).join('');
+  $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.disabled) return; S.style[key] = b.dataset.v; update(false); });
+}
+seg('mode', D.options.mode, 'mode', { auto: 'Auto', light: 'Light', dark: 'Dark' });
+seg('avshape', D.options.avatar, 'avatar', { circle: 'Circle', rounded: 'Rounded', square: 'Square' });
 
 /* ---------- dynamic lists ---------- */
 function renderLists() {
   $('socials').innerHTML = S.socials.map((s, i) => `
-    <div class="item"><input data-s="${i}" data-k="label" value="${esc(s.label)}" placeholder="Label (e.g. GitHub)" maxlength="120">
-    <input data-s="${i}" data-k="url" value="${esc(s.url)}" placeholder="https://… or mailto:…">
-    <button type="button" class="ib" data-del-s="${i}" aria-label="Remove">✕</button></div>`).join('');
+    <div class="item"><input data-s="${i}" data-k="label" value="${esc(s.label)}" placeholder="Label, e.g. GitHub" maxlength="120" aria-label="Profile ${i + 1} label">
+    <input data-s="${i}" data-k="url" value="${esc(s.url)}" placeholder="https://… or mailto:you@…" aria-label="Profile ${i + 1} address" inputmode="url">
+    <button type="button" class="ib" data-del-s="${i}" aria-label="Remove profile ${i + 1}">Remove</button></div>`).join('');
   $('sections').innerHTML = S.sections.map((sec, i) => `
     <div class="sec">
-      <div class="sec-head"><input data-sec="${i}" value="${esc(sec.title)}" placeholder="Section title (e.g. Work with me)" maxlength="120">
-        <button type="button" class="ib" data-up="${i}" aria-label="Move up">↑</button>
-        <button type="button" class="ib" data-del-sec="${i}" aria-label="Remove section">✕</button></div>
+      <div class="sec-head"><input data-sec="${i}" value="${esc(sec.title)}" placeholder="Section name, e.g. Work with me" maxlength="120" aria-label="Section ${i + 1} name">
+        <button type="button" class="ib" data-up="${i}" aria-label="Move section ${i + 1} up" ${i ? '' : 'disabled'}>Up</button>
+        <button type="button" class="ib" data-del-sec="${i}" aria-label="Remove section ${i + 1}">Remove</button></div>
       ${sec.links.map((l, j) => `
         <div class="item link-item">
-          <input data-l="${i}.${j}" data-k="title" value="${esc(l.title)}" placeholder="Link title" maxlength="120">
-          <input data-l="${i}.${j}" data-k="url" value="${esc(l.url)}" placeholder="https://…">
-          <label class="feat" title="Highlight this link"><input type="checkbox" data-l="${i}.${j}" data-k="featured" ${l.featured ? 'checked' : ''}>★</label>
-          <button type="button" class="ib" data-del-l="${i}.${j}" aria-label="Remove link">✕</button>
-          <input class="desc" data-l="${i}.${j}" data-k="description" value="${esc(l.description)}" placeholder="Optional description" maxlength="160">
+          <input data-l="${i}.${j}" data-k="title" value="${esc(l.title)}" placeholder="Link title" maxlength="120" aria-label="Link title">
+          <input data-l="${i}.${j}" data-k="url" value="${esc(l.url)}" placeholder="https://…" aria-label="Link address" inputmode="url">
+          <label class="feat"><input type="checkbox" data-l="${i}.${j}" data-k="featured" ${l.featured ? 'checked' : ''}> Feature</label>
+          <button type="button" class="ib" data-del-l="${i}.${j}" aria-label="Remove link">Remove</button>
+          <input class="desc" data-l="${i}.${j}" data-k="description" value="${esc(l.description)}" placeholder="Short description (optional)" maxlength="160" aria-label="Link description">
         </div>`).join('')}
-      <button type="button" class="ib" data-add-l="${i}">+ Add link</button>
+      <button type="button" class="ib ib--text" data-add-l="${i}">Add link</button>
     </div>`).join('');
 }
 document.addEventListener('input', e => {
@@ -227,118 +192,103 @@ document.addEventListener('click', e => {
   else if (d.delSec !== undefined) S.sections.splice(d.delSec, 1);
   else if (d.up !== undefined) { const i = +d.up; if (i > 0) [S.sections[i - 1], S.sections[i]] = [S.sections[i], S.sections[i - 1]]; }
   else if (d.delL !== undefined) { const [i, j] = d.delL.split('.'); S.sections[i].links.splice(j, 1); }
-  else if (d.addL !== undefined) S.sections[d.addL].links.push({ title: '', url: 'https://', description: '', featured: false });
+  else if (d.addL !== undefined) S.sections[d.addL].links.push({ title: '', url: '', description: '', featured: false });
   else changed = false;
-  if (changed) update();
+  if (changed) update(true);
 });
-$('add-social').addEventListener('click', () => { if (S.socials.length < D.limits.socials) { S.socials.push({ label: '', url: 'https://' }); update(); } });
-$('add-section').addEventListener('click', () => { if (S.sections.length < D.limits.sections) { S.sections.push({ title: '', links: [{ title: '', url: 'https://', description: '', featured: false }] }); update(); } });
+$('add-social').addEventListener('click', () => { if (S.socials.length < D.limits.socials) { S.socials.push({ label: '', url: '' }); update(true); } });
+$('add-section').addEventListener('click', () => { if (S.sections.length < D.limits.sections) { S.sections.push({ title: '', links: [{ title: '', url: '', description: '', featured: false }] }); update(true); } });
 
-/* ---------- clean data + YAML ---------- */
+/* ---------- clean data, file output ---------- */
 function clean() {
-  const links = S.sections.map(s => ({ title: s.title.trim(), links: s.links.filter(l => l.title.trim() && okUrl(l.url)) })).filter(s => s.links.length);
-  return { ...S, socials: S.socials.filter(s => okUrl(s.url) && !/^mailto:$/.test(s.url.trim())), sections: links };
+  const sections = S.sections.map(s => ({ title: s.title.trim(), links: s.links.filter(l => l.title.trim() && okUrl(l.url)).map(l => ({ ...l, url: l.url.trim(), title: l.title.trim(), description: l.description.trim() })) })).filter(s => s.links.length);
+  const trim = k => (S[k] || '').trim();
+  return { ...Object.fromEntries(FIELDS.map(k => [k, trim(k)])), avatar: okImg(S.avatar) ? trim('avatar') : '', cover: okImg(S.cover) ? trim('cover') : '',
+    style: { ...S.style, accent: S.style.useAccent ? S.style.accent : '' },
+    socials: S.socials.filter(s => okUrl(s.url)).map(s => ({ label: s.label.trim() || domain(s.url) || 'Contact', url: s.url.trim() })), sections };
 }
-const q = v => JSON.stringify(String(v).trim());
+const q = v => JSON.stringify(String(v));
 function toYaml(c) {
-  const st = c.style, out = [];
-  out.push(`# Made with the ${D.site_url}/create/ builder`, `username: ${c.username.trim() || 'your-username'}`, `name: ${q(c.name || 'Your Name')}`);
-  ['headline', 'bio', 'location'].forEach(k => c[k].trim() && out.push(`${k}: ${q(c[k])}`));
-  if (c.about.trim()) out.push(`about: ${q(c.about.replace(/\s+/g, ' '))}`);
-  if (c.avatar.trim()) out.push(`avatar: ${q(c.avatar)}`);
+  const st = c.style, out = [`# Made with the ${D.site_url}/create/ builder`, `username: ${c.username || 'your-username'}`, `name: ${q(c.name || 'Your Name')}`];
+  ['headline', 'bio', 'location', 'job_title'].forEach(k => c[k] && out.push(`${k}: ${q(c[k])}`));
+  if (c.about) out.push(`about: ${q(c.about.replace(/\s+/g, ' '))}`);
+  if (c.avatar) out.push(`avatar: ${q(c.avatar)}`);
+  if (c.cover) out.push(`cover: ${q(c.cover)}`);
   const kw = c.keywords.split(',').map(s => s.trim()).filter(Boolean);
   if (kw.length) out.push(`keywords: [${kw.map(q).join(', ')}]`);
-  out.push('', 'style:', `  theme: ${st.theme}`, `  font: ${st.font}`, `  buttons: ${st.buttons}`, `  layout: ${st.layout}`, `  avatar: ${st.avatar}`, `  effect: ${st.effect}`, `  animation: ${st.animation}`);
-  if (st.useAccent) out.push(`  accent: "${st.accent}"`);
-  if (st.useGrad) out.push(`  gradient: ["${st.g1}", "${st.g2}"]`);
-  if (st.bgimg.trim()) out.push(`  background_image: ${q(st.bgimg)}`);
-  if (c.socials.length) { out.push('', 'socials:'); c.socials.forEach(s => out.push(`  - { label: ${q(s.label || domain(s.url) || 'Link')}, url: ${q(s.url)} }`)); }
+  out.push('', 'style:', `  theme: ${st.theme}`);
+  if (D.themes[st.theme].modes) out.push(`  mode: ${st.mode}`);
+  if (st.accent) out.push(`  accent: "${st.accent}"`);
+  if (st.font !== 'default') out.push(`  font: ${st.font}`);
+  if (st.avatar !== 'circle') out.push(`  avatar: ${st.avatar}`);
+  if (st.icons === 'off') out.push('  icons: off');
+  if (c.socials.length) { out.push('', 'socials:'); c.socials.forEach(s => out.push(`  - { label: ${q(s.label)}, url: ${q(s.url)} }`)); }
   if (c.sections.length) {
     out.push('', 'sections:');
-    c.sections.forEach(s => {
-      out.push(`  - title: ${q(s.title)}`, '    links:');
-      s.links.forEach(l => out.push(`      - { title: ${q(l.title)}, url: ${q(l.url)}${l.description.trim() ? `, description: ${q(l.description)}` : ''}${l.featured ? ', featured: true' : ''} }`));
-    });
+    c.sections.forEach(s => { out.push(`  - title: ${q(s.title || 'Links')}`, '    links:');
+      s.links.forEach(l => out.push(`      - { title: ${q(l.title)}, url: ${q(l.url)}${l.description ? `, description: ${q(l.description)}` : ''}${l.featured ? ', featured: true' : ''} }`)); });
   }
   return out.join('\n') + '\n';
 }
 
-/* ---------- preview ---------- */
-const loadedFonts = new Set();
-function preview(c) {
-  const st = c.style, t = D.themes[st.theme], pv = $('pv');
-  const font = D.fonts[st.font];
-  if (font.url && !loadedFonts.has(font.url)) { const l = document.createElement('link'); l.rel = 'stylesheet'; l.href = font.url; document.head.appendChild(l); loadedFonts.add(font.url); }
-  Object.assign(pv.dataset, { theme: st.theme, effect: st.effect === 'auto' ? t.effect : st.effect, buttons: st.buttons, layout: st.layout, avatar: st.avatar, anim: st.animation });
-  const vars = [];
-  if (!(st.theme === 'terminal' && st.font === 'inter')) vars.push(`--font:${font.stack}`);
-  if (st.useAccent) vars.push(`--accent:${st.accent}`);
-  if (st.useGrad) vars.push(`--page-bg:linear-gradient(160deg,${st.g1},${st.g2})`);
-  const bg = /^https:\/\/[^\s"'()\\;]+$/.test(st.bgimg.trim()) ? st.bgimg.trim() : '';
-  if (bg) vars.push(`--bg-img:url(${bg})`);
-  pv.setAttribute('style', vars.join(';'));
-  pv.classList.toggle('has-bgimg', !!bg);
-  const name = c.name.trim() || 'Your Name', ini = esc(name[0]);
-  const av = c.avatar.trim().startsWith('https://') ? `<img class="avatar" src="${esc(c.avatar.trim())}" alt="" data-fb="${ini}">` : `<div class="avatar avatar--initial">${ini}</div>`;
-  let i = 8;
-  pv.innerHTML = `<div class="fx" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="pv-scroll"><div class="wrap"><header class="hero">
-    <div class="avatar-wrap anim" style="--i:0">${av}</div>
-    <h1 class="anim" style="--i:1">${esc(name)}</h1>
-    ${c.headline.trim() ? `<p class="headline anim" style="--i:2">${esc(c.headline)}</p>` : ''}
-    ${c.bio.trim() ? `<p class="bio anim" style="--i:3">${esc(c.bio)}</p>` : ''}
-    ${c.location.trim() ? `<p class="loc anim" style="--i:3">📍 ${esc(c.location)}</p>` : ''}
-    ${c.socials.length ? `<nav class="socials">${c.socials.map((s, k) => `<a class="anim" style="--i:${k + 4}" title="${esc(s.label)}">${s.url.startsWith('http') ? `<img class="sico" src="https://icons.duckduckgo.com/ip3/${esc(domain(s.url))}.ico" alt="" data-fb="${esc((s.label || '?')[0])}">` : '✉'}</a>`).join('')}</nav>` : ''}
-  </header>
-  ${c.about.trim() ? `<section class="about anim" style="--i:7"><h2>About ${esc(name.split(' ')[0])}</h2><p>${esc(c.about)}</p></section>` : ''}
-  ${c.sections.map(s => `<section class="block">${s.title ? `<h2 class="anim" style="--i:${i}">${esc(s.title)}</h2>` : ''}<ul class="links">${s.links.map(l => `<li class="anim" style="--i:${++i}"><a class="link${l.featured ? ' link--featured' : ''}">${l.url.startsWith('http') ? `<img class="ico" src="https://icons.duckduckgo.com/ip3/${esc(domain(l.url))}.ico" alt="" data-fb="${esc(l.title[0])}">` : '<span class="ico ico--txt">✉</span>'}<span class="txt"><span class="t">${esc(l.title)}</span><span class="d">${esc(l.description || domain(l.url))}</span></span><span class="arrow">→</span></a></li>`).join('')}</ul></section>`).join('')}
-  </div><footer class="foot"><p>${esc(D.site_url.replace(/^https?:\/\//, ''))}/${esc(c.username || 'username')}</p></footer></div>`;
-}
-
-/* ---------- validation + output ---------- */
+/* ---------- validation ---------- */
 function validate(c) {
-  const u = c.username.trim(), m = $('u-msg');
-  let err = '';
-  if (!u) err = 'Choose a username.';
-  else if (!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])$/.test(u)) err = 'Use 2-30 lowercase letters, numbers or hyphens (no hyphen at the start or end).';
-  else if (D.reserved.includes(u)) err = 'That username is reserved.';
-  const uErr = err;
-  if (!c.name.trim()) err = err || 'Add your name.';
-  if (!c.sections.length && !c.socials.length) err = err || 'Add at least one link with a valid URL.';
+  const u = c.username, m = $('u-msg');
+  let uErr = '';
+  if (!u) uErr = 'Choose a username.';
+  else if (!/^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])$/.test(u)) uErr = 'Use 2 to 30 lowercase letters, numbers or hyphens, not starting or ending with a hyphen.';
+  else if (D.reserved.includes(u)) uErr = 'That username is reserved. Try another.';
+  let err = uErr || (!c.name ? 'Add your name.' : '') || (!c.sections.length && !c.socials.length ? 'Add at least one link with a full address, like https://example.com.' : '')
+    || (!okImg(S.avatar) ? 'The photo URL must start with https://.' : '') || (!okImg(S.cover) ? 'The cover image URL must start with https://.' : '');
   const taken = D.taken.includes(u);
-  m.innerHTML = uErr ? `<span class="err">${esc(uErr)}</span>` : u ? (taken ? `<span class="err">"${esc(u)}" is taken. If it's yours, publishing will open an edit.</span>` : `<span class="ok">✓ ${esc(D.site_url)}/${esc(u)}/ is available</span>`) : `Your page: ${esc(D.site_url)}/<b>${esc(u || 'username')}</b>/`;
+  m.innerHTML = uErr && u ? `<span class="err">${esc(uErr)}</span>` : u ? (taken ? `<span class="err">${esc(u)} is taken. If it's your page, publishing opens it for editing.</span>` : `<span class="ok">${esc(D.site_url)}/${esc(u)}/ is available</span>`) : `Your page will be ${esc(D.site_url)}/<b>username</b>/`;
   document.querySelectorAll('.u-echo').forEach(e => e.textContent = u || 'username');
   return { err, taken };
 }
 
-function update(lists = true) {
+/* ---------- preview + state ---------- */
+const frame = $('pv'); let ready = false;
+const markReady = () => { if (!ready) { ready = true; push(); } };
+// The preview may finish loading before this script runs, so check all three signals.
+addEventListener('message', e => { if (e.origin === location.origin && e.data && e.data.type === 'tapvio-preview-ready') markReady(); });
+frame.addEventListener('load', markReady);
+try { if (frame.contentDocument && frame.contentDocument.readyState === 'complete' && frame.contentDocument.getElementById('root')) markReady(); } catch {}
+function push() { if (ready) frame.contentWindow.postMessage({ type: 'tapvio-preview', profile: clean() }, location.origin); }
+function update(lists) {
   if (lists) renderLists();
-  document.querySelectorAll('.sw').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === S.style.theme));
+  const t = D.themes[S.style.theme];
+  document.querySelectorAll('.theme-opt').forEach(b => b.setAttribute('aria-pressed', b.dataset.t === S.style.theme));
+  $('theme-desc').textContent = t.label + ': ' + t.desc;
+  document.querySelectorAll('#mode button').forEach(b => { b.setAttribute('aria-pressed', b.dataset.v === S.style.mode); b.disabled = !t.modes; });
+  $('mode-note').textContent = t.modes ? 'Auto follows the visitor\'s device setting.' : `${t.label} has one fixed look.`;
+  document.querySelectorAll('#avshape button').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === S.style.avatar));
   const c = clean();
-  preview(c);
   $('yaml').value = toYaml(c);
   validate(c);
+  push();
   try { localStorage.setItem(STORE, JSON.stringify(S)); } catch {}
 }
 
+$('example-btn').addEventListener('click', () => { S = example(); syncFields(); update(true); });
 $('publish-btn').addEventListener('click', () => {
   const c = clean(), { err, taken } = validate(c), box = $('pub-err');
   box.hidden = !err; box.textContent = err;
   if (err) { box.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
-  const u = c.username.trim(), file = `profiles/${u}.yml`;
+  const file = `profiles/${c.username}.yml`;
   if (taken) {
     navigator.clipboard?.writeText(toYaml(c)).catch(() => {});
-    alert('Your YAML is copied. On GitHub, select all, paste, then propose the change.');
+    box.hidden = false; box.textContent = 'Your file is copied. On GitHub, select everything in the editor, paste, then click Propose changes.';
     window.open(`https://github.com/${D.repo}/edit/${D.branch}/${file}`, '_blank', 'noopener');
   } else {
     window.open(`https://github.com/${D.repo}/new/${D.branch}?filename=${encodeURIComponent(file)}&value=${encodeURIComponent(toYaml(c))}`, '_blank', 'noopener');
   }
 });
-$('copy-btn').addEventListener('click', async e => { try { await navigator.clipboard.writeText($('yaml').value); e.target.textContent = '✓ Copied'; } catch { $('yaml').select(); } setTimeout(() => e.target.textContent = 'Copy YAML', 1500); });
-$('dl-btn').addEventListener('click', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('yaml').value], { type: 'text/yaml' })); a.download = `${S.username.trim() || 'profile'}.yml`; a.click(); URL.revokeObjectURL(a.href); });
-$('reset-btn').addEventListener('click', () => { if (confirm('Clear the form and start over?')) { S = blank(); fields.forEach(k => $(k).value = ''); try { localStorage.removeItem(STORE); } catch {} update(); } });
+$('copy-btn').addEventListener('click', async e => { try { await navigator.clipboard.writeText($('yaml').value); e.target.textContent = 'Copied'; } catch { $('yaml').select(); } setTimeout(() => e.target.textContent = 'Copy file', 1600); });
+$('dl-btn').addEventListener('click', () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([$('yaml').value], { type: 'text/yaml' })); a.download = `${(S.username || 'profile').trim()}.yml`; a.click(); URL.revokeObjectURL(a.href); });
+$('reset-btn').addEventListener('click', () => { if (confirm('Clear the form and start over? Your saved draft will be deleted.')) { S = blank(); try { localStorage.removeItem(STORE); } catch {} syncFields(); update(true); } });
 
-update();
+syncFields();
+update(true);
 })();
 </script>
 {% endblock %}

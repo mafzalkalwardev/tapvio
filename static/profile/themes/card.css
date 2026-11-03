@@ -1,0 +1,37 @@
+/* Business card: a printed card on a felt desk. The card settles in once on load. */
+[data-theme=card]{color-scheme:dark;--bg:#34463d;--fg:#eef2ec;--muted:#b4c2b8;--line:rgba(238,242,236,.2);--surface:transparent;
+  --accent:#f3efe4;--accent-ink:#1f2a24;--ink:#1f2a24;--paper:#f9f7f1;
+  --font-body:"Libre Franklin",system-ui,sans-serif;--font-display:var(--font-body);--radius:4px;--avatar:64px}
+[data-theme=card] body,[data-theme=card]{background:var(--bg) radial-gradient(circle at 1px 1px,rgba(255,255,255,.045) 1px,transparent 0) 0 0/4px 4px}
+[data-theme=card] .tv-page{max-width:600px;padding-top:64px}
+[data-theme=card] .tv-id{position:relative;flex-direction:column-reverse;align-items:flex-start;justify-content:space-between;gap:12px;
+  aspect-ratio:1.75;padding:30px 32px 26px;background:var(--paper);color:var(--ink);border-radius:5px;
+  box-shadow:0 1px 1px rgba(0,0,0,.2),0 2px 4px rgba(0,0,0,.12),0 24px 40px -18px rgba(0,0,0,.6);animation:card-settle .7s cubic-bezier(.2,.9,.3,1) both}
+[data-theme=card] .tv-id::before{content:"";position:absolute;left:32px;right:32px;bottom:58px;border-top:1px solid #d9d3c4}
+[data-theme=card] .tv-id::after{content:attr(data-handle);position:absolute;left:32px;bottom:24px;font-size:.78rem;letter-spacing:.02em;color:#6f6a5c}
+[data-theme=card] .tv-idtext{padding-bottom:52px}
+[data-theme=card] .tv-avatar{position:absolute;top:28px;right:30px;border-radius:50%;filter:grayscale(.15)}
+[data-theme=card] .tv-name{font-size:1.65rem;font-weight:700;letter-spacing:-.01em;color:var(--ink);max-width:calc(100% - 80px)}
+[data-theme=card] .tv-verified{color:var(--ink)}
+[data-theme=card] .tv-verified path:last-child{fill:var(--paper)}
+[data-theme=card] .tv-headline{color:#3c463f;font-weight:500;margin-top:6px}
+[data-theme=card] .tv-loc{color:#6f6a5c}
+[data-theme=card] .tv-bio{margin-top:28px;color:var(--fg)}
+[data-theme=card] .tv-social a{border-color:var(--line);color:var(--fg)}
+[data-theme=card] .tv-social a:hover{border-color:var(--fg)}
+[data-theme=card] .tv-btn{background:transparent;color:var(--fg);border-color:var(--line)}
+[data-theme=card] .tv-btn--primary{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+[data-theme=card] .tv-search input{background:rgba(0,0,0,.15);border-color:var(--line)}
+[data-theme=card] .tv-h{color:var(--fg);font-weight:600;font-size:.95rem;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:0}
+[data-theme=card] .tv-links{gap:0}
+[data-theme=card] .tv-link{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:13px 2px;background:none}
+[data-theme=card] .tv-link:hover{background:rgba(255,255,255,.05)}
+[data-theme=card] .is-featured .tv-lt{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+[data-theme=card] .tv-foot{border-color:var(--line)}
+@keyframes card-settle{from{opacity:0;transform:translateY(18px) rotate(-1.5deg)}}
+@media (max-width:520px){
+  [data-theme=card] .tv-id{aspect-ratio:auto;min-height:220px;padding:24px 22px 22px}
+  [data-theme=card] .tv-id::before{left:22px;right:22px;bottom:52px}
+  [data-theme=card] .tv-id::after{left:22px;bottom:20px}
+  [data-theme=card] .tv-avatar{top:22px;right:22px;--avatar:54px}
+}
