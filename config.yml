@@ -1,14 +1,14 @@
-# Linkora site settings.
-site_name: "Linkora"
+# Tapvio site settings.
+site_name: "Tapvio"
 site_tagline: "Free, open-source link-in-bio pages that search engines can actually find."
 # Full public URL, no trailing slash.
 # Moving to a custom domain later? Set site_url to it and fill custom_domain.
-site_url: "https://mafzalkalwardev.github.io/linkora"
+site_url: "https://mafzalkalwardev.github.io/tapvio"
 custom_domain: ""
 owner_name: "INDUS Web Agency"
 owner_url: "https://induswebagency.com"
 # GitHub repo (owner/name): used for "Create your page" and pull-request links.
-repo: "mafzalkalwardev/linkora"
+repo: "mafzalkalwardev/tapvio"
 branch: "main"
 default_theme: "aurora"
 lang: "en"

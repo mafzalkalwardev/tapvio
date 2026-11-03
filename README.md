@@ -1,9 +1,9 @@
-# Linkora
+# Tapvio
 
 **A free, open-source link-in-bio platform that search engines can actually index.**
 It's an alternative to Linktree with animated themes, deep customization and serious SEO. Each page is static HTML on GitHub Pages: no server, no database, no ads, no tracking, and $0 to run.
 
-**Live:** https://mafzalkalwardev.github.io/linkora/ · **Create your page:** https://mafzalkalwardev.github.io/linkora/create/
+**Live:** https://mafzalkalwardev.github.io/tapvio/ · **Create your page:** https://mafzalkalwardev.github.io/tapvio/create/
 
 ---
 
@@ -30,9 +30,9 @@ It's an alternative to Linktree with animated themes, deep customization and ser
 
 ## Create your page (no coding)
 
-1. Open the **[visual builder](https://mafzalkalwardev.github.io/linkora/create/)**. Fill in your details, pick a theme and watch the live preview.
+1. Open the **[visual builder](https://mafzalkalwardev.github.io/tapvio/create/)**. Fill in your details, pick a theme and watch the live preview.
 2. Click **Publish on GitHub**. GitHub opens with your file pre-filled. Click **Commit changes → Propose changes → Create pull request**.
-3. After a maintainer merges it, your page is live at `https://mafzalkalwardev.github.io/linkora/<username>/`.
+3. After a maintainer merges it, your page is live at `https://mafzalkalwardev.github.io/tapvio/<username>/`.
 
 Prefer YAML? Copy `profiles/_template.yml` to `profiles/<username>.yml` and open a PR. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -51,13 +51,29 @@ python -m http.server -d dist 8000
 2. Edit `config.yml`: `site_url`, `repo` and `owner_*`.
 3. Push to `main`. The workflow validates, builds, deploys and pings IndexNow.
 
-**Custom domain later:** set `site_url: "https://links.yourdomain.com"` and `custom_domain: "links.yourdomain.com"`. At your DNS provider, add `CNAME links → <user>.github.io`, then enter the domain under Settings → Pages and enable HTTPS.
+## Free custom domain: `tapvio.is-a.dev`
+
+[is-a.dev](https://is-a.dev) gives free subdomains to developer projects through a GitHub pull request.
+
+1. Make sure the site is live on GitHub Pages first, because the is-a.dev reviewers check it.
+2. Open a pull request to [is-a-dev/register](https://github.com/is-a-dev/register) that adds `domains/tapvio.json`:
+   ```json
+   {
+     "owner": { "username": "mafzalkalwardev" },
+     "records": { "CNAME": "mafzalkalwardev.github.io" }
+   }
+   ```
+   In the PR description, say it's an open-source, free link-in-bio generator and link this repo and the live site.
+3. After it's merged, go to **Settings → Pages → Custom domain**, enter `tapvio.is-a.dev`, save, and tick **Enforce HTTPS**.
+4. In `config.yml`, set `site_url: "https://tapvio.is-a.dev"` and `custom_domain: "tapvio.is-a.dev"`, then push. Canonical URLs, the sitemap and share images all switch to the new domain, and the old github.io address redirects to it automatically.
+
+**Any other domain:** set `site_url` and `custom_domain` to it. At your DNS provider, add `CNAME <sub> → <user>.github.io` (or GitHub's A records for an apex domain), then enter the domain under Settings → Pages.
 
 ## Getting indexed by Google
 
 Google has no instant-ping API for normal pages, so do this once:
 
-1. **[Google Search Console](https://search.google.com/search-console)** → Add property → **URL prefix** → `https://mafzalkalwardev.github.io/linkora/`
+1. **[Google Search Console](https://search.google.com/search-console)** → Add property → **URL prefix** → `https://mafzalkalwardev.github.io/tapvio/`
 2. Choose **HTML tag** verification, copy the `content="…"` value into `config.yml` → `google_site_verification`, push, then click Verify.
 3. **Sitemaps** → submit `sitemap.xml`.
 4. **URL Inspection** → paste your profile URL → **Request indexing**.

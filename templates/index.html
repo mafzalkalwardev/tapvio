@@ -12,7 +12,7 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"WebSite","name":{{ cfg.site_name | tojson }},"url":{{ page_url | tojson }},"description":{{ cfg.site_tagline | tojson }},"publisher":{"@type":"Organization","name":{{ cfg.owner_name | tojson }},"url":{{ cfg.owner_url | tojson }}}},
- {"@type":"ItemList","name":"Linkora directory","itemListElement":[{% for p in profiles %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ (cfg.site_url ~ '/' ~ p.username ~ '/') | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
+ {"@type":"ItemList","name":"Tapvio directory","itemListElement":[{% for p in profiles %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ (cfg.site_url ~ '/' ~ p.username ~ '/') | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
 ]}
 </script>
 {% endblock %}

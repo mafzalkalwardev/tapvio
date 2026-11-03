@@ -161,7 +161,7 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const domain = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch { return ''; } };
 const okUrl = u => /^(https?:\/\/[^\s]+\.[^\s]+|mailto:[^\s]+|tel:[+0-9 ()-]+)$/i.test(u.trim());
-const STORE = 'linkora-draft-v1';
+const STORE = 'tapvio-draft-v1';
 
 const blank = () => ({
   username: '', name: '', headline: '', bio: '', about: '', location: '', avatar: '', keywords: '',

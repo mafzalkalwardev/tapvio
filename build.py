@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Linkora: static link-in-bio site generator.
+"""Tapvio: static link-in-bio site generator.
 
 Reads config.yml + profiles/*.yml and writes a fully static, SEO-ready site to dist/.
 Usage:
@@ -309,7 +309,7 @@ def _fetch_image(url: str):
     cached = CACHE / (hashlib.sha1(url.encode()).hexdigest() + ".img")
     try:
         if not cached.exists():
-            req = urllib.request.Request(url, headers={"User-Agent": "Linkora-build/1.0"})
+            req = urllib.request.Request(url, headers={"User-Agent": "Tapvio-build/1.0"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 cached.write_bytes(resp.read(5_000_000))
         return Image.open(io.BytesIO(cached.read_bytes())).convert("RGB")
