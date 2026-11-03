@@ -1,10 +1,16 @@
 name: Release
 
-# Push a tag like v1.2.0 and this publishes a GitHub release.
-# The release notes are that version's section of CHANGELOG.md, and the brand kit is attached.
+# Two ways to publish a release (notes come from that version's section of CHANGELOG.md):
+#   1. Push a tag:            git tag v1.2.0 && git push origin v1.2.0
+#   2. From GitHub:           Actions -> Release -> Run workflow -> enter 1.2.0  (creates the tag for you)
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release, without the v (must have a section in CHANGELOG.md)"
+        required: true
 
 permissions:
   contents: write
@@ -14,16 +20,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Work out the version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then v="${{ inputs.version }}"; else v="${GITHUB_REF_NAME#v}"; fi
+          v="${v#v}"
+          echo "VERSION=$v" >> "$GITHUB_ENV"
+          echo "TAG=v$v" >> "$GITHUB_ENV"
       - name: Extract release notes from CHANGELOG.md
         run: |
-          version="${GITHUB_REF_NAME#v}"
-          awk -v v="$version" '
+          awk -v v="$VERSION" '
             $0 ~ "^## \\[" v "\\]" { found = 1; next }
             found && /^## \[/ { exit }
             found && /^\[[0-9.]+\]: / { exit }
             found { print }
           ' CHANGELOG.md > notes.md
-          if [ ! -s notes.md ]; then echo "No CHANGELOG.md section for $version" >&2; exit 1; fi
+          if [ ! -s notes.md ]; then echo "No CHANGELOG.md section for $VERSION" >&2; exit 1; fi
           printf '\n---\n**Live site:** https://mafzalkalwardev.github.io/tapvio/ · **Create a page:** https://mafzalkalwardev.github.io/tapvio/create/ · **Guide:** https://mafzalkalwardev.github.io/tapvio/guide/\n' >> notes.md
       - name: Package brand kit
         run: cd static/brand && zip -q -r "$GITHUB_WORKSPACE/tapvio-brand-kit.zip" .
@@ -31,8 +42,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "$GITHUB_REF_NAME" \
-            --title "Tapvio $GITHUB_REF_NAME" \
+          gh release create "$TAG" \
+            --target "$GITHUB_SHA" \
+            --title "Tapvio $TAG" \
             --notes-file notes.md \
             --latest \
             tapvio-brand-kit.zip
