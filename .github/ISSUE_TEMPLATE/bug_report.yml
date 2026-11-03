@@ -1,0 +1,29 @@
+name: Bug report
+description: Something in Tapvio does not work the way the code or the guide describes
+title: ""
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. A short example is more useful than a long one.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: How to reproduce
+      description: Steps, a snippet of the profile YAML, or a link to the page. Leave out anything private.
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      description: Published page, local build, or the visual builder. A commit or release tag helps.
+      placeholder: main, or v1.0.0

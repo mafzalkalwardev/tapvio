@@ -1,0 +1,23 @@
+name: Feature request
+description: Suggest a change to the generator, a theme, or the docs
+title: ""
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tapvio stays a static site generator: one YAML file per page, built by `build.py`, hosted on GitHub Pages. Suggestions that need accounts, a database, or tracking are unlikely to fit.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem should this solve?
+      description: Who hits it, and what they have to do today.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you change?
+      description: A sketch is enough. Mention the file if you already know where it lives (`build.py`, `templates/`, a theme CSS file, `GUIDE.md`).
+    validations:
+      required: true
