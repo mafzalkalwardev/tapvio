@@ -38,6 +38,18 @@ sections:
       - { title: "LinkedIn — INDUS Web Agency", url: "https://www.linkedin.com/company/induswebagency" }
       - { title: "Topmate — Book a call", url: "https://topmate.io/mafzalkalwardev" }
 
+  - title: "INDUS products"
+    links:
+      - { title: "MailForge", url: "https://mailforge.induswebagency.com", description: "Self-hosted email verification, cold email campaigns, and a unified inbox." }
+      - { title: "Routelix", url: "https://routelix.induswebagency.com", description: "Self-hosted AI auto dialer and carrier CRM for outbound Google Voice campaigns." }
+      - { title: "Laneora", url: "https://laneora.induswebagency.com", description: "Windows desktop client for US freight dispatchers with shared load-board access." }
+      - { title: "Article Pulse", url: "https://articlepulse.induswebagency.com", description: "Turns public GitHub evidence into reviewable Markdown drafts for Hashnode and dev.to." }
+      - { title: "Phone Verifier", url: "https://phoneverifier.induswebagency.com", description: "Open-source bulk phone number verification and CSV cleanup for SMS lists." }
+      - { title: "CarrierSource Data Collector", url: "https://carriersource.induswebagency.com", description: "Chrome extension that collects visible CarrierSource carrier cards and exports CSV or Excel." }
+      - { title: "Tapvio", url: "https://tapvio.induswebagency.com", description: "Free, open-source link-in-bio pages with 9 themes, built-in SEO, and no ads." }
+      - { title: "Inkcadence", url: "https://inkcadence.induswebagency.com", description: "Learn your handwriting, then write new pages in it. Runs in the browser." }
+      - { title: "PakOption", url: "https://pakoption.induswebagency.com", description: "Inspection-backed car auction and classifieds marketplace for Pakistan." }
+
   - title: "Chrome extensions"
     links:
       - { title: "GV Auto Dialer", url: "https://chromewebstore.google.com/detail/gv-auto-dialer-by-indus-w/mhmfioegohbhejocblgpacabecelbkoi" }
