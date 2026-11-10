@@ -38,7 +38,7 @@
       <div class="phone"><iframe id="demo-frame" src="{{ cfg.site_url }}/demo/?theme=resume" title="Example page in the Résumé theme" loading="eager"></iframe></div>
       <div class="switcher">
         <p class="switcher-label" id="sw-label">Try a theme on this example page</p>
-        <ul class="switcher-list" role="group" aria-labelledby="sw-label">
+        <ul class="switcher-list" aria-labelledby="sw-label">
           {% for key, t in themes.items() %}
           <li><button type="button" class="chip" data-theme="{{ key }}" data-desc="{{ t.desc }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ t.label }}</button></li>
           {% endfor %}

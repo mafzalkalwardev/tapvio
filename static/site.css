@@ -25,8 +25,8 @@ body.site{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 var(--
 /* buttons */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:600 .95rem/1 var(--body);padding:13px 20px;border-radius:999px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);text-decoration:none;cursor:pointer;white-space:nowrap}
 .btn:hover{background:var(--ink);color:#fff}
-.btn--brand{background:var(--brand);border-color:var(--brand);color:#fff}
-.btn--brand:hover{background:var(--brand-2);border-color:var(--brand-2)}
+.btn--brand,.site a.btn--brand{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn--brand:hover,.site a.btn--brand:hover{background:var(--brand-2);border-color:var(--brand-2);color:#fff}
 .btn--sm{padding:9px 15px;font-size:.88rem}
 
 /* type */
