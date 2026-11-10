@@ -34,7 +34,7 @@ sections:
     links:
       - { title: "Hire me — Portfolio", url: "https://mafzalkalwardev.github.io/#hire-me", featured: true }
       - { title: "INDUS Web Agency", url: "https://induswebagency.com", featured: true }
-      - { title: "Upwork", url: "https://www.upwork.com/freelancers/~01f4ad6974fac97bf3" }
+      - { title: "Upwork", url: "https://www.upwork.com/freelancers/mafzalkalwardev" }
       - { title: "LinkedIn — INDUS Web Agency", url: "https://www.linkedin.com/company/induswebagency" }
       - { title: "Topmate — Book a call", url: "https://topmate.io/mafzalkalwardev" }
 
