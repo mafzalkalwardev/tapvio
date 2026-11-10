@@ -1,13 +1,13 @@
 # File name must equal the username: profiles/<username>.yml
 username: mafzalkalwardev
 name: "Muhammad Afzal Kalwar"
-headline: "Python Automation & Full-Stack Developer"
+headline: "Python Automation Engineer & Founder, INDUS Web Agency"
 bio: "Founder, INDUS Web Agency. Python automation: auto dialers, AI call agents, scrapers, CRMs."
 # Longer text helps search engines understand the page (aim for 2-4 sentences).
 about: >-
-  I'm Muhammad Afzal Kalwar, a Python automation and full-stack developer based in
-  Islamabad, Pakistan, and the founder of INDUS Web Agency. I build auto dialers,
-  AI call agents, web scrapers, CRMs and Chrome extensions for businesses worldwide.
+  I'm Muhammad Afzal Kalwar, a Python Automation Engineer and founder of INDUS Web Agency, based in
+  Islamabad, Pakistan. I build auto dialers, AI call agents, web scrapers, CRMs and Chrome extensions.
+  I'm available immediately, any time zone.
   Below you'll find my portfolio, freelance profiles, articles and products.
 location: "Islamabad, Pakistan"
 avatar: "https://github.com/mafzalkalwardev.png"
@@ -59,6 +59,14 @@ sections:
 
   - title: "Articles"
     links:
+      - { title: "Building a Self-Hosted Bulk Phone Number Verifier with libphonenumber and Regulator Block Checks", url: "https://dev.to/mafzalkalwardev/building-a-self-hosted-bulk-phone-number-verifier-with-libphonenumber-and-regulator-block-checks-3pb3" }
+      - { title: "Building MailForge: a Self-Hosted Email Desk for Verification, Campaigns and a Unified Inbox", url: "https://dev.to/mafzalkalwardev/building-mailforge-a-self-hosted-email-desk-for-verification-campaigns-and-a-unified-inbox-416l" }
+      - { title: "Building a Reliable FMCSA Carrier Data Scraper with Python and Playwright", url: "https://dev.to/mafzalkalwardev/building-a-reliable-fmcsa-carrier-data-scraper-with-python-and-playwright-4250" }
+      - { title: "Building Laneora: Shared Freight Load-Board Access on a Windows Desktop", url: "https://dev.to/mafzalkalwardev/building-laneora-shared-freight-load-board-access-on-a-windows-desktop-34fb" }
+      - { title: "I built a free Linktree alternative that Google can index", url: "https://dev.to/mafzalkalwardev/i-built-a-free-linktree-alternative-that-google-can-index-1d7j" }
+      - { title: "Find Me Online — Muhammad Afzal Kalwar (mafzalkalwardev)", url: "https://dev.to/mafzalkalwardev/find-me-online-muhammad-afzal-kalwar-mafzalkalwardev-3m0k" }
+      - { title: "Building an AI Outbound Calling Agent on Google Voice with Python, Groq and FastAPI", url: "https://dev.to/mafzalkalwardev/building-an-ai-outbound-calling-agent-on-google-voice-with-python-groq-and-fastapi-1h6p" }
+      - { title: "Indus Carrier Directory: Looking Up Freight Carriers with FMCSA Data", url: "https://dev.to/mafzalkalwardev/indus-carrier-directory-looking-up-freight-carriers-with-fmcsa-data-bk2" }
       - { title: "How to Build an AI Call Agent with Python: STT, Groq LLM and TTS", url: "https://dev.to/mafzalkalwardev/how-to-build-an-ai-call-agent-with-python-stt-groq-llm-and-tts-2nm6" }
       - { title: "Google Voice Auto Dialer Chrome Extension: How It Works (MV3)", url: "https://dev.to/mafzalkalwardev/google-voice-auto-dialer-chrome-extension-how-it-works-mv3-39p3" }
       - { title: "How to Build a Python Auto Dialer: Multi-Line, AMD and Excel Import", url: "https://dev.to/mafzalkalwardev/how-to-build-a-python-auto-dialer-multi-line-amd-and-excel-import-2jof" }
