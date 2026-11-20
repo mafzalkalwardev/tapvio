@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% set active = 'compare' %}
+{% block title %}Tapvio vs Linktree: a free, open-source Linktree alternative | {{ cfg.site_name }}{% endblock %}
+{% block meta %}
+<meta name="description" content="An honest comparison of Tapvio and Linktree. Tapvio is a free, open-source link-in-bio page built as static HTML you own. Linktree is a hosted service with Free, Starter, Pro and Premium plans.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tapvio vs Linktree">
+<meta property="og:description" content="A free, open-source Linktree alternative: how Tapvio and Linktree differ, and when each one is the better pick.">
+<meta property="og:url" content="{{ page_url }}">
+<meta property="og:image" content="{{ cfg.site_url }}/assets/brand/tapvio-social.png">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"WebPage","@id":{{ (page_url ~ '#page') | tojson }},"url":{{ page_url | tojson }},"name":"Tapvio vs Linktree",
+  "description":"An honest comparison of Tapvio, a free open-source link-in-bio tool, and Linktree.",
+  "isPartOf":{"@type":"WebSite","url":{{ (cfg.canonical_site_url ~ '/') | tojson }},"name":{{ cfg.site_name | tojson }}},
+  "about":[{"@type":"SoftwareApplication","name":"Tapvio","applicationCategory":"WebApplication","operatingSystem":"Any","url":{{ (cfg.canonical_site_url ~ '/') | tojson }},
+            "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},
+           {"@type":"SoftwareApplication","name":"Linktree","applicationCategory":"WebApplication","url":"https://linktr.ee/"}]},
+ {"@type":"BreadcrumbList","itemListElement":[
+  {"@type":"ListItem","position":1,"name":{{ cfg.site_name | tojson }},"item":{{ (cfg.canonical_site_url ~ '/') | tojson }}},
+  {"@type":"ListItem","position":2,"name":"Tapvio vs Linktree","item":{{ page_url | tojson }}}]},
+ {"@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"Is Tapvio a free Linktree alternative?","acceptedAnswer":{"@type":"Answer","text":"Yes. Tapvio is free and open source under the MIT licence. There are no paid plans, ads or tracking. Publishing needs a free GitHub account."}},
+  {"@type":"Question","name":"Can Google index a Tapvio link-in-bio page?","acceptedAnswer":{"@type":"Answer","text":"Published Tapvio pages are static HTML without a noindex tag. Each has its own title, description, canonical URL, JSON-LD structured data and a sitemap entry. Indexing is still up to the search engine."}},
+  {"@type":"Question","name":"When is Linktree the better choice?","acceptedAnswer":{"@type":"Answer","text":"If you want to sign up with an email address, edit from a phone app, and use features Tapvio does not have, such as click analytics or selling through your page (on paid plans), Linktree is the better fit."}}]}
+]}
+</script>
+{% endblock %}
+{% block content %}
+<div class="wrap doc">
+  <nav class="toc" aria-label="On this page">
+    <p>On this page</p>
+    <ol>
+      <li><a href="#short-answer">The short answer</a></li>
+      <li><a href="#table">Side by side</a></li>
+      <li><a href="#why-tapvio">Why Tapvio</a></li>
+      <li><a href="#tradeoffs">What Tapvio does not do</a></li>
+      <li><a href="#faq">Questions</a></li>
+    </ol>
+  </nav>
+  <article class="prose">
+    <h1>Tapvio vs Linktree</h1>
+    <p><strong>Tapvio is a free, open-source Linktree alternative.</strong> Both give you one short address that lists your website, social profiles and contact details. They are built very differently, and each suits a different person. This page sets out the differences as plainly as we can. Linktree details come from its own site; check <a href="https://linktr.ee/s/pricing" rel="nofollow noopener">Linktree's pricing page</a> for what it currently offers.</p>
+
+    <h2 id="short-answer">The short answer</h2>
+    <ul>
+      <li><strong>Pick Tapvio</strong> if you want a free link-in-bio page that is plain, fast HTML, that search engines can read, that lives in a file you own, and that you can copy or self-host.</li>
+      <li><strong>Pick Linktree</strong> if you want an account you sign into with an email address, a hosted editor and phone app, and features Tapvio does not have, such as click analytics or selling through your page (on Linktree's paid plans).</li>
+    </ul>
+
+    <h2 id="table">Side by side</h2>
+    <div class="table-scroll">
+    <table>
+      <thead><tr><th></th><th>Tapvio</th><th>Linktree</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Price</th><td>Free. No paid plans.</td><td>Free plan, plus paid Starter, Pro and Premium plans</td></tr>
+        <tr><th scope="row">Source code</th><td>Open source, MIT licence (<a href="{{ cfg.repo_url }}">on GitHub</a>)</td><td>Closed source, hosted service</td></tr>
+        <tr><th scope="row">Account</th><td>No Tapvio account. Publishing uses a free GitHub account</td><td>Linktree account</td></tr>
+        <tr><th scope="row">How you edit</th><td>Visual builder with a live phone preview; changes go in as a GitHub pull request</td><td>Linktree's web editor and its App Store / Google Play app</td></tr>
+        <tr><th scope="row">What your page is</th><td>Static HTML built from one YAML file you own</td><td>A profile hosted by Linktree</td></tr>
+        <tr><th scope="row">Address</th><td>{{ cfg.canonical_site_url.split('://', 1)[-1] }}/yourname, or your own copy on your own domain</td><td>linktr.ee/yourname</td></tr>
+        <tr><th scope="row">SEO</th><td>Unique title, description and canonical URL, JSON-LD (ProfilePage, Person), sitemap with lastmod, IndexNow ping on deploy</td><td>Hosted profile page</td></tr>
+        <tr><th scope="row">Design</th><td>Nine themes, accent colour, ten fonts, cover image, light/dark/auto</td><td>Linktree's themes and customisation</td></tr>
+        <tr><th scope="row">Save contact</th><td>vCard generated from your email, phone or WhatsApp link</td><td>Digital business cards are listed among Linktree's tools</td></tr>
+        <tr><th scope="row">Analytics</th><td>None. Tapvio does not track visitors</td><td>Basic analytics from the paid Starter plan; more on higher plans</td></tr>
+        <tr><th scope="row">Ads and tracking</th><td>None</td><td>See Linktree's own privacy policy</td></tr>
+        <tr><th scope="row">Updates go live</th><td>After a maintainer merges your pull request</td><td>When you save</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="why-tapvio">Why Tapvio is a good Linktree alternative</h2>
+    <p>Most link-in-bio tools are built for social apps, and the page they give you can be heavy on scripts. A Tapvio link-in-bio page is server-rendered HTML with no JavaScript framework. Published pages are not marked <code>noindex</code>. Each one has its own title, description, canonical URL and structured data, an automatic share image for LinkedIn, X, WhatsApp and Slack, and an entry in the sitemap. That gives search engines what they need to find your name and the profiles you own. Whether and when a page ranks is still up to the search engine.</p>
+    <p>Your page is one file. You can copy it, fork the project, or run your own copy on your own domain. Nothing is locked inside an account.</p>
+
+    <h2 id="tradeoffs">What Tapvio does not do</h2>
+    <ul>
+      <li>No click analytics, because Tapvio does not track visitors.</li>
+      <li>No selling, payments or email collection from the page.</li>
+      <li>Changes are not instant. They go live after your pull request is checked and merged.</li>
+      <li>You need a free GitHub account to publish.</li>
+    </ul>
+    <p>If any of these matter to you, Linktree is likely the better tool.</p>
+
+    <h2 id="faq">Questions</h2>
+    <h3>Is Tapvio a free Linktree alternative?</h3>
+    <p>Yes. Tapvio is free and open source under the MIT licence, with no paid plans, ads or tracking. Publishing needs a free GitHub account.</p>
+    <h3>Can Google index a Tapvio link-in-bio page?</h3>
+    <p>Published pages are static HTML without a <code>noindex</code> tag, with a unique title, description, canonical URL, JSON-LD and a sitemap entry. Indexing is still the search engine's decision.</p>
+    <h3>Can I move from Linktree to Tapvio?</h3>
+    <p>Yes, by hand. Open the <a href="{{ cfg.site_url }}/create/">builder</a>, add the same links, pick a theme and publish. Then put your new Tapvio address in your social bios. There is no automatic import.</p>
+
+    <p style="margin-top:48px"><a class="btn btn--brand" href="{{ cfg.site_url }}/create/">Create your free page</a> <a class="btn" href="{{ cfg.site_url }}/guide/">Read the guide</a></p>
+  </article>
+</div>
+{% endblock %}

@@ -2,6 +2,12 @@
 
 > {{ cfg.site_tagline }}
 
+## Pages
+
+- [Create your page]({{ cfg.canonical_site_url }}/create/): visual builder
+- [Guide]({{ cfg.canonical_site_url }}/guide/): how to publish a free link-in-bio page
+- [Tapvio vs Linktree]({{ cfg.canonical_site_url }}/tapvio-vs-linktree/): honest comparison with Linktree
+
 ## Profiles
 {% for p in profiles %}
 - [{{ p.name }}]({{ p.page_url }}): {{ p.headline or p.bio }}
