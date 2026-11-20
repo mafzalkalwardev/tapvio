@@ -349,16 +349,17 @@ def json_ld(p: dict, cfg: dict, page_url: str, avatar_url: str, modified: str, o
                               **({"url": p["works_for"]["url"]} if p["works_for"]["url"] else {})}
     if p["keywords"]:
         person["knowsAbout"] = p["keywords"]
+    home = cfg["canonical_site_url"].rstrip("/") + "/"
     page = {"@type": "ProfilePage", "@id": page_url, "url": page_url,
             "name": f"{p['name']} | {cfg['site_name']}", "dateModified": modified,
             "mainEntity": {"@id": f"{page_url}#person"},
-            "isPartOf": {"@type": "WebSite", "name": cfg["site_name"], "url": cfg["site_url"] + "/"}}
+            "isPartOf": {"@type": "WebSite", "name": cfg["site_name"], "url": home}}
     if og:
         page["primaryImageOfPage"] = og
     graph = {"@context": "https://schema.org", "@graph": [
         page, person,
         {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": cfg["site_name"], "item": cfg["site_url"] + "/"},
+            {"@type": "ListItem", "position": 1, "name": cfg["site_name"], "item": home},
             {"@type": "ListItem", "position": 2, "name": p["name"], "item": page_url}]}]}
     return json.dumps(graph, ensure_ascii=False, indent=2).replace("</", "<\\/")
 
@@ -465,11 +466,42 @@ def render_guide() -> dict:
     return {"guide_html": html, "guide_toc": toc}
 
 
+def resolve_origins(cfg: dict) -> tuple[str, str]:
+    """Asset origin (where this build is served) and public origin (canonical).
+
+    TAPVIO_SITE_URL means this process is building the site that will be served
+    at that origin: a local preview, or the official host. That build is its
+    own canonical and does not advertise a second address. The GitHub Pages
+    build leaves the variable unset and uses canonical_site_url for search
+    engines, while files and in-site navigation stay on site_url.
+    """
+    override = os.environ.get("TAPVIO_SITE_URL", "").strip()
+    if override:
+        cfg["site_url"] = override
+    site = cfg["site_url"] = str(cfg["site_url"]).strip().rstrip("/")
+    if override:
+        canon = site
+    else:
+        canon = str(cfg.get("canonical_site_url") or "").strip().rstrip("/") or site
+    cfg["canonical_site_url"] = canon
+    # Empty when this build is already the official origin, so templates add no banner.
+    cfg["official_site"] = "" if canon == site else canon
+    return site, canon
+
+
 # ---------------------------------------------------------------- build
 def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
-    site_url = cfg["site_url"] = cfg["site_url"].rstrip("/")
+    site_url, canon = resolve_origins(cfg)
     cfg["repo_url"] = f"https://github.com/{cfg['repo']}"
-    host_path = site_url.split("://", 1)[-1]
+    public_host = canon.split("://", 1)[-1]
+
+    def publicize(url: str) -> str:
+        """Rewrite an asset URL onto the public origin for sitemap entries."""
+        prefix = site_url + "/"
+        if url.startswith(prefix):
+            return canon + url[len(site_url):]
+        return url
+
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html", "xml"]),
                       trim_blocks=True, lstrip_blocks=True)
     env.filters["domain"] = domain_of
@@ -495,12 +527,16 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
     logo = (STATIC / "brand" / "tapvio-logo.svg").read_text(encoding="utf-8")
     logo = logo.replace('role="img" aria-label="Tapvio"', 'aria-hidden="true" focusable="false"', 1)
     common = {"cfg": cfg, "year": dt.date.today().year, "themes": THEMES, "theme_fonts": theme_fonts, "logo_svg": logo}
-    sitemap = [{"loc": f"{site_url}/{p}", "lastmod": today, "images": []} for p in ("", "create/", "guide/")]
+    sitemap = [{"loc": f"{canon}/{p}", "lastmod": today, "images": []} for p in ("", "create/", "guide/")]
 
-    def render_profile(p: dict, out: Path, page_url: str, noindex: bool = False):
+    def render_profile(p: dict, out: Path, rel: str, noindex: bool = False):
+        # rel is a path such as "username/" or "demo/". public_url is the address
+        # search engines should index; asset_url is where this build serves files.
+        public_url = f"{canon}/{rel}"
+        asset_url = f"{site_url}/{rel}"
         avatar_url = f"{site_url}/{p['avatar']}" if p["avatar"].startswith("avatars/") else p["avatar"]
         p["cover_url"] = f"{site_url}/{p['cover']}" if p["cover"].startswith("avatars/") else p["cover"]
-        p["avatar_url"], p["page_url"] = avatar_url, page_url
+        p["avatar_url"], p["page_url"] = avatar_url, public_url
         p["modified"] = p.get("modified") or today
         style = resolve_style(p["style"], cfg)
         for s in p["sections"]:
@@ -509,36 +545,35 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
         for s in p["socials"]:
             s["rel"] = link_rel(s["url"], p["verified"])
         out.mkdir(parents=True, exist_ok=True)
-        card = vcard(p, page_url)
+        card = vcard(p, public_url)
         if card:
             (out / "contact.vcf").write_text(card, encoding="utf-8")
         p["vcard"] = bool(card)
         og_url = ""
         avatar_local = str(ROOT / p["avatar"]) if p["avatar"].startswith("avatars/") else p["avatar"]
-        if og_images and not noindex and render_og(p, style["theme"], style["accent"], avatar_local, out / "og.png", host_path):
-            og_url = page_url + "og.png"
+        if og_images and not noindex and render_og(p, style["theme"], style["accent"], avatar_local, out / "og.png", public_host):
+            og_url = asset_url + "og.png"
         p["og_url"] = og_url
         title = p["name"] + (f", {p['headline']}" if p["headline"] else "") + f" | {cfg['site_name']}"
         description = p["bio"] or p["about"][:155] or f"All links for {p['name']} in one place."
         (out / "index.html").write_text(env.get_template("profile.html").render(
             **common, p=p, s=style, t=THEMES[style["theme"]], css=profile_css(style["theme"]),
-            page_url=page_url, avatar_url=avatar_url, title=title, description=description,
+            page_url=public_url, avatar_url=avatar_url, title=title, description=description,
             modified=p["modified"], og_image=og_url or avatar_url, noindex=noindex,
-            json_ld="" if noindex else json_ld(p, cfg, page_url, avatar_url, p["modified"], og_url)), encoding="utf-8")
+            json_ld="" if noindex else json_ld(p, cfg, public_url, avatar_url, p["modified"], og_url)), encoding="utf-8")
         return style
 
     for p in profiles:
         p["modified"] = last_modified(PROFILES / f"{p['username']}.yml")
-        page_url = f"{site_url}/{p['username']}/"
-        render_profile(p, DIST / p["username"], page_url)
-        sitemap.append({"loc": page_url, "lastmod": p["modified"],
-                        "images": [i for i in (p["og_url"], p["avatar_url"]) if i.startswith("http")]})
+        render_profile(p, DIST / p["username"], f"{p['username']}/")
+        sitemap.append({"loc": p["page_url"], "lastmod": p["modified"],
+                        "images": [publicize(i) for i in (p["og_url"], p["avatar_url"]) if i.startswith("http")]})
 
     demo_path = PROFILES / "_demo.yml"
     demo = None
     if demo_path.exists():
         demo = load_profile(demo_path, demo=True)
-        render_profile(demo, DIST / "demo", f"{site_url}/demo/", noindex=True)
+        render_profile(demo, DIST / "demo", "demo/", noindex=True)
 
     ordered = sorted(profiles, key=lambda x: x["name"].lower())
     builder_data = {
@@ -546,15 +581,15 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
                        "og": v["og"]} for k, v in THEMES.items()},
         "fonts": {k: {"url": GF + q if q else "", "stack": st} for k, (q, st) in FONTS_OVERRIDE.items()},
         "options": OPTIONS, "reserved": sorted(RESERVED), "taken": [p["username"] for p in profiles],
-        "repo": cfg["repo"], "branch": cfg.get("branch", "main"), "site_url": site_url, "limits": LIMITS,
+        "repo": cfg["repo"], "branch": cfg.get("branch", "main"), "site_url": canon, "limits": LIMITS,
     }
     builder_json = json.dumps(builder_data).replace("</", "<\\/")
     pages = {
-        "index.html": ("index.html", {"profiles": ordered, "page_url": site_url + "/"}),
-        "404.html": ("404.html", {"page_url": site_url + "/404.html"}),
-        "create/index.html": ("create.html", {"page_url": site_url + "/create/", "builder": builder_json}),
-        "guide/index.html": ("guide.html", {"page_url": site_url + "/guide/", **render_guide()}),
-        "preview/index.html": ("preview.html", {"page_url": site_url + "/preview/", "builder": builder_json,
+        "index.html": ("index.html", {"profiles": ordered, "page_url": canon + "/"}),
+        "404.html": ("404.html", {"page_url": canon + "/404.html"}),
+        "create/index.html": ("create.html", {"page_url": canon + "/create/", "builder": builder_json}),
+        "guide/index.html": ("guide.html", {"page_url": canon + "/guide/", **render_guide()}),
+        "preview/index.html": ("preview.html", {"page_url": canon + "/preview/", "builder": builder_json,
                                                 "base_css": (STATIC / "profile" / "base.css").read_text(encoding="utf-8")}),
     }
     for target, (tpl, ctx) in pages.items():
@@ -567,7 +602,7 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
         profiles=sorted(profiles, key=lambda x: x["modified"], reverse=True)[:50]), encoding="utf-8")
     (DIST / "llms.txt").write_text(env.get_template("llms.txt").render(cfg=cfg, profiles=ordered), encoding="utf-8")
     (DIST / "robots.txt").write_text(
-        f"User-agent: *\nAllow: /\nDisallow: /preview/\nDisallow: /demo/\n\nSitemap: {site_url}/sitemap.xml\n", encoding="utf-8")
+        f"User-agent: *\nAllow: /\nDisallow: /preview/\nDisallow: /demo/\n\nSitemap: {canon}/sitemap.xml\n", encoding="utf-8")
     if cfg.get("indexnow_key"):
         (DIST / f"{cfg['indexnow_key']}.txt").write_text(cfg["indexnow_key"])
     (DIST / ".nojekyll").write_text("")
@@ -585,8 +620,6 @@ def main() -> None:
     ap.add_argument("--no-og", action="store_true", help="skip Open Graph image generation")
     args = ap.parse_args()
     cfg = yaml.safe_load((ROOT / "config.yml").read_text(encoding="utf-8"))
-    if os.environ.get("TAPVIO_SITE_URL"):  # local preview: python build.py with TAPVIO_SITE_URL=http://localhost:8000
-        cfg["site_url"] = os.environ["TAPVIO_SITE_URL"]
     profiles = load_all()
     if (PROFILES / "_demo.yml").exists():
         try:

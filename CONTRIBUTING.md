@@ -4,7 +4,7 @@ Issues and pull requests are welcome. You can add your own page, or change the g
 
 ## Adding your page
 
-1. Easiest: use the visual builder at https://mafzalkalwardev.github.io/tapvio/create/ and click **Publish on GitHub**.
+1. Easiest: use the visual builder at https://tapvio.induswebagency.com/create/ and click **Publish on GitHub**.
    Or fork the repo and copy `profiles/_template.yml` to `profiles/<username>.yml`.
 2. Fill in your details. You can run `python build.py --check` locally to validate.
 3. Open a pull request titled `Add <username>`.
