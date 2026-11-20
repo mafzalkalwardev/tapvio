@@ -76,7 +76,7 @@ RETIRED_STYLE_KEYS = {"buttons", "layout", "effect", "animation", "gradient", "b
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 USERNAME_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])$")
 RESERVED = {
-    "admin", "api", "app", "assets", "static", "avatars", "about", "help", "login", "create", "guide",
+    "admin", "api", "app", "assets", "static", "avatars", "about", "help", "login", "create", "guide", "tapvio-vs-linktree",
     "signup", "register", "settings", "sitemap", "robots", "index", "404", "www", "themes", "preview",
     "mail", "blog", "docs", "terms", "privacy", "contact", "support", "new", "join", "feed", "demo",
 }
@@ -527,7 +527,7 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
     logo = (STATIC / "brand" / "tapvio-logo.svg").read_text(encoding="utf-8")
     logo = logo.replace('role="img" aria-label="Tapvio"', 'aria-hidden="true" focusable="false"', 1)
     common = {"cfg": cfg, "year": dt.date.today().year, "themes": THEMES, "theme_fonts": theme_fonts, "logo_svg": logo}
-    sitemap = [{"loc": f"{canon}/{p}", "lastmod": today, "images": []} for p in ("", "create/", "guide/")]
+    sitemap = [{"loc": f"{canon}/{p}", "lastmod": today, "images": []} for p in ("", "create/", "guide/", "tapvio-vs-linktree/")]
 
     def render_profile(p: dict, out: Path, rel: str, noindex: bool = False):
         # rel is a path such as "username/" or "demo/". public_url is the address
@@ -589,6 +589,7 @@ def build(cfg: dict, profiles: list[dict], og_images: bool = True) -> None:
         "404.html": ("404.html", {"page_url": canon + "/404.html"}),
         "create/index.html": ("create.html", {"page_url": canon + "/create/", "builder": builder_json}),
         "guide/index.html": ("guide.html", {"page_url": canon + "/guide/", **render_guide()}),
+        "tapvio-vs-linktree/index.html": ("compare.html", {"page_url": canon + "/tapvio-vs-linktree/"}),
         "preview/index.html": ("preview.html", {"page_url": canon + "/preview/", "builder": builder_json,
                                                 "base_css": (STATIC / "profile" / "base.css").read_text(encoding="utf-8")}),
     }
