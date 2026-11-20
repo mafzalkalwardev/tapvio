@@ -17,7 +17,7 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"WebSite","name":{{ cfg.site_name | tojson }},"url":{{ page_url | tojson }},"description":{{ cfg.site_tagline | tojson }},"publisher":{"@type":"Organization","name":{{ cfg.owner_name | tojson }},"url":{{ cfg.owner_url | tojson }}}},
  {"@type":"SoftwareApplication","name":{{ cfg.site_name | tojson }},"applicationCategory":"WebApplication","operatingSystem":"Any","url":{{ page_url | tojson }},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://opensource.org/licenses/MIT","codeRepository":{{ cfg.repo_url | tojson }},"image":{{ (cfg.site_url ~ '/assets/brand/tapvio-mark-512.png') | tojson }}},
- {"@type":"ItemList","name":"Tapvio directory","itemListElement":[{% for p in profiles %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ (cfg.canonical_site_url ~ '/' ~ p.username ~ '/') | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
+ {"@type":"ItemList","name":"Tapvio directory","itemListElement":[{% for p in profiles if p.on_official %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ p.page_url | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
 ]}
 </script>
 {% endblock %}
@@ -89,7 +89,7 @@
     <ol class="steps">
       <li><h3 class="h3">Fill in the builder</h3><p>Add your name, a short bio and your links. Pick a theme and watch the preview update as you type.</p></li>
       <li><h3 class="h3">Publish on GitHub</h3><p>One button opens GitHub with your page file ready. Click Propose changes, then Create pull request.</p></li>
-      <li><h3 class="h3">Go live</h3><p>Once it's approved, your page is live at <b>{{ cfg.canonical_site_url.split('://')[1] }}/yourname</b> and search engines are told about it.</p></li>
+      <li><h3 class="h3">Go live</h3><p>Once it's approved, your page is live at <b>{{ cfg.site_url.split('://')[1] }}/yourname</b> and search engines are told about it.</p></li>
     </ol>
   </div>
 </section>
@@ -117,7 +117,7 @@
     <div class="band-head"><h2 class="h2">Directory</h2><p>Pages published on {{ cfg.site_name }}.</p></div>
     <ul class="dir">
       {% for p in profiles %}
-      <li><a href="{{ cfg.canonical_site_url }}/{{ p.username }}/">
+      <li><a href="{{ p.page_url if p.on_official else cfg.site_url ~ '/' ~ p.username ~ '/' }}">
         {% if p.avatar_url %}<img src="{{ p.avatar_url }}" alt="" width="44" height="44" loading="lazy">{% else %}<span class="ini" aria-hidden="true">{{ p.name[:1] }}</span>{% endif %}
         <span><b>{{ p.name }}</b><small>{{ p.headline or p.bio }}</small></span>
       </a></li>

@@ -58,7 +58,7 @@ document.addEventListener('error', e => {
 
   <header class="tv-head">
     {% if p.cover %}<div class="tv-cover"><img src="{{ p.cover_url }}" alt="" fetchpriority="high"></div>{% else %}<div class="tv-cover tv-cover--blank"{% if avatar_url %} style="--cover-img:url('{{ avatar_url }}')"{% endif %}></div>{% endif %}
-    <div class="tv-id" data-handle="{{ cfg.canonical_site_url.split('://',1)[-1] }}/{{ p.username }}">
+    <div class="tv-id" data-handle="{{ (cfg.canonical_site_url if p.on_official and p.page_url.rstrip('/').endswith('/' ~ p.username) else cfg.site_url).split('://', 1)[-1] }}/{{ p.username }}">
       {% if avatar_url %}<img class="tv-avatar" src="{{ avatar_url }}" alt="{{ p.name }}" data-fb="{{ p.name[:1] }}" width="88" height="88">
       {% else %}<span class="tv-avatar tv-avatar--initial" aria-hidden="true">{{ p.name[:1] }}</span>{% endif %}
       <div class="tv-idtext">

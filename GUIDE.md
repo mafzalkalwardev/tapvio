@@ -19,7 +19,7 @@ Because everything goes through GitHub, every change is reviewed before it goes 
 You'll need a free [GitHub account](https://github.com/signup). That's the only sign-up.
 
 1. Open the [builder](../create/).
-2. Choose a **username**. It becomes your address, for example `tapvio.induswebagency.com/ali-khan/`. Use 2 to 30 lowercase letters, numbers or hyphens.
+2. Choose a **username**. It becomes your address, for example `tapvio.is-a.dev/ali-khan/`. Use 2 to 30 lowercase letters, numbers or hyphens.
 3. Fill in your **name**, **what you do** and a **short bio**. The **About** box is optional, but a few sentences there help search engines understand your page.
 4. Add a **photo**. Any image address that starts with `https://` works. If you have a GitHub account, click **Use my GitHub photo**.
 5. Add your main **profiles** (LinkedIn, GitHub, Instagram, email). Then add **links** in sections such as "Work with me" or "Articles". Tick **Feature** to highlight your most important link.

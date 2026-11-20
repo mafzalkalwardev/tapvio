@@ -25,7 +25,7 @@
     <h2 id="p1">About you</h2>
     <p>This is what people and search engines see first.</p>
     <div class="row">
-      <label class="f">Username <input id="username" placeholder="ali-khan" maxlength="30" autocomplete="off" spellcheck="false"><small id="u-msg">Your page will be {{ cfg.canonical_site_url }}/<b>username</b>/</small></label>
+      <label class="f">Username <input id="username" placeholder="ali-khan" maxlength="30" autocomplete="off" spellcheck="false"><small id="u-msg">Your page will be {{ cfg.site_url }}/<b>username</b>/</small></label>
       <label class="f">Full name <input id="name" placeholder="Ali Khan" maxlength="80" autocomplete="name"></label>
     </div>
     <div class="row">
@@ -83,7 +83,7 @@
     <ol class="publish-steps">
       <li>Click <b>Publish on GitHub</b> and sign in. A free account is enough.</li>
       <li>GitHub opens with your file filled in. Click <b>Commit changes</b>, then <b>Propose changes</b>, then <b>Create pull request</b>.</li>
-      <li>When it's approved, your page goes live at <b>{{ cfg.canonical_site_url }}/<span class="u-echo">username</span>/</b>.</li>
+      <li>When it's approved, your page goes live at <b>{{ cfg.site_url }}/<span class="u-echo">username</span>/</b>.</li>
     </ol>
     <p class="msg-err" id="pub-err" role="alert" hidden></p>
     <div class="out">
