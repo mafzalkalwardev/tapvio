@@ -1,9 +1,14 @@
 # Tapvio site settings.
 site_name: "Tapvio"
 site_tagline: "Free, open-source link-in-bio pages that search engines can actually find."
-# Full public URL, no trailing slash.
-# Moving to a custom domain later? Set site_url to it and fill custom_domain.
+# Where this copy is served, no trailing slash. Asset and navigation links use it,
+# so the GitHub Pages copy keeps working under /tapvio/.
+# The official host is built with TAPVIO_SITE_URL set to that host; it then
+# self-canonicalizes and ignores canonical_site_url.
 site_url: "https://mafzalkalwardev.github.io/tapvio"
+# Address search engines should treat as the product. Used for canonical, og:url,
+# JSON-LD url/@id, the sitemap, robots and llms.txt. No trailing slash.
+canonical_site_url: "https://tapvio.induswebagency.com"
 custom_domain: ""
 owner_name: "INDUS Web Agency"
 owner_url: "https://induswebagency.com"

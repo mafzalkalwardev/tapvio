@@ -1,3 +1,5 @@
+Official site: https://tapvio.induswebagency.com/
+
 <p align="center">
   <img src="static/brand/tapvio-logo.svg" alt="Tapvio" width="320">
 </p>
@@ -12,9 +14,9 @@ Nine themes, real HTML, no ads and no tracking. Your page is a file you own.</p>
 </p>
 
 <p align="center">
-  <a href="https://mafzalkalwardev.github.io/tapvio/">Website</a> ·
-  <a href="https://mafzalkalwardev.github.io/tapvio/create/">Create your page</a> ·
-  <a href="https://mafzalkalwardev.github.io/tapvio/guide/">Guide</a> ·
+  <a href="https://tapvio.induswebagency.com/">Website</a> ·
+  <a href="https://tapvio.induswebagency.com/create/">Create your page</a> ·
+  <a href="https://tapvio.induswebagency.com/guide/">Guide</a> ·
   <a href="https://dev.to/mafzalkalwardev/i-built-a-free-linktree-alternative-that-google-can-index-1d7j">Why I built this</a>
 </p>
 
@@ -95,15 +97,15 @@ profiles/you.yml ──► GitHub Actions ──► build.py ──► dist/ ─
                                          vCard, sitemap)           └─► IndexNow ping
 ```
 
-1. Someone fills in the [builder](https://mafzalkalwardev.github.io/tapvio/create/) and clicks **Publish on GitHub**. That opens a pull request adding `profiles/<username>.yml`.
+1. Someone fills in the [builder](https://tapvio.induswebagency.com/create/) and clicks **Publish on GitHub**. That opens a pull request adding `profiles/<username>.yml`.
 2. The workflow runs `python build.py --check` and reports any problems on the pull request.
 3. A maintainer merges it. The workflow builds the site, deploys it to GitHub Pages and pings IndexNow.
 
-The full user guide is in [GUIDE.md](GUIDE.md). It's also published at [/guide/](https://mafzalkalwardev.github.io/tapvio/guide/).
+The full user guide is in [GUIDE.md](GUIDE.md). It's also published at [/guide/](https://tapvio.induswebagency.com/guide/).
 
 ## Add your page
 
-Use the **[visual builder](https://mafzalkalwardev.github.io/tapvio/create/)**, or copy [`profiles/_template.yml`](profiles/_template.yml) to `profiles/<username>.yml` and open a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the rules.
+Use the **[visual builder](https://tapvio.induswebagency.com/create/)**, or copy [`profiles/_template.yml`](profiles/_template.yml) to `profiles/<username>.yml` and open a pull request. See [CONTRIBUTING.md](CONTRIBUTING.md) for the rules.
 
 ```yaml
 username: ali-khan

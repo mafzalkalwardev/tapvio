@@ -35,7 +35,7 @@ jobs:
             found { print }
           ' CHANGELOG.md > notes.md
           if [ ! -s notes.md ]; then echo "No CHANGELOG.md section for $VERSION" >&2; exit 1; fi
-          printf '\n---\n**Live site:** https://mafzalkalwardev.github.io/tapvio/ · **Create a page:** https://mafzalkalwardev.github.io/tapvio/create/ · **Guide:** https://mafzalkalwardev.github.io/tapvio/guide/\n' >> notes.md
+          printf '\n---\n**Live site:** https://tapvio.induswebagency.com/ · **Create a page:** https://tapvio.induswebagency.com/create/ · **Guide:** https://tapvio.induswebagency.com/guide/\n' >> notes.md
       - name: Package brand kit
         run: cd static/brand && zip -q -r "$GITHUB_WORKSPACE/tapvio-brand-kit.zip" .
       - name: Publish release

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>{{ cfg.site_name }}: new and updated pages</title>
-  <link href="{{ cfg.site_url }}/feed.xml" rel="self"/>
-  <link href="{{ cfg.site_url }}/"/>
-  <id>{{ cfg.site_url }}/</id>
+  <link href="{{ cfg.canonical_site_url }}/feed.xml" rel="self"/>
+  <link href="{{ cfg.canonical_site_url }}/"/>
+  <id>{{ cfg.canonical_site_url }}/</id>
   <updated>{{ updated }}T00:00:00Z</updated>
 {% for p in profiles %}
   <entry>

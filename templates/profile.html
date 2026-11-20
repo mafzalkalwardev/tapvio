@@ -47,6 +47,10 @@ document.addEventListener('error', e => {
 </script>
 </head>
 <body class="tv" data-theme="{{ s.theme }}" data-mode="{{ s.mode }}" data-avatar="{{ s.avatar }}" data-icons="{{ s.icons }}"{% if s.css %} style="{{ s.css }}"{% endif %}>
+{% if cfg.official_site and not noindex %}
+<style>.official-site{margin:0;padding:8px 16px;background:#141b2e;color:#fff;text-align:center;font:500 .84rem/1.4 system-ui,sans-serif}.official-site a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:2px}</style>
+<p class="official-site">Official site: <a href="{{ page_url }}">{{ cfg.official_site.split('://', 1)[-1] }}</a></p>
+{% endif %}
 <a class="tv-skip" href="#main">Skip to links</a>
 <div class="tv-page">
   <div class="tv-window-bar" aria-hidden="true"><span class="tv-window-title">{{ p.name }}</span><span class="tv-window-btns"><i></i><i></i><i></i></span></div>
@@ -54,7 +58,7 @@ document.addEventListener('error', e => {
 
   <header class="tv-head">
     {% if p.cover %}<div class="tv-cover"><img src="{{ p.cover_url }}" alt="" fetchpriority="high"></div>{% else %}<div class="tv-cover tv-cover--blank"{% if avatar_url %} style="--cover-img:url('{{ avatar_url }}')"{% endif %}></div>{% endif %}
-    <div class="tv-id" data-handle="{{ cfg.site_url.split('://',1)[-1] }}/{{ p.username }}">
+    <div class="tv-id" data-handle="{{ cfg.canonical_site_url.split('://',1)[-1] }}/{{ p.username }}">
       {% if avatar_url %}<img class="tv-avatar" src="{{ avatar_url }}" alt="{{ p.name }}" data-fb="{{ p.name[:1] }}" width="88" height="88">
       {% else %}<span class="tv-avatar tv-avatar--initial" aria-hidden="true">{{ p.name[:1] }}</span>{% endif %}
       <div class="tv-idtext">
@@ -107,7 +111,7 @@ document.addEventListener('error', e => {
 
   <footer class="tv-foot">
     <span>Updated <time datetime="{{ modified }}">{{ modified }}</time></span>
-    <a href="{{ cfg.site_url }}/">Made with {{ cfg.site_name }}. Make your own page, free.</a>
+    <a href="{{ cfg.canonical_site_url }}/">Made with {{ cfg.site_name }}. Make your own page, free.</a>
   </footer>
 </div>
 <script>

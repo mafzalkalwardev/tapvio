@@ -11,7 +11,7 @@
 <meta name="theme-color" content="#f5f6f8">
 <link rel="icon" href="{{ cfg.site_url }}/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="{{ cfg.site_url }}/assets/brand/tapvio-mark-180.png">
-<link rel="alternate" type="application/atom+xml" title="New pages on {{ cfg.site_name }}" href="{{ cfg.site_url }}/feed.xml">
+<link rel="alternate" type="application/atom+xml" title="New pages on {{ cfg.site_name }}" href="{{ cfg.canonical_site_url }}/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,500..800&family=Hanken+Grotesk:wght@400;500;600;700">
@@ -19,6 +19,10 @@
 {% block head_extra %}{% endblock %}
 </head>
 <body class="site">
+{% if cfg.official_site %}
+<style>.official-site{margin:0;padding:8px 16px;background:#141b2e;color:#fff;text-align:center;font-size:.84rem;font-weight:500;line-height:1.4}.official-site a{color:#fff;font-weight:700;text-decoration:underline;text-underline-offset:2px}</style>
+<p class="official-site">Official site: <a href="{{ page_url }}">{{ cfg.official_site.split('://', 1)[-1] }}</a></p>
+{% endif %}
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav" id="nav">
   <div class="wrap">

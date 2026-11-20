@@ -7,6 +7,7 @@ Usage: python scripts/indexnow.py [--before <sha>] [--all]
 """
 import argparse
 import json
+import os
 import subprocess
 import sys
 import urllib.request
@@ -35,7 +36,12 @@ def main() -> int:
     args = ap.parse_args()
 
     cfg = yaml.safe_load((ROOT / "config.yml").read_text())
-    key, site = cfg.get("indexnow_key"), cfg["site_url"].rstrip("/")
+    key = cfg.get("indexnow_key")
+    # Same origin rule as build.resolve_origins: an explicit TAPVIO_SITE_URL is the
+    # site being published; otherwise submit the official canonical origin so a
+    # GitHub Pages deploy does not announce the github.io copy.
+    override = os.environ.get("TAPVIO_SITE_URL", "").strip().rstrip("/")
+    site = override or str(cfg.get("canonical_site_url") or cfg["site_url"]).strip().rstrip("/")
     if not key:
         print("No indexnow_key in config.yml; skipping.")
         return 0
