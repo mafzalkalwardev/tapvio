@@ -2,6 +2,8 @@
 
 > {{ cfg.site_tagline }}
 
+Tapvio is a free, open-source link-in-bio product from INDUS Web Agency. You pick a theme, add links, and publish a static page that search engines can index. No ads, no tracking, no sign-up.
+
 ## Pages
 
 - [Create your page]({{ cfg.canonical_site_url }}/create/): visual builder
@@ -12,3 +14,9 @@
 {% for p in profiles %}
 - [{{ p.name }}]({{ p.page_url }}): {{ p.headline or p.bio }}
 {% endfor %}
+
+## Contact
+
+- Maker: INDUS Web Agency (https://www.induswebagency.com), founded 2026
+- Email: info@mail.induswebagency.com
+- Source: https://github.com/mafzalkalwardev/tapvio
