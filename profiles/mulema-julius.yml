@@ -1,0 +1,19 @@
+# Made with the https://tapvio.induswebagency.com/create/ builder
+username: mulema-julius
+name: "Mulema Julius"
+headline: "Software & Application Developer | Technology Enthusiast | Digital Innovator | Web Designing"
+bio: "Mulema Julius from Uganda, Kiruhura, Sanga Town Council"
+job_title: "Software & Application Developer"
+about: "Mulem Julius is a Uganda-based aspiring software and application developer passionate about technology, innovation and digital transformation. He is interested in designing and developing modern web applications and mobile solutions that address practical challenges in society. His interests include software engineering, web development, application development, database systems and emerging technologies. Through continuous learning, experimentation and personal projects, Julius is working towards building useful digital solutions that contribute to technological growth and innovation in Uganda. Occupation: Software and Application Developer Country: Uganda Areas of Interest: Software Engineering, Web Development, Mobile Application Development and Digital Innovation."
+avatar: "https://i.ibb.co/yczkr0vG/IMG-20261120-115032.webp"
+cover: "https://i.ibb.co/cXyxNKTS/cover.jpg"
+keywords: ["Software & Application Development & Web Designs"]
+
+style:
+  theme: resume
+  mode: auto
+
+sections:
+  - title: "Links"
+    links:
+      - { title: "LinkedIn", url: "https://www.linkedin.com/in/mulema-julius-269b593b4/", description: "\"Connect with me professionally on LinkedIn.\"  \"View my full professional profile and work experience.\"  \"Let's connect! Find my professional background and ski", featured: true }
