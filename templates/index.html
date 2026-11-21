@@ -15,7 +15,9 @@
 <meta name="twitter:image" content="{{ cfg.site_url }}/assets/brand/tapvio-social.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
- {"@type":"WebSite","name":{{ cfg.site_name | tojson }},"url":{{ page_url | tojson }},"description":{{ cfg.site_tagline | tojson }},"publisher":{"@type":"Organization","name":{{ cfg.owner_name | tojson }},"url":{{ cfg.owner_url | tojson }}}},
+ {"@type":"Organization","@id":"https://www.induswebagency.com/#organization","name":"INDUS Web Agency","url":"https://www.induswebagency.com","email":"info@mail.induswebagency.com","foundingDate":"2026","sameAs":["https://github.com/induswebagency","https://www.linkedin.com/in/mafzalkalwardev/","https://www.upwork.com/freelancers/mafzalkalwardev","https://www.freelancer.com/u/mafzalkalwardev","https://dev.to/mafzalkalwardev","https://mafzalkalwardev.hashnode.dev","https://linktr.ee/mafzalkalwardev"]},
+ {"@type":"Person","@id":"https://www.induswebagency.com/about#muhammad-afzal-kalwar","name":"Muhammad Afzal Kalwar","jobTitle":"Rust & Python Automation Engineer","url":"https://tapvio.induswebagency.com/mafzalkalwardev/","email":"info@mail.induswebagency.com","worksFor":{"@id":"https://www.induswebagency.com/#organization"},"sameAs":["https://www.linkedin.com/in/mafzalkalwardev/","https://www.upwork.com/freelancers/mafzalkalwardev","https://www.freelancer.com/u/mafzalkalwardev","https://github.com/mafzalkalwardev","https://dev.to/mafzalkalwardev","https://mafzalkalwardev.hashnode.dev","https://linktr.ee/mafzalkalwardev"]},
+ {"@type":"WebSite","name":{{ cfg.site_name | tojson }},"url":{{ page_url | tojson }},"description":{{ cfg.site_tagline | tojson }},"publisher":{"@id":"https://www.induswebagency.com/#organization"}},
  {"@type":"SoftwareApplication","name":{{ cfg.site_name | tojson }},"applicationCategory":"WebApplication","operatingSystem":"Any","url":{{ page_url | tojson }},"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"license":"https://opensource.org/licenses/MIT","codeRepository":{{ cfg.repo_url | tojson }},"image":{{ (cfg.site_url ~ '/assets/brand/tapvio-mark-512.png') | tojson }}},
  {"@type":"ItemList","name":"Tapvio directory","itemListElement":[{% for p in profiles %}{"@type":"ListItem","position":{{ loop.index }},"url":{{ (cfg.canonical_site_url ~ '/' ~ p.username ~ '/') | tojson }},"name":{{ p.name | tojson }}}{% if not loop.last %},{% endif %}{% endfor %}]}
 ]}
@@ -38,7 +40,7 @@
       <div class="phone"><iframe id="demo-frame" src="{{ cfg.site_url }}/demo/?theme=resume" title="Example page in the Résumé theme" loading="eager"></iframe></div>
       <div class="switcher">
         <p class="switcher-label" id="sw-label">Try a theme on this example page</p>
-        <ul class="switcher-list" role="group" aria-labelledby="sw-label">
+        <ul class="switcher-list" aria-labelledby="sw-label">
           {% for key, t in themes.items() %}
           <li><button type="button" class="chip" data-theme="{{ key }}" data-desc="{{ t.desc }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ t.label }}</button></li>
           {% endfor %}
